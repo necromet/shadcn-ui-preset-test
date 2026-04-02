@@ -1,8 +1,6 @@
 ---
 name: shadcn
 description: Manages shadcn components and projects — adding, searching, fixing, debugging, styling, and composing UI. Provides project context, component docs, and usage examples. Applies when working with shadcn/ui, component registries, presets, --preset codes, or any project with a components.json file. Also triggers for "shadcn init", "create an app with --preset", or "switch to --preset".
-user-invocable: false
-allowed-tools: Bash(npx shadcn@latest *), Bash(pnpm dlx shadcn@latest *), Bash(bunx --bun shadcn@latest *)
 ---
 
 # shadcn/ui
@@ -13,9 +11,17 @@ A framework for building ui, components and design systems. Components are added
 
 ## Current Project Context
 
-```json
-!`npx shadcn@latest info --json`
+> **Monorepo Detection:** If the project root has no `components.json`, check for it in subdirectories (e.g. `packages/*/`, `apps/*/`). Run `npx shadcn@latest info --json --cwd <dir>` targeting the directory that contains `components.json`. For Turborepo monorepos, shared UI packages typically live under `packages/` or a root-level `ui/` directory.
+
+Run the following command to get project context (adjust `--cwd` to the directory containing `components.json`):
+
+```bash
+npx shadcn@latest info --json --cwd ui
+# or: npx shadcn@latest info --json --cwd web
+# or: npx shadcn@latest info --json  (if components.json is at project root)
 ```
+
+Paste the JSON output here and use it for all subsequent decisions. If multiple `components.json` files exist (common in monorepos), use the one relevant to the component you're working on.
 
 The JSON above contains the project config and installed components. Use `npx shadcn@latest docs <component>` to get documentation and example URLs for any component.
 
@@ -151,7 +157,7 @@ The injected project context contains these key fields:
 - **`framework`** → routing and file conventions (e.g. Next.js App Router vs Vite SPA).
 - **`packageManager`** → use this for any non-shadcn dependency installs (e.g. `pnpm add date-fns` vs `npm install date-fns`).
 
-See [cli.md — `info` command](./cli.md) for the full field reference.
+See [cli.md — `info` command](./rules/cli.md) for the full field reference.
 
 ## Component Docs, Examples, and Usage
 
@@ -238,5 +244,5 @@ npx shadcn@latest view @shadcn/button
 - [rules/icons.md](./rules/icons.md) — data-icon, icon sizing, passing icons as objects
 - [rules/styling.md](./rules/styling.md) — Semantic colors, variants, className, spacing, size, truncate, dark mode, cn(), z-index
 - [rules/base-vs-radix.md](./rules/base-vs-radix.md) — asChild vs render, Select, ToggleGroup, Slider, Accordion
-- [cli.md](./cli.md) — Commands, flags, presets, templates
-- [customization.md](./customization.md) — Theming, CSS variables, extending components
+- [cli.md](./rules/cli.md) — Commands, flags, presets, templates
+- [customization.md](./rules/customization.md) — Theming, CSS variables, extending components
