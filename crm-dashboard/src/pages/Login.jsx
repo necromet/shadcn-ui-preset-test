@@ -1,5 +1,4 @@
 import { SignIn } from "@clerk/clerk-react"
-import { Church } from "lucide-react"
 
 export function Login() {
   return (
@@ -7,7 +6,16 @@ export function Login() {
       <div className="flex w-full max-w-md flex-col gap-6">
         <div className="flex flex-col items-center gap-2 text-center">
           <div className="flex size-12 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Church className="size-6" />
+            <img
+              src="/images/logos/church-logo.svg"
+              alt="Connexion Logo"
+              className="size-6 dark:hidden"
+            />
+            <img
+              src="/images/logos/church-logo-dark.svg"
+              alt="Connexion Logo"
+              className="size-6 hidden dark:block"
+            />
           </div>
           <h1 className="text-2xl font-semibold tracking-tight">Connexion</h1>
           <p className="text-sm text-muted-foreground">

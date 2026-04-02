@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <rect x="30" y="50" width="60" height="80" rx="8" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2"/>
+  <rect x="110" y="50" width="60" height="80" rx="8" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2"/>
+  <circle cx="60" cy="80" r="12" fill="#e2e8f0"/>
+  <circle cx="140" cy="80" r="12" fill="#e2e8f0"/>
+  <text x="60" y="110" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="sans-serif">CGF 1</text>
+  <text x="140" y="110" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="sans-serif">CGF 2</text>
+  <text x="100" y="160" text-anchor="middle" fill="#64748b" font-size="14" font-family="sans-serif">No groups yet</text>
+  <path d="M85 70h30M100 55v30" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 4"/>
+</svg>

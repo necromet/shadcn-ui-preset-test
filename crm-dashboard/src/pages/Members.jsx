@@ -5,6 +5,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { Button } from "../components/ui/button.jsx"
 import { Badge } from "../components/ui/badge.jsx"
 import { getMembers, getCGFGroups } from "../data/mock.js"
+import { MemberAvatar } from "../components/ui/member-avatar.jsx"
+import { EmptyState } from "../components/ui/empty-state.jsx"
 
 const PAGE_SIZE = 10
 
@@ -383,7 +385,6 @@ export function Members() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>No. Jemaat</TableHead>
                   <TableHead>Nama</TableHead>
                   <TableHead>Gender</TableHead>
                   <TableHead>Phone</TableHead>
@@ -395,15 +396,32 @@ export function Members() {
               <TableBody>
                 {paginatedMembers.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
-                      No members found.
+                    <TableCell colSpan={6}>
+                      <EmptyState
+                        title="No members found"
+                        description="Start by adding your first church member to the system, or adjust your search filters."
+                        illustration="/illustrations/empty-states/no-members.svg"
+                        actionLabel="Add Member"
+                        onAction={openAddDialog}
+                      />
                     </TableCell>
                   </TableRow>
                 ) : (
                   paginatedMembers.map((member) => (
                     <TableRow key={member.no_jemaat}>
-                      <TableCell className="font-medium">{member.no_jemaat}</TableCell>
-                      <TableCell>{member.nama_jemaat}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <MemberAvatar
+                            name={member.nama_jemaat}
+                            gender={member.jenis_kelamin}
+                            size="sm"
+                          />
+                          <div>
+                            <p className="font-medium">{member.nama_jemaat}</p>
+                            <p className="text-xs text-muted-foreground">#{member.no_jemaat}</p>
+                          </div>
+                        </div>
+                      </TableCell>
                       <TableCell>{member.jenis_kelamin}</TableCell>
                       <TableCell>{member.no_handphone}</TableCell>
                       <TableCell>{getCgfStatusBadge(member.ketertarikan_cgf)}</TableCell>

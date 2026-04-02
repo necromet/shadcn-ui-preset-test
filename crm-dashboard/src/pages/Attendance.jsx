@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { Button } from "../components/ui/button"
 import { Badge } from "../components/ui/badge"
 import { getCGFGroups, getCGFMembers, getAttendance, getMembers } from "../data/mock.js"
+import { EmptyState } from "../components/ui/empty-state.jsx"
 
 const STATUS_OPTIONS = [
   { value: "hadir", label: "Hadir" },
@@ -150,7 +151,13 @@ export function Attendance() {
             </div>
 
             {/* Members Table */}
-            {loadedMembers.length > 0 && (
+            {loadedMembers.length === 0 && selectedCGF === "" ? (
+              <EmptyState
+                title="Select a CGF group"
+                description="Choose a CGF group above to load members and take attendance."
+                illustration="/illustrations/empty-states/no-attendance.svg"
+              />
+            ) : loadedMembers.length > 0 && (
               <>
                 <Table>
                   <TableHeader>
@@ -267,8 +274,12 @@ export function Attendance() {
               <TableBody>
                 {historyRecords.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center text-muted-foreground">
-                      No attendance records found.
+                    <TableCell colSpan={4}>
+                      <EmptyState
+                        title="No attendance records"
+                        description="Attendance records will appear here once meetings are recorded."
+                        illustration="/illustrations/empty-states/no-attendance.svg"
+                      />
                     </TableCell>
                   </TableRow>
                 ) : (

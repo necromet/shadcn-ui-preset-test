@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <rect x="30" y="40" width="140" height="120" rx="8" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2"/>
+  <rect x="40" y="55" width="120" height="20" rx="4" fill="#e2e8f0"/>
+  <rect x="40" y="85" width="80" height="8" rx="2" fill="#e2e8f0"/>
+  <rect x="40" y="100" width="60" height="8" rx="2" fill="#e2e8f0"/>
+  <rect x="40" y="115" width="90" height="8" rx="2" fill="#e2e8f0"/>
+  <path d="M90 62h20M100 52v20" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round"/>
+  <text x="100" y="185" text-anchor="middle" fill="#64748b" font-size="14" font-family="sans-serif">No attendance records</text>
+</svg>
