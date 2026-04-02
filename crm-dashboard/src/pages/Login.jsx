@@ -5,18 +5,11 @@ export function Login() {
     <div className="flex min-h-screen items-center justify-center bg-muted/30 p-4">
       <div className="flex w-full max-w-md flex-col gap-6">
         <div className="flex flex-col items-center gap-2 text-center">
-          <div className="flex size-12 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <img
-              src="/images/logos/church-logo.svg"
+          <img
+              src="/images/logos/Connexion Logogram Black.png"
               alt="Connexion Logo"
-              className="size-6 dark:hidden"
+              className="size-32 bg-transparent dark:invert"
             />
-            <img
-              src="/images/logos/church-logo-dark.svg"
-              alt="Connexion Logo"
-              className="size-6 hidden dark:block"
-            />
-          </div>
           <h1 className="text-2xl font-semibold tracking-tight">Connexion</h1>
           <p className="text-sm text-muted-foreground">
             Church Management Dashboard

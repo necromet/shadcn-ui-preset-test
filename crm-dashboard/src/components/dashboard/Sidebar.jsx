@@ -20,24 +20,16 @@ export function Sidebar({ isOpen = true }) {
     <aside
       className={cn(
         "hidden lg:flex flex-col border-r border-sidebar-border bg-sidebar h-screen sticky top-0 overflow-hidden transition-[width] duration-300 ease-in-out",
-        isOpen ? "w-64" : "w-16"
+        isOpen ? "w-64" : "w-26"
       )}
     >
       <div className="flex items-center px-4 py-5 border-b border-sidebar-border shrink-0">
-        <div className="flex size-9 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground shrink-0 overflow-hidden">
-          <img
-            src="/images/logos/church-logo.svg"
-            alt=""
-            className="size-9 dark:hidden"
-            aria-hidden="true"
-          />
-          <img
-            src="/images/logos/church-logo-dark.svg"
-            alt=""
-            className="size-9 hidden dark:block"
-            aria-hidden="true"
-          />
-        </div>
+        <img
+          src="/images/logos/Connexion Logogram Black.png"
+          alt=""
+          className="size-16 bg-transparent dark:invert"
+          aria-hidden="true"
+        />
         <span
           className={cn(
             "text-lg font-semibold tracking-tight text-sidebar-foreground whitespace-nowrap transition-opacity duration-200 ml-2",
