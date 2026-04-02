@@ -3,8 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table.jsx";
 import { Button } from "../components/ui/button.jsx";
 import { Badge } from "../components/ui/badge.jsx";
-import { Avatar, AvatarFallback } from "../components/ui/avatar.jsx";
 import { Plus, Pencil, Users, MapPin, Clock, ArrowLeft, UserPlus, Trash2, Crown } from "lucide-react";
+import { MemberAvatar } from "../components/ui/member-avatar.jsx";
+import { EmptyState } from "../components/ui/empty-state.jsx";
 import { getCGFGroups, getCGFMembers, getMembers, getAttendance } from "../data/mock.js";
 
 export function CGFGroups() {
@@ -183,12 +184,12 @@ export function CGFGroups() {
                     <TableCell className="font-medium">{member.no_jemaat}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <Avatar className="h-8 w-8">
-                          <AvatarFallback className="text-xs">
-                            {getInitials(member.nama_jemaat)}
-                          </AvatarFallback>
-                        </Avatar>
-                        {member.nama_jemaat}
+                        <MemberAvatar
+                          name={member.nama_jemaat}
+                          gender={member.jenis_kelamin}
+                          size="sm"
+                        />
+                        <span>{member.nama_jemaat}</span>
                       </div>
                     </TableCell>
                     <TableCell>{member.jenis_kelamin}</TableCell>
@@ -269,11 +270,11 @@ export function CGFGroups() {
                         onClick={() => handleAddMember(member.no_jemaat)}
                       >
                         <div className="flex items-center gap-2">
-                          <Avatar className="h-8 w-8">
-                            <AvatarFallback className="text-xs">
-                              {getInitials(member.nama_jemaat)}
-                            </AvatarFallback>
-                          </Avatar>
+                          <MemberAvatar
+                            name={member.nama_jemaat}
+                            gender={member.jenis_kelamin}
+                            size="sm"
+                          />
                           <div>
                             <p className="text-sm font-medium">{member.nama_jemaat}</p>
                             <p className="text-xs text-muted-foreground">#{member.no_jemaat}</p>
@@ -311,8 +312,17 @@ export function CGFGroups() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {groups.map((group) => {
+      {groups.length === 0 ? (
+        <EmptyState
+          title="No CGF groups"
+          description="Create your first small group to organize members."
+          illustration="/illustrations/empty-states/no-groups.svg"
+          actionLabel="Create Group"
+          onAction={handleCreateGroup}
+        />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {groups.map((group) => {
           const memberCount = cgfMemberAssignments.filter(a => a.cg_id === group.cg_id).length;
           return (
             <Card key={group.cg_id}>
@@ -346,7 +356,8 @@ export function CGFGroups() {
             </Card>
           );
         })}
-      </div>
+        </div>
+      )}
 
       {showGroupDialog && (
         <GroupFormDialog

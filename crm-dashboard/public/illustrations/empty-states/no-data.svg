@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <rect x="50" y="40" width="100" height="120" rx="8" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2"/>
+  <rect x="60" y="55" width="80" height="8" rx="2" fill="#e2e8f0"/>
+  <rect x="60" y="70" width="60" height="8" rx="2" fill="#e2e8f0"/>
+  <rect x="60" y="85" width="70" height="8" rx="2" fill="#e2e8f0"/>
+  <rect x="60" y="100" width="50" height="8" rx="2" fill="#e2e8f0"/>
+  <rect x="60" y="115" width="65" height="8" rx="2" fill="#e2e8f0"/>
+  <rect x="60" y="130" width="40" height="8" rx="2" fill="#e2e8f0"/>
+  <circle cx="100" cy="170" r="2" fill="#cbd5e1"/>
+  <circle cx="110" cy="170" r="2" fill="#cbd5e1"/>
+  <circle cx="90" cy="170" r="2" fill="#cbd5e1"/>
+  <text x="100" y="195" text-anchor="middle" fill="#64748b" font-size="12" font-family="sans-serif">No data available</text>
+</svg>

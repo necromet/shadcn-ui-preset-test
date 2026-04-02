@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom"
-import { LayoutDashboard, Users, UserCheck, CalendarCheck, BarChart3, Church, Settings } from "lucide-react"
+import { LayoutDashboard, Users, UserCheck, CalendarCheck, BarChart3, Settings } from "lucide-react"
 import { cn } from "../../lib/utils.js"
 import { Button } from "../ui/button.jsx"
 
@@ -24,8 +24,19 @@ export function Sidebar({ isOpen = true }) {
       )}
     >
       <div className="flex items-center px-4 py-5 border-b border-sidebar-border shrink-0">
-        <div className="flex size-9 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground shrink-0">
-          <Church className="size-5" />
+        <div className="flex size-9 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground shrink-0 overflow-hidden">
+          <img
+            src="/images/logos/church-logo.svg"
+            alt=""
+            className="size-9 dark:hidden"
+            aria-hidden="true"
+          />
+          <img
+            src="/images/logos/church-logo-dark.svg"
+            alt=""
+            className="size-9 hidden dark:block"
+            aria-hidden="true"
+          />
         </div>
         <span
           className={cn(
