@@ -1,30 +1,69 @@
+import { useState } from "react"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { ClerkProvider } from "@clerk/clerk-react"
+import { Toaster } from "sonner"
 import { Sidebar } from "./components/dashboard/Sidebar.jsx"
 import { Header } from "./components/dashboard/Header.jsx"
-import { StatsCards } from "./components/dashboard/StatsCards.jsx"
-import { RevenueChart } from "./components/dashboard/RevenueChart.jsx"
-import { RecentDeals } from "./components/dashboard/RecentDeals.jsx"
-import { TopContacts } from "./components/dashboard/TopContacts.jsx"
-import { DealPipeline } from "./components/dashboard/DealPipeline.jsx"
+import { ProtectedRoute } from "./components/auth/ProtectedRoute.jsx"
+import { DashboardHome } from "./pages/DashboardHome.jsx"
+import { Members } from "./pages/Members.jsx"
+import { CGFGroups } from "./pages/CGFGroups.jsx"
+import { Attendance } from "./pages/Attendance.jsx"
+import { Analytics } from "./pages/Analytics.jsx"
+import { Login } from "./pages/Login.jsx"
+import { Settings } from "./pages/Settings.jsx"
 
-function App() {
+const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+
+function AppLayout({ children }) {
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+
   return (
     <div className="flex min-h-screen bg-muted/30">
-      <Sidebar />
+      <Sidebar isOpen={sidebarOpen} />
       <div className="flex-1 flex flex-col min-w-0">
-        <Header />
-        <main className="flex-1 p-6 space-y-6">
-          <StatsCards />
-          <div className="grid gap-6 grid-cols-1 xl:grid-cols-3">
-            <RevenueChart />
-            <DealPipeline />
-          </div>
-          <div className="grid gap-6 grid-cols-1 xl:grid-cols-3">
-            <RecentDeals />
-            <TopContacts />
-          </div>
+        <Header
+          sidebarOpen={sidebarOpen}
+          onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
+        />
+        <main className="flex-1 p-6">
+          {children}
         </main>
       </div>
     </div>
+  )
+}
+
+function App() {
+  return (
+    <ClerkProvider publishableKey={clerkPubKey}>
+      <BrowserRouter>
+        <Routes>
+          {/* Public routes */}
+          <Route path="/login" element={<Login />} />
+
+          {/* Protected routes */}
+          <Route
+            path="/*"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <Routes>
+                    <Route path="/" element={<DashboardHome />} />
+                    <Route path="/members" element={<Members />} />
+                    <Route path="/cgf" element={<CGFGroups />} />
+                    <Route path="/attendance" element={<Attendance />} />
+                    <Route path="/analytics" element={<Analytics />} />
+                    <Route path="/settings" element={<Settings />} />
+                  </Routes>
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+        <Toaster position="bottom-right" richColors closeButton />
+      </BrowserRouter>
+    </ClerkProvider>
   )
 }
 

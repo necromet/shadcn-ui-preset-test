@@ -1,39 +1,117 @@
-import {
-  LayoutDashboard,
-  Building2,
-} from "lucide-react"
+import { NavLink } from "react-router-dom"
+import { LayoutDashboard, Users, UserCheck, CalendarCheck, BarChart3, Church, Settings } from "lucide-react"
 import { cn } from "../../lib/utils.js"
 import { Button } from "../ui/button.jsx"
 
 const navItems = [
-  { icon: LayoutDashboard, label: "Dashboard", active: true },
+  { icon: LayoutDashboard, label: "Dashboard", path: "/" },
+  { icon: Users, label: "Members", path: "/members" },
+  { icon: UserCheck, label: "CGF Groups", path: "/cgf" },
+  { icon: CalendarCheck, label: "Attendance", path: "/attendance" },
+  { icon: BarChart3, label: "Analytics", path: "/analytics" },
 ]
 
-export function Sidebar() {
+const bottomNavItems = [
+  { icon: Settings, label: "Settings", path: "/settings" },
+]
+
+export function Sidebar({ isOpen = true }) {
   return (
-    <aside className="hidden lg:flex w-64 flex-col border-r border-sidebar-border bg-sidebar h-screen sticky top-0">
-      <div className="flex items-center gap-2 px-6 py-5 border-b border-sidebar-border">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-          <Building2 className="h-5 w-5" />
+    <aside
+      className={cn(
+        "hidden lg:flex flex-col border-r border-sidebar-border bg-sidebar h-screen sticky top-0 overflow-hidden transition-[width] duration-300 ease-in-out",
+        isOpen ? "w-64" : "w-16"
+      )}
+    >
+      <div className="flex items-center px-4 py-5 border-b border-sidebar-border shrink-0">
+        <div className="flex size-9 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground shrink-0">
+          <Church className="size-5" />
         </div>
-        <span className="text-lg font-semibold tracking-tight text-sidebar-foreground">CRM Pro</span>
+        <span
+          className={cn(
+            "text-lg font-semibold tracking-tight text-sidebar-foreground whitespace-nowrap transition-opacity duration-200 ml-2",
+            isOpen ? "opacity-100" : "opacity-0 w-0 ml-0"
+          )}
+        >
+          Connexion
+        </span>
       </div>
 
-      <nav className="flex-1 px-3 py-4 flex flex-col gap-1">
+      <nav className="flex-1 py-4 flex flex-col gap-1 items-center">
         {navItems.map((item) => (
-          <Button
-            key={item.label}
-            variant={item.active ? "secondary" : "ghost"}
+          <NavLink
+            key={item.path}
+            to={item.path}
+            end={item.path === "/"}
             className={cn(
-              "w-full justify-start gap-3",
-              item.active && "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+              "transition-all duration-200",
+              isOpen ? "w-full px-2" : "w-9"
             )}
           >
-            <item.icon className="h-4 w-4" />
-            {item.label}
-          </Button>
+            {({ isActive }) => (
+              <Button
+                variant={isActive ? "secondary" : "ghost"}
+                size={isOpen ? "default" : "icon"}
+                className={cn(
+                  "transition-all duration-200",
+                  isOpen && "w-full justify-start gap-3",
+                  isActive && "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                )}
+              >
+                <item.icon className="size-4 shrink-0" />
+                {isOpen && (
+                  <span className="whitespace-nowrap transition-opacity duration-200">
+                    {item.label}
+                  </span>
+                )}
+              </Button>
+            )}
+          </NavLink>
         ))}
       </nav>
+
+      <div className="border-t border-sidebar-border py-4 flex flex-col gap-1 items-center">
+        {bottomNavItems.map((item) => (
+          <NavLink
+            key={item.path}
+            to={item.path}
+            className={cn(
+              "transition-all duration-200",
+              isOpen ? "w-full px-2" : "w-9"
+            )}
+          >
+            {({ isActive }) => (
+              <Button
+                variant={isActive ? "secondary" : "ghost"}
+                size={isOpen ? "default" : "icon"}
+                className={cn(
+                  "transition-all duration-200",
+                  isOpen && "w-full justify-start gap-3",
+                  isActive && "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                )}
+              >
+                <item.icon className="size-4 shrink-0" />
+                {isOpen && (
+                  <span className="whitespace-nowrap transition-opacity duration-200">
+                    {item.label}
+                  </span>
+                )}
+              </Button>
+            )}
+          </NavLink>
+        ))}
+      </div>
+
+      <div className="px-4 py-4 border-t border-sidebar-border shrink-0">
+        <span
+          className={cn(
+            "text-xs text-muted-foreground whitespace-nowrap transition-opacity duration-200",
+            isOpen ? "opacity-100" : "opacity-0"
+          )}
+        >
+          v1.0.0
+        </span>
+      </div>
     </aside>
   )
 }
