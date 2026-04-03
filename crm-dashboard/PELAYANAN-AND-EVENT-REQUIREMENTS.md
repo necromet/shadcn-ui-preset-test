@@ -1,6 +1,6 @@
 # Church Management System Dashboard
 
-**Last Updated:** 2026-04-03T09:21:43+07:00  
+**Last Updated:** 2026-04-03T18:45:00+07:00  
 **System:** Church Management System  
 **Database Tables:** `pelayanan_info`, `pelayan`, `cnx_jemaat_status_history`, `event_history`, `event_participation`
 
@@ -331,6 +331,175 @@ LIMIT 10
 
 ---
 
+### 6. Pastoral Care Dashboard
+
+#### Care Visit Tracker
+
+- **Data Source:** `cnx_jemaat_status_history` table + `pelayan` table
+- **UI Components:** `Card`, `Table`, `Avatar`, `AvatarFallback`, `Badge`, `Progress`, `Dialog`, `Button`, `Input`, `Select`, `Separator`
+- **Visualization:** Kanban-style board with columns for Visit Status (Scheduled, Completed, Follow-up Needed, Overdue)
+- **Metrics Displayed:**
+  - Total pastoral visits this month vs. target
+  - Visit completion rate with `Progress` bar indicator
+  - Members requiring follow-up (flagged via status history patterns)
+  - Average time between visits per member
+- **Non-Generic UI Concepts:**
+  - **Heat Map Calendar:** A CSS grid-based month view where each cell's background intensity reflects visit volume (using semantic `bg-primary/10` through `bg-primary` opacity scale). Built with `Card` cells inside a responsive grid, not a third-party calendar library.
+  - **Member Proximity Radar:** Circular layout showing members grouped by last visit recency (inner ring = visited this week, outer ring = 30+ days). Each member rendered as an `Avatar` with `Badge` overlay showing days since last visit.
+  - **Care Pulse Indicator:** Animated `Progress` bar that fills in real-time as visits are completed during the day, with a `Separator` marking the halfway target.
+
+#### At-Risk Member Alerts
+
+- **Data Source:** `cnx_jemaat_status_history` table (status change patterns)
+- **UI Components:** `Alert`, `AlertDescription`, `Avatar`, `AvatarFallback`, `Badge`, `Button`, `Card`, `Separator`
+- **Visualization:** Priority-sorted alert list
+- **Criteria for At-Risk Flags:**
+  - Members with status change to Inactive within last 30 days
+  - Members with 2+ status changes in 6 months (instability indicator)
+  - Members on Sabbatical for 3+ months without reintegration plan
+  - Previously active members with no event participation in 90+ days
+- **Non-Generic UI Concepts:**
+  - **Risk Score Meter:** Each alert card displays a segmented horizontal bar (5 segments) using `Badge` components with variant="outline" for inactive segments and variant="destructive" for active risk segments. Not a progress bar—a discrete risk level indicator.
+  - **Cascading Alert Cards:** `Card` components with `data-[severity="high"]:border-destructive` custom data attributes for severity-based border styling. Cards expand on click to reveal `Dialog` with full member history.
+  - **Action Funnel:** Inline `Button` group at bottom of each alert card: "Assign Caregiver" → "Schedule Visit" → "Mark Resolved", with `Separator` dividers between actions.
+
+---
+
+### 7. Communication Hub
+
+#### Announcement Board
+
+- **Data Source:** Application-level announcements table (to be created)
+- **UI Components:** `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter`, `Badge`, `Button`, `Avatar`, `AvatarFallback`, `Separator`, `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent`
+- **Visualization:** Tabbed view with categories (Urgent, Ministry Updates, General, Archived)
+- **Metrics Displayed:**
+  - Active announcements count per category
+  - Read/unread status per announcement
+  - Announcement author and timestamp
+  - Pinned announcements (always visible)
+- **Non-Generic UI Concepts:**
+  - **Notification Ripple Effect:** When a new announcement is posted, existing announcement cards animate a subtle border pulse using CSS `@keyframes` with `border-primary` color. Pure CSS, no JavaScript animation library.
+  - **Priority Gradient Cards:** Announcement `Card` components use a left-border accent gradient (`border-l-4` with `border-l-primary` for normal, `border-l-destructive` for urgent, `border-l-secondary` for ministry). The gradient effect comes from stacking `bg-gradient-to-r from-primary/20 to-transparent` behind the card content.
+  - **Smart Preview Cards:** Announcement content truncated with `truncate` class, expandable via `Dialog` overlay. The trigger uses `asChild` prop on `Button` to make the entire card clickable.
+
+#### Communication Log
+
+- **Data Source:** Interaction history (to be linked with member profiles)
+- **UI Components:** `Table`, `TableHeader`, `TableBody`, `TableRow`, `TableHead`, `TableCell`, `Avatar`, `AvatarFallback`, `Badge`, `Input`, `Select`, `SelectTrigger`, `SelectValue`, `SelectContent`, `SelectItem`, `Button`
+- **Visualization:** Filterable `Table` of all communications
+- **Fields Displayed:**
+  - Member contacted (with `Avatar`)
+  - Communication type (Call, Visit, Message, Email)
+  - Date and time
+  - Outcome (Completed, No Response, Follow-up Needed)
+  - Assigned pastoral staff
+- **Non-Generic UI Concepts:**
+  - **Timeline Thread View:** Toggle between `Table` view and a vertical timeline. The timeline uses `Separator` (vertical orientation) as the spine, with `Card` components branching alternately left/right. Each card shows communication details with `Avatar` and timestamp.
+  - **Interaction Density Sparkline:** Above the table, a row of small `Card` components (one per day of the current month) showing communication count as a vertical bar using `Progress` with `orientation="vertical"` (custom extension). Visual pattern reveals communication rhythm.
+
+---
+
+### 8. Small Group (CG) Management
+
+#### CG Health Dashboard
+
+- **Data Source:** `pelayan` table (`is_cg_leader` flag) + `event_participation` table + `cnx_jemaat_status_history`
+- **UI Components:** `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter`, `Avatar`, `AvatarFallback`, `Badge`, `Progress`, `Table`, `TableHeader`, `TableBody`, `TableRow`, `TableHead`, `TableCell`, `Button`, `Separator`, `Empty`
+- **Visualization:** Grid of `Card` components, one per Community Group
+- **Metrics Displayed per CG:**
+  - CG Leader name and `Avatar`
+  - Member count vs. capacity (e.g., 8/12) with `Progress` bar
+  - Attendance rate for last 4 meetings (mini `Badge` row: 85%, 90%, 75%, 88%)
+  - New members this quarter
+  - Members at risk (Inactive/Sabbatical)
+- **Non-Generic UI Concepts:**
+  - **CG Vitality Ring:** Each CG card displays a circular progress indicator built with CSS `conic-gradient` applied to a `div` with `rounded-full`, ringed by `border-4 border-background`. The conic gradient uses `--primary` CSS variable for filled portion and `--muted` for unfilled. Score ranges: Green (80-100%), Yellow (50-79%), Red (<50%).
+  - **Member Constellation View:** Clicking a CG card opens a `Dialog` showing members arranged in a circle around the CG Leader's `Avatar` in the center. Connections between members who serve together in ministries shown as SVG lines. Uses `Avatar` + `Badge` for each member node.
+  - **Attendance Spark Bar:** A horizontal sequence of 4 tiny `div` elements inside each card, each with height proportional to attendance percentage and `bg-primary` or `bg-muted` based on threshold. Not a chart—a custom CSS bar visualization.
+
+#### CG Growth Tracker
+
+- **Data Source:** `cnx_jemaat_status_history` + CG membership records
+- **UI Components:** `Card`, `Progress`, `Badge`, `Separator`, `Table`, `Avatar`, `AvatarFallback`
+- **Visualization:** Growth comparison across CGs
+- **Metrics Displayed:**
+  - Net member growth per CG (last quarter)
+  - CGs with declining membership (flagged with `Badge` variant="destructive")
+  - CGs at capacity (flagged with `Badge` variant="secondary")
+  - Average CG size trend
+- **Non-Generic UI Concepts:**
+  - **Growth Trajectory Arrows:** Each CG card shows a directional indicator built with Lucide `TrendingUp`/`TrendingDown` icons inside a `Badge`. The `Badge` variant changes based on growth direction: variant="default" for growth, variant="destructive" for decline, variant="outline" for stable.
+  - **Capacity Pressure Gauge:** Stacked `Progress` bars inside a `Card` showing three zones: Underfilled (<50%, `bg-muted`), Optimal (50-80%, `bg-primary`), Overfilled (>80%, `bg-secondary`). The current fill level shown as a `Separator` marker across all three bars.
+
+---
+
+### 9. Member Journey Timeline
+
+#### Individual Member Timeline
+
+- **Data Source:** `cnx_jemaat_status_history` + `event_participation` + `pelayan` table
+- **UI Components:** `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `Avatar`, `AvatarFallback`, `Badge`, `Separator`, `Button`, `Dialog`, `DialogContent`, `DialogTitle`, `DialogDescription`, `Select`, `Input`
+- **Visualization:** Vertical timeline showing all milestones for a selected member
+- **Events Displayed:**
+  - Status changes (Active → Inactive → Active)
+  - Event participation (first event, milestones like 10th event)
+  - Ministry onboarding (started serving in a new ministry)
+  - CG membership changes
+  - Service count milestones (10th, 25th, 50th service)
+- **Non-Generic UI Concepts:**
+  - **Branching Timeline:** Instead of a single vertical line, the timeline branches horizontally when multiple events occur on the same date. Uses `flex` with `gap-*` for branches, `Separator` for the main spine. Each branch is a `Card` with `className="relative"` containing the event details.
+  - **Milestone Halo Effect:** Significant milestones (baptism, 1-year serving, leadership appointment) get a `Card` with a CSS `box-shadow` halo using `shadow-primary/30` and `shadow-lg`. Regular events use `shadow-sm`. Pure CSS distinction, no JavaScript conditionals.
+  - **Time Compression Slider:** A `Select` component at the top lets users choose time density (Week/Month/Quarter/Year). This controls which events are grouped together. Dense periods show stacked `Badge` components; sparse periods show individual `Card` components.
+
+#### Congregation Journey Overview
+
+- **Data Source:** Aggregated from all member timelines
+- **UI Components:** `Card`, `CardHeader`, `CardTitle`, `CardContent`, `Table`, `TableHeader`, `TableBody`, `TableRow`, `TableHead`, `TableCell`, `Badge`, `Avatar`, `AvatarFallback`, `Progress`, `Separator`
+- **Visualization:** Cohort analysis view
+- **Metrics Displayed:**
+  - New members joined per quarter (cohort size)
+  - Cohort retention rates at 3, 6, 12 months
+  - Average time from joining to first service
+  - Average time from joining to CG membership
+- **Non-Generic UI Concepts:**
+  - **Retention Waterfall:** A horizontal bar chart built entirely with `Card` + CSS `width` percentages. Each bar represents a cohort, with segments colored by retention status: `bg-primary` (still active), `bg-muted` (inactive), `bg-secondary` (moved). The visual "waterfall" effect comes from bars of decreasing width.
+  - **Journey Phase Badges:** Members are categorized into journey phases displayed as `Badge` variants: variant="outline" for Newcomer (<3 months), variant="secondary" for Growing (3-12 months), variant="default" for Established (1+ year), variant="destructive" for Drifting (no engagement 90+ days).
+
+---
+
+### 10. Volunteer Scheduling Dashboard
+
+#### Service Schedule Matrix
+
+- **Data Source:** `pelayan` table (service flags) + scheduling table (to be created)
+- **UI Components:** `Table`, `TableHeader`, `TableBody`, `TableRow`, `TableHead`, `TableCell`, `Avatar`, `AvatarFallback`, `Badge`, `Button`, `Dialog`, `DialogContent`, `DialogTitle`, `Select`, `SelectTrigger`, `SelectValue`, `SelectContent`, `SelectItem`, `Input`, `Card`, `CardHeader`, `CardTitle`, `CardContent`, `Separator`
+- **Visualization:** Weekly schedule grid (rows = team members, columns = service dates)
+- **Metrics Displayed:**
+  - Scheduled vs. available members per service date
+  - Ministry coverage percentage per week
+  - Members with scheduling conflicts
+  - Open slots requiring assignment
+- **Non-Generic UI Concepts:**
+  - **Availability Heat Grid:** A CSS Grid table where each cell's background color indicates availability: `bg-primary/20` (available), `bg-primary` (scheduled), `bg-destructive/20` (unavailable), `bg-muted` (no response). Cells are `div` elements with `size-8` and `rounded-sm`, creating a visual heat map pattern. Not a calendar component—a custom grid.
+  - **Drag-to-Assign Ghost:** When dragging an `Avatar` from the available pool to a schedule slot, a semi-transparent ghost clone follows the cursor (CSS `opacity-50` + `pointer-events-none` on the clone). The drop target highlights with `ring-2 ring-primary`. Radix primitives handle the drag state.
+  - **Conflict Resolver Modal:** `Dialog` triggered when a scheduling conflict is detected. Shows conflicting assignments side-by-side in a two-column `flex` layout with `Separator` between columns. Each side is a `Card` with member `Avatar`, `Badge` showing ministry role, and `Button` to swap or remove assignment.
+
+#### Volunteer Availability Heatmap
+
+- **Data Source:** Historical scheduling data + member preferences
+- **UI Components:** `Card`, `CardHeader`, `CardTitle`, `CardContent`, `Badge`, `Progress`, `Avatar`, `AvatarFallback`, `Separator`, `Select`
+- **Visualization:** Year-at-a-glance availability density
+- **Metrics Displayed:**
+  - Peak availability periods (most members available)
+  - Low-coverage periods (need recruitment)
+  - Individual member reliability score (honored commitments / total assignments)
+  - Ministry-specific availability patterns
+- **Non-Generic UI Concepts:**
+  - **GitHub-Style Contribution Grid:** A 52×7 CSS Grid (weeks × days) where each cell is a `div` with `size-3 rounded-[2px]`. Background color uses a 5-level opacity scale based on available volunteer count: `bg-muted` (0), `bg-primary/20` (1-3), `bg-primary/40` (4-6), `bg-primary/70` (7-9), `bg-primary` (10+). Tooltip via `Dialog` on hover shows exact counts.
+  - **Reliability Score Rings:** Each volunteer's `Avatar` is surrounded by a CSS `border-2` ring colored by reliability: `border-primary` (>90%), `border-secondary` (70-90%), `border-destructive` (<70%). The ring uses `rounded-full` with `border` applied directly to the `Avatar` component.
+
+---
+
 ## Specific Insights Enabled by Data
 
 ### From `pelayan` Table:
@@ -366,26 +535,45 @@ LIMIT 10
 1. **Member Status Overview** - Pie chart + trend line
 2. **Ministry Participation Bar Chart** - Horizontal bars by ministry
 3. **Recent Status Changes Table** - Last 10 updates
+4. **At-Risk Member Alerts** - Priority-sorted alert list with risk score meters
 
 ### Phase 2: Engagement Depth (Weeks 3-4)
 
 1. **Service Frequency Distribution** - Histogram of `total_pelayanan`
 2. **Upcoming Events Calendar** - Next 3 events with registration stats
 3. **Worship Team Composition** - Donut chart (Vocalists vs. Instrumentalists)
+4. **CG Health Dashboard** - Grid of CG cards with vitality rings
 
 ### Phase 3: Analytics & Insights (Weeks 5-6)
 
 1. **Event Attendance Trends** - Line chart over time
 2. **Member Engagement Score** - Composite metric gauge
 3. **Multi-Skill Members Analysis** - Radar chart or histogram
+4. **Care Visit Tracker** - Kanban board with heat map calendar
 
-### Phase 4: Advanced Features (Ongoing)
+### Phase 4: Community & Communication (Weeks 7-8)
+
+1. **Announcement Board** - Tabbed communication hub with priority gradient cards
+2. **Prayer Wall** - Masonry card grid with prayer count ripple effects
+3. **CG Growth Tracker** - Growth trajectory arrows and capacity pressure gauges
+4. **Member Journey Timeline** - Branching timeline with milestone halo effects
+
+### Phase 5: Scheduling & Operations (Weeks 9-10)
+
+1. **Service Schedule Matrix** - Weekly grid with availability heat map
+2. **Volunteer Availability Heatmap** - GitHub-style contribution grid
+3. **Prayer Follow-up Tracker** - Pipeline stage cards with coverage meter
+4. **Communication Log** - Timeline thread view with interaction density sparklines
+
+### Phase 6: Advanced Features (Ongoing)
 
 1. Drill-down capabilities from all visualizations to member lists
 2. Export functionality (PDF, CSV) for reports
 3. Alert system for significant changes (e.g., multiple status changes)
 4. Goal tracking against historical baselines or targets
 5. Predictive analytics for future staffing needs
+6. Congregation Journey Overview with retention waterfall and cohort analysis
+7. Member Constellation View for CG relationship mapping
 
 ---
 

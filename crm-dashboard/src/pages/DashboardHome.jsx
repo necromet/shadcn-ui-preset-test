@@ -20,12 +20,25 @@ import {
   Legend,
 } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card.jsx"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs.jsx"
 import { cn } from "../lib/utils.js"
 import {
   getDashboardKPIs,
   getGenderDistribution,
   getCGFSizes,
 } from "../data/mock.js"
+import { MemberStatusOverview } from "../components/dashboard/MemberStatusOverview.jsx"
+import { MinistryParticipation } from "../components/dashboard/MinistryParticipation.jsx"
+import { RecentStatusChanges } from "../components/dashboard/RecentStatusChanges.jsx"
+import { AtRiskAlerts } from "../components/dashboard/AtRiskAlerts.jsx"
+import { ServiceFrequency } from "../components/dashboard/ServiceFrequency.jsx"
+import { UpcomingEvents } from "../components/dashboard/UpcomingEvents.jsx"
+import { WorshipTeamComposition } from "../components/dashboard/WorshipTeamComposition.jsx"
+import { CGHealthDashboard } from "../components/dashboard/CGHealthDashboard.jsx"
+import { EventAttendanceTrends } from "../components/dashboard/EventAttendanceTrends.jsx"
+import { MemberEngagementScore } from "../components/dashboard/MemberEngagementScore.jsx"
+import { MultiSkillAnalysis } from "../components/dashboard/MultiSkillAnalysis.jsx"
+import { CareVisitTracker } from "../components/dashboard/CareVisitTracker.jsx"
 
 const kpiConfig = [
   {
@@ -212,11 +225,57 @@ function CGFSizeBarChart() {
 export function DashboardHome() {
   return (
     <div className="flex flex-col gap-6">
-      <KPISection />
-      <div className="grid gap-6 grid-cols-1 xl:grid-cols-2">
-        <GenderPieChart />
-        <CGFSizeBarChart />
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">Church Dashboard</h1>
+        <p className="text-muted-foreground">Pelayanan & Event Analytics</p>
       </div>
+      <Tabs defaultValue="overview">
+        <TabsList className="flex flex-wrap h-auto gap-1">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="ministry">Ministry</TabsTrigger>
+          <TabsTrigger value="events">Events</TabsTrigger>
+          <TabsTrigger value="engagement">Engagement</TabsTrigger>
+          <TabsTrigger value="pastoral">Pastoral</TabsTrigger>
+          <TabsTrigger value="cg-health">CG Health</TabsTrigger>
+        </TabsList>
+        <TabsContent value="overview" className="flex flex-col gap-6">
+          <KPISection />
+          <div className="grid gap-6 grid-cols-1 xl:grid-cols-2">
+            <GenderPieChart />
+            <CGFSizeBarChart />
+          </div>
+          <MemberStatusOverview />
+        </TabsContent>
+        <TabsContent value="ministry" className="flex flex-col gap-6">
+          <MinistryParticipation />
+          <div className="grid gap-6 grid-cols-1 xl:grid-cols-2">
+            <WorshipTeamComposition />
+            <MultiSkillAnalysis />
+          </div>
+        </TabsContent>
+        <TabsContent value="events" className="flex flex-col gap-6">
+          <div className="grid gap-6 grid-cols-1 xl:grid-cols-2">
+            <UpcomingEvents />
+            <EventAttendanceTrends />
+          </div>
+        </TabsContent>
+        <TabsContent value="engagement" className="flex flex-col gap-6">
+          <div className="grid gap-6 grid-cols-1 xl:grid-cols-2">
+            <ServiceFrequency />
+            <MemberEngagementScore />
+          </div>
+          <AtRiskAlerts />
+        </TabsContent>
+        <TabsContent value="pastoral" className="flex flex-col gap-6">
+          <div className="grid gap-6 grid-cols-1 xl:grid-cols-2">
+            <CareVisitTracker />
+            <RecentStatusChanges />
+          </div>
+        </TabsContent>
+        <TabsContent value="cg-health" className="flex flex-col gap-6">
+          <CGHealthDashboard />
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

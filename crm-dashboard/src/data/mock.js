@@ -73,6 +73,188 @@ const members = [
 ];
 
 // ============================================================
+// MOCK DATA - PELAYAN (Service/Ministry Members)
+// ============================================================
+
+const pelayan = [
+  { no_jemaat: 1001, nama_jemaat: 'Andreas Wijaya', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: true, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: true, is_community_pic: false, total_pelayanan: 45 },
+  { no_jemaat: 1002, nama_jemaat: 'Maria Sari', is_wl: false, is_singer: true, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 18 },
+  { no_jemaat: 1003, nama_jemaat: 'Daniel Setiawan', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: true, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: true, is_community_pic: false, total_pelayanan: 52 },
+  { no_jemaat: 1004, nama_jemaat: 'Sarah Hartono', is_wl: false, is_singer: false, is_pianis: true, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 22 },
+  { no_jemaat: 1005, nama_jemaat: 'Yohanes Pratama', is_wl: true, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: true, is_cforce: false, is_cg_leader: true, is_community_pic: false, total_pelayanan: 38 },
+  { no_jemaat: 1006, nama_jemaat: 'Esther Lim', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: true, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 15 },
+  { no_jemaat: 1007, nama_jemaat: 'Yakobus Santoso', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: true, is_cg_leader: true, is_community_pic: false, total_pelayanan: 41 },
+  { no_jemaat: 1008, nama_jemaat: 'Ruth Natalia', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: true, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 12 },
+  { no_jemaat: 1009, nama_jemaat: 'Daud Kurniawan', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: true, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: true, is_community_pic: false, total_pelayanan: 48 },
+  { no_jemaat: 1010, nama_jemaat: 'Deborah Susanti', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: true, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 20 },
+  { no_jemaat: 1011, nama_jemaat: 'Paulus Gunawan', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: true, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: true, is_community_pic: false, total_pelayanan: 55 },
+  { no_jemaat: 1012, nama_jemaat: 'Hana Wijayanti', is_wl: false, is_singer: true, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: true, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 24 },
+  { no_jemaat: 1013, nama_jemaat: 'Samuel Tan', is_wl: false, is_singer: false, is_pianis: true, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: true, is_community_pic: false, total_pelayanan: 36 },
+  { no_jemaat: 1014, nama_jemaat: 'Grace Oktavia', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: true, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 10 },
+  { no_jemaat: 1015, nama_jemaat: 'Timothy Halim', is_wl: true, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: true, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: true, is_community_pic: false, total_pelayanan: 60 },
+  { no_jemaat: 1016, nama_jemaat: 'Mikhaela Tampubolon', is_wl: false, is_singer: false, is_pianis: true, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 14 },
+  { no_jemaat: 1017, nama_jemaat: 'Gabriel Saputra', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: true, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: true, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 28 },
+  { no_jemaat: 1018, nama_jemaat: 'Brenda Anggraini', is_wl: false, is_singer: true, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: true, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 30 },
+  { no_jemaat: 1023, nama_jemaat: 'Natan Ridwan', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: true, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 8 },
+  { no_jemaat: 1025, nama_jemaat: 'Imanuel Sihombing', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: true, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 16 },
+  { no_jemaat: 1027, nama_jemaat: 'Naomi Simanjuntak', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: true, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: true, total_pelayanan: 35 },
+  { no_jemaat: 1029, nama_jemaat: 'Priscilla Anggraeni', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: true, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 11 },
+  { no_jemaat: 1031, nama_jemaat: 'Sela Marpaung', is_wl: false, is_singer: true, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 19 },
+];
+
+// ============================================================
+// MOCK DATA - STATUS HISTORY (cnx_jemaat_status_history)
+// ============================================================
+
+const cnx_jemaat_status_history = [
+  // Andreas Wijaya - Active throughout
+  { id: 1, no_jemaat: 1001, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Maria Sari - Active throughout
+  { id: 2, no_jemaat: 1002, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Daniel Setiawan - Active throughout
+  { id: 3, no_jemaat: 1003, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Sarah Hartono - Active, went Inactive briefly, back to Active
+  { id: 4, no_jemaat: 1004, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 5, no_jemaat: 1004, status: 'Inactive', changed_at: '2025-06-15T10:00:00Z', reason: 'Pindah kota sementara untuk tugas kantor' },
+  { id: 6, no_jemaat: 1004, status: 'Active', changed_at: '2025-11-01T08:00:00Z', reason: 'Kembali dari penugasan luar kota' },
+  // Yohanes Pratama - Active throughout
+  { id: 7, no_jemaat: 1005, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Esther Lim - Sabbatical
+  { id: 8, no_jemaat: 1006, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 9, no_jemaat: 1006, status: 'Sabbatical', changed_at: '2025-12-01T08:00:00Z', reason: 'Istirahat untuk pemulihan kesehatan' },
+  // Yakobus Santoso - Active throughout
+  { id: 10, no_jemaat: 1007, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Ruth Natalia - Active throughout
+  { id: 11, no_jemaat: 1008, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Daud Kurniawan - Active throughout
+  { id: 12, no_jemaat: 1009, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Deborah Susanti - Active throughout
+  { id: 13, no_jemaat: 1010, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Paulus Gunawan - Active throughout
+  { id: 14, no_jemaat: 1011, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Hana Wijayanti - Active throughout
+  { id: 15, no_jemaat: 1012, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Samuel Tan - Active throughout
+  { id: 16, no_jemaat: 1013, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Grace Oktavia - Active throughout
+  { id: 17, no_jemaat: 1014, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Timothy Halim - Active throughout
+  { id: 18, no_jemaat: 1015, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Mikhaela Tampubolon - Active, then Moved
+  { id: 19, no_jemaat: 1016, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 20, no_jemaat: 1016, status: 'Moved', changed_at: '2025-09-01T08:00:00Z', reason: 'Pindah domisili ke Surabaya untuk pekerjaan' },
+  // Gabriel Saputra - Active throughout
+  { id: 21, no_jemaat: 1017, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Brenda Anggraini - Active, Inactive briefly, Active again
+  { id: 22, no_jemaat: 1018, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 23, no_jemaat: 1018, status: 'Inactive', changed_at: '2025-07-10T10:00:00Z', reason: 'Fokus skripsi semester akhir' },
+  { id: 24, no_jemaat: 1018, status: 'Active', changed_at: '2025-12-20T08:00:00Z', reason: 'Lulus dan kembali aktif' },
+  // Michael Putra - Inactive recently
+  { id: 25, no_jemaat: 1019, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 26, no_jemaat: 1019, status: 'Inactive', changed_at: '2026-03-15T10:00:00Z', reason: 'Kesibukan pekerjaan yang sangat padat' },
+  // Catherine Widodo - Active throughout
+  { id: 27, no_jemaat: 1020, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Ezra Nugroho - Active, then Moved
+  { id: 28, no_jemaat: 1021, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 29, no_jemaat: 1021, status: 'Moved', changed_at: '2025-08-15T08:00:00Z', reason: 'Melanjutkan studi di Bandung' },
+  // Abigail Larasati - Active throughout
+  { id: 30, no_jemaat: 1022, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Natan Ridwan - Active throughout
+  { id: 31, no_jemaat: 1023, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Lidia Purnamasari - Active, then Sabbatical
+  { id: 32, no_jemaat: 1024, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 33, no_jemaat: 1024, status: 'Sabbatical', changed_at: '2025-11-15T08:00:00Z', reason: 'Istirahat karena kondisi kesehatan' },
+  // Imanuel Sihombing - Active throughout
+  { id: 34, no_jemaat: 1025, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Kirenius Sagala - Active throughout
+  { id: 35, no_jemaat: 1026, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Naomi Simanjuntak - Active throughout
+  { id: 36, no_jemaat: 1027, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Obed Manurung - Active, Inactive recently
+  { id: 37, no_jemaat: 1028, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 38, no_jemaat: 1028, status: 'Inactive', changed_at: '2026-03-20T10:00:00Z', reason: 'Konflik jadwal dengan komitmen keluarga' },
+  // Priscilla Anggraeni - Active throughout
+  { id: 39, no_jemaat: 1029, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Rafael Hutapea - Active throughout
+  { id: 40, no_jemaat: 1030, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Sela Marpaung - Active throughout
+  { id: 41, no_jemaat: 1031, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Titus Sibarani - Active throughout
+  { id: 42, no_jemaat: 1032, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Ulfa Ramadhani - Active throughout
+  { id: 43, no_jemaat: 1033, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Viktor Nainggolan - Active throughout
+  { id: 44, no_jemaat: 1034, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  // Wisye Pakpahan - Active, Inactive recently
+  { id: 45, no_jemaat: 1035, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 46, no_jemaat: 1035, status: 'Inactive', changed_at: '2026-03-25T10:00:00Z', reason: 'Pindah rumah dan belum menemukan CGF baru' },
+];
+
+// ============================================================
+// MOCK DATA - EVENT HISTORY
+// Past 12 months: April 2025 - April 2026
+// ============================================================
+
+const event_history = [
+  { event_id: 1, event_name: 'Easter Retreat 2025', event_date: '2025-04-18', category: 'Retreat', location: 'Villa Istana Bunga, Lembang', description: 'Retreat Paskah dengan tema "Kebangkitan dan Harapan Baru" selama 3 hari 2 malam' },
+  { event_id: 2, event_name: 'Worship Night Mei', event_date: '2025-05-17', category: 'Monthly', location: 'Gedung Gereja Utama', description: 'Malam pujian dan penyembahan bulanan dengan tema "Berserah"' },
+  { event_id: 3, event_name: 'Quarterly Fellowship Q2', event_date: '2025-06-14', category: 'Quarterly', location: 'Aula Serbaguna Komunitas', description: 'Fellowship triwulanan dengan games, makan bersama, dan sharing kesaksian' },
+  { event_id: 4, event_name: 'Youth Camp 2025', event_date: '2025-07-04', category: 'Camp', location: 'Bumi Perkemahan Cibubur', description: 'Kemah pemuda selama 4 hari dengan pelatihan kepemimpinan dan ibadah outdoor' },
+  { event_id: 5, event_name: 'Worship Night Agustus', event_date: '2025-08-16', category: 'Monthly', location: 'Gedung Gereja Utama', description: 'Malam pujian dengan tema "Kemerdekaan Sejati"' },
+  { event_id: 6, event_name: 'Quarterly Fellowship Q3', event_date: '2025-09-13', category: 'Quarterly', location: 'Aula Serbaguna Komunitas', description: 'Fellowship triwulanan dengan acara bakar-bakar dan sharing pelayanan' },
+  { event_id: 7, event_name: 'Family Retreat 2025', event_date: '2025-10-03', category: 'Retreat', location: 'Hotel Puncak Pass Resort', description: 'Retreat keluarga dengan sesi parenting dan family bonding' },
+  { event_id: 8, event_name: 'Worship Night November', event_date: '2025-11-15', category: 'Monthly', location: 'Gedung Gereja Utama', description: 'Malam pujian dengan tema "Syukur dan Pengharapan"' },
+  { event_id: 9, event_name: 'Christmas Service 2025', event_date: '2025-12-24', category: 'Special', location: 'Gedung Gereja Utama', description: 'Ibadah Natal dengan drama, paduan suara, dan perayaan kelahiran Kristus' },
+  { event_id: 10, event_name: 'New Year Revival 2026', event_date: '2026-01-01', category: 'Special', location: 'Gedung Gereja Utama', description: 'Ibadah pergantian tahun dengan doa syafaat dan komitmen baru' },
+  { event_id: 11, event_name: 'Quarterly Fellowship Q1 2026', event_date: '2026-01-17', category: 'Quarterly', location: 'Aula Serbaguna Komunitas', description: 'Fellowship triwulanan awal tahun dengan visi dan tujuan 2026' },
+  { event_id: 12, event_name: 'Worship Night Februari', event_date: '2026-02-14', category: 'Monthly', location: 'Gedung Gereja Utama', description: 'Malam pujian kasih dengan tema "Kasih yang Memulihkan"' },
+  { event_id: 13, event_name: 'Easter Retreat 2026', event_date: '2026-04-03', category: 'Retreat', location: 'Villa Istana Bunga, Lembang', description: 'Retreat Paskah dengan tema "Hidup Baru dalam Kristus"' },
+  { event_id: 14, event_name: 'Worship Night Maret', event_date: '2026-03-14', category: 'Monthly', location: 'Gedung Gereja Utama', description: 'Malam pujian dengan tema "Iman yang Teguh"' },
+  { event_id: 15, event_name: 'Quarterly Fellowship Q2 2026', event_date: '2026-04-18', category: 'Quarterly', location: 'Aula Serbaguna Komunitas', description: 'Fellowship triwulanan Q2 dengan tema "Pertumbuhan Bersama"' },
+];
+
+// ============================================================
+// MOCK DATA - EVENT PARTICIPATION
+// ============================================================
+
+function generateEventParticipation() {
+  const records = [];
+  let id = 1;
+  const memberIds = members.map(m => m.no_jemaat);
+  const roles = ['Peserta', 'Panitia', 'Volunteer'];
+
+  event_history.forEach(event => {
+    const participantCount = 15 + Math.floor(Math.random() * 16);
+    const shuffled = [...memberIds].sort(() => Math.random() - 0.5);
+    const selected = shuffled.slice(0, participantCount);
+
+    selected.forEach(no_jemaat => {
+      const rand = Math.random();
+      let role;
+      if (rand < 0.6) role = 'Peserta';
+      else if (rand < 0.8) role = 'Panitia';
+      else role = 'Volunteer';
+
+      const eventDate = new Date(event.event_date);
+      const regDate = new Date(eventDate);
+      regDate.setDate(regDate.getDate() - Math.floor(Math.random() * 30) - 1);
+
+      records.push({
+        id: id++,
+        event_id: event.event_id,
+        no_jemaat,
+        role,
+        registered_at: regDate.toISOString(),
+      });
+    });
+  });
+
+  return records;
+}
+
+const event_participation = generateEventParticipation();
+
+// ============================================================
 // MOCK DATA - CGF GROUPS (cgf_info)
 // ============================================================
 
@@ -359,6 +541,371 @@ function getBirthdayMembers() {
   return members.filter(m => m.bulan_lahir === currentMonth);
 }
 
+function getStatusDistribution() {
+  const latestStatuses = {};
+  cnx_jemaat_status_history.forEach(record => {
+    if (!latestStatuses[record.no_jemaat] || new Date(record.changed_at) > new Date(latestStatuses[record.no_jemaat].changed_at)) {
+      latestStatuses[record.no_jemaat] = record;
+    }
+  });
+
+  const distribution = { Active: 0, Inactive: 0, Sabbatical: 0, Moved: 0 };
+  Object.values(latestStatuses).forEach(record => {
+    if (distribution[record.status] !== undefined) {
+      distribution[record.status]++;
+    }
+  });
+  return distribution;
+}
+
+function getStatusTrend() {
+  const now = new Date('2026-04-03');
+  const months = [];
+
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const monthEnd = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+    const monthLabel = d.toLocaleString('en-US', { month: 'short', year: 'numeric' });
+
+    const latestStatuses = {};
+    cnx_jemaat_status_history.forEach(record => {
+      if (new Date(record.changed_at) <= monthEnd) {
+        if (!latestStatuses[record.no_jemaat] || new Date(record.changed_at) > new Date(latestStatuses[record.no_jemaat].changed_at)) {
+          latestStatuses[record.no_jemaat] = record;
+        }
+      }
+    });
+
+    const counts = { Active: 0, Inactive: 0, Sabbatical: 0, Moved: 0 };
+    Object.values(latestStatuses).forEach(record => {
+      if (counts[record.status] !== undefined) {
+        counts[record.status]++;
+      }
+    });
+
+    months.push({ month: monthLabel, ...counts });
+  }
+
+  return months;
+}
+
+function getMinistryParticipation() {
+  const totalServing = pelayan.length;
+  const ministryFields = [
+    { key: 'is_wl', name: 'Worship Leader' },
+    { key: 'is_singer', name: 'Singer' },
+    { key: 'is_pianis', name: 'Pianist' },
+    { key: 'is_saxophone', name: 'Saxophone' },
+    { key: 'is_filler', name: 'Filler Musician' },
+    { key: 'is_bass_gitar', name: 'Bass Guitarist' },
+    { key: 'is_drum', name: 'Drummer' },
+    { key: 'is_mulmed', name: 'Multimedia' },
+    { key: 'is_sound', name: 'Sound Engineer' },
+    { key: 'is_caringteam', name: 'Care Team' },
+    { key: 'is_connexion_crew', name: 'Connexion Crew' },
+    { key: 'is_supporting_crew', name: 'Supporting Crew' },
+    { key: 'is_cforce', name: 'CForce' },
+    { key: 'is_cg_leader', name: 'CG Leader' },
+    { key: 'is_community_pic', name: 'Community PIC' },
+  ];
+
+  return ministryFields.map(m => {
+    const count = pelayan.filter(p => p[m.key]).length;
+    return {
+      ministry: m.name,
+      count,
+      percentage: Math.round((count / totalServing) * 100),
+    };
+  }).sort((a, b) => b.count - a.count);
+}
+
+function getTotalServingMembers() {
+  return pelayan.length;
+}
+
+function getServingPercentage() {
+  const dist = getStatusDistribution();
+  const activeMembers = dist.Active;
+  const serving = pelayan.filter(p => {
+    const memberStatus = cnx_jemaat_status_history
+      .filter(r => r.no_jemaat === p.no_jemaat)
+      .sort((a, b) => new Date(b.changed_at) - new Date(a.changed_at))[0];
+    return memberStatus && memberStatus.status === 'Active';
+  }).length;
+  return activeMembers > 0 ? Math.round((serving / activeMembers) * 100) : 0;
+}
+
+function getRecentStatusChanges(limit = 10) {
+  const withNames = cnx_jemaat_status_history.map(record => {
+    const member = members.find(m => m.no_jemaat === record.no_jemaat);
+    return {
+      ...record,
+      nama_jemaat: member ? member.nama_jemaat : 'Unknown',
+    };
+  });
+  return withNames
+    .sort((a, b) => new Date(b.changed_at) - new Date(a.changed_at))
+    .slice(0, limit);
+}
+
+function getAtRiskMembers() {
+  const now = new Date('2026-04-03');
+  const thirtyDaysAgo = new Date(now);
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const sixMonthsAgo = new Date(now);
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+  const threeMonthsAgo = new Date(now);
+  threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+
+  const atRisk = [];
+
+  members.forEach(member => {
+    const memberHistory = cnx_jemaat_status_history
+      .filter(r => r.no_jemaat === member.no_jemaat)
+      .sort((a, b) => new Date(b.changed_at) - new Date(a.changed_at));
+
+    if (memberHistory.length === 0) return;
+
+    const latestStatus = memberHistory[0];
+    let riskLevel = null;
+    let riskReason = '';
+    let riskScore = 0;
+
+    // Inactive within 30 days
+    if (latestStatus.status === 'Inactive' && new Date(latestStatus.changed_at) >= thirtyDaysAgo) {
+      riskLevel = 'high';
+      riskReason = 'Baru menjadi tidak aktif dalam 30 hari terakhir';
+      riskScore = 5;
+    }
+
+    // 2+ status changes in 6 months
+    const recentChanges = memberHistory.filter(r => new Date(r.changed_at) >= sixMonthsAgo);
+    if (recentChanges.length >= 2) {
+      if (!riskLevel) {
+        riskLevel = 'medium';
+        riskReason = `${recentChanges.length} perubahan status dalam 6 bulan terakhir`;
+        riskScore = 3;
+      } else {
+        riskReason += '; ' + `${recentChanges.length} perubahan status dalam 6 bulan`;
+        riskScore = Math.max(riskScore, 4);
+      }
+    }
+
+    // Sabbatical for 3+ months
+    if (latestStatus.status === 'Sabbatical' && new Date(latestStatus.changed_at) <= threeMonthsAgo) {
+      if (!riskLevel) {
+        riskLevel = 'medium';
+        riskReason = 'Sabbatical selama lebih dari 3 bulan';
+        riskScore = 3;
+      } else {
+        riskReason += '; Sabbatical selama lebih dari 3 bulan';
+        riskScore = Math.max(riskScore, 4);
+      }
+    }
+
+    if (riskLevel) {
+      atRisk.push({
+        no_jemaat: member.no_jemaat,
+        nama_jemaat: member.nama_jemaat,
+        riskLevel,
+        riskReason,
+        status: latestStatus.status,
+        riskScore,
+      });
+    }
+  });
+
+  return atRisk.sort((a, b) => b.riskScore - a.riskScore);
+}
+
+function getServiceFrequencyDistribution() {
+  const buckets = { '0': 0, '1-5': 0, '6-10': 0, '11-20': 0, '21-50': 0, '51+': 0 };
+
+  pelayan.forEach(p => {
+    const t = p.total_pelayanan;
+    if (t === 0) buckets['0']++;
+    else if (t <= 5) buckets['1-5']++;
+    else if (t <= 10) buckets['6-10']++;
+    else if (t <= 20) buckets['11-20']++;
+    else if (t <= 50) buckets['21-50']++;
+    else buckets['51+']++;
+  });
+
+  return Object.entries(buckets).map(([range, count]) => ({ range, count }));
+}
+
+function getUpcomingEvents(limit = 3) {
+  const now = '2026-04-03';
+  const upcoming = event_history
+    .filter(e => e.event_date > now)
+    .sort((a, b) => new Date(a.event_date) - new Date(b.event_date))
+    .slice(0, limit);
+
+  return upcoming.map(event => {
+    const participantCount = event_participation.filter(ep => ep.event_id === event.event_id).length;
+    return { ...event, participantCount };
+  });
+}
+
+function getWorshipTeamComposition() {
+  const vocalists = {
+    total: pelayan.filter(p => p.is_singer || p.is_wl).length,
+    singers: pelayan.filter(p => p.is_singer).length,
+    worshipLeaders: pelayan.filter(p => p.is_wl).length,
+  };
+  const instrumentalists = {
+    total: pelayan.filter(p => p.is_pianis || p.is_saxophone || p.is_bass_gitar || p.is_drum || p.is_filler).length,
+    pianist: pelayan.filter(p => p.is_pianis).length,
+    saxophone: pelayan.filter(p => p.is_saxophone).length,
+    bass: pelayan.filter(p => p.is_bass_gitar).length,
+    drums: pelayan.filter(p => p.is_drum).length,
+    filler: pelayan.filter(p => p.is_filler).length,
+  };
+  return { vocalists, instrumentalists };
+}
+
+function getEventAttendanceTrend() {
+  const now = new Date('2026-04-03');
+  const months = [];
+
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const monthEnd = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+    const monthLabel = d.toLocaleString('en-US', { month: 'short', year: 'numeric' });
+
+    const monthEvents = event_history.filter(e => {
+      const eventDate = new Date(e.event_date);
+      return eventDate >= d && eventDate <= monthEnd;
+    });
+
+    const categories = { Camp: 0, Retreat: 0, Quarterly: 0, Monthly: 0, Special: 0 };
+    monthEvents.forEach(event => {
+      const count = event_participation.filter(ep => ep.event_id === event.event_id).length;
+      categories[event.category] += count;
+    });
+
+    months.push({ month: monthLabel, ...categories });
+  }
+
+  return months;
+}
+
+function getMultiSkillDistribution() {
+  const distribution = {};
+  pelayan.forEach(p => {
+    const count = [p.is_wl, p.is_singer, p.is_pianis, p.is_saxophone, p.is_filler, p.is_bass_gitar, p.is_drum, p.is_mulmed, p.is_sound, p.is_caringteam, p.is_connexion_crew, p.is_supporting_crew, p.is_cforce, p.is_cg_leader, p.is_community_pic].filter(Boolean).length;
+    const key = count.toString();
+    distribution[key] = (distribution[key] || 0) + 1;
+  });
+
+  return Object.entries(distribution)
+    .map(([skills, count]) => ({ skills: parseInt(skills), count }))
+    .sort((a, b) => a.skills - b.skills);
+}
+
+function getCGHealthData() {
+  return cgfGroups.map(group => {
+    const groupMemberIds = cgfMembers.filter(cm => cm.cg_id === group.cg_id).map(cm => cm.no_jemaat);
+    const memberCount = groupMemberIds.length;
+    const capacity = 12;
+
+    const groupAttendance = cgfAttendance.filter(r => r.cg_id === group.cg_id);
+    const hadirCount = groupAttendance.filter(r => r.keterangan === 'hadir').length;
+    const attendanceRate = groupAttendance.length > 0 ? Math.round((hadirCount / groupAttendance.length) * 100) : 0;
+
+    const quarterStart = new Date('2026-01-01');
+    const newMembersThisQuarter = cgfMembers.filter(cm => {
+      return cm.cg_id === group.cg_id && cm.id > 20;
+    }).length;
+
+    const atRiskMembers = groupMemberIds.filter(no_jemaat => {
+      const latestStatus = cnx_jemaat_status_history
+        .filter(r => r.no_jemaat === no_jemaat)
+        .sort((a, b) => new Date(b.changed_at) - new Date(a.changed_at))[0];
+      return latestStatus && (latestStatus.status === 'Inactive' || latestStatus.status === 'Sabbatical');
+    }).length;
+
+    return {
+      cg_id: group.cg_id,
+      nama_cgf: group.nama_cgf,
+      leader_name: group.leader_name,
+      memberCount,
+      capacity,
+      attendanceRate,
+      newMembersThisQuarter,
+      atRiskMembers,
+    };
+  });
+}
+
+function getMemberEngagementScore(no_jemaat) {
+  let serviceScore = 0;
+  const memberPelayan = pelayan.find(p => p.no_jemaat === no_jemaat);
+  if (memberPelayan) {
+    serviceScore = Math.min(memberPelayan.total_pelayanan / 50, 1) * 40;
+  }
+
+  const memberEvents = event_participation.filter(ep => ep.no_jemaat === no_jemaat);
+  const eventScore = Math.min(memberEvents.length / 8, 1) * 30;
+
+  let statusScore = 20;
+  const memberHistory = cnx_jemaat_status_history
+    .filter(r => r.no_jemaat === no_jemaat)
+    .sort((a, b) => new Date(b.changed_at) - new Date(a.changed_at));
+  if (memberHistory.length > 0) {
+    if (memberHistory[0].status === 'Active') statusScore = 20;
+    else if (memberHistory[0].status === 'Sabbatical') statusScore = 10;
+    else if (memberHistory[0].status === 'Inactive') statusScore = 5;
+    else statusScore = 0;
+
+    if (memberHistory.length > 2) statusScore *= 0.7;
+  }
+
+  let versatilityScore = 0;
+  if (memberPelayan) {
+    const ministryCount = [memberPelayan.is_wl, memberPelayan.is_singer, memberPelayan.is_pianis, memberPelayan.is_saxophone, memberPelayan.is_filler, memberPelayan.is_bass_gitar, memberPelayan.is_drum, memberPelayan.is_mulmed, memberPelayan.is_sound, memberPelayan.is_caringteam, memberPelayan.is_connexion_crew, memberPelayan.is_supporting_crew, memberPelayan.is_cforce, memberPelayan.is_cg_leader, memberPelayan.is_community_pic].filter(Boolean).length;
+    versatilityScore = Math.min(ministryCount / 4, 1) * 10;
+  }
+
+  return Math.round(serviceScore + eventScore + statusScore + versatilityScore);
+}
+
+function getAverageEngagementScore() {
+  const scores = members.map(m => getMemberEngagementScore(m.no_jemaat));
+  const total = scores.reduce((sum, s) => sum + s, 0);
+  return Math.round(total / scores.length);
+}
+
+function getCareVisitData() {
+  const visits = [];
+  const now = new Date('2026-04-03');
+
+  for (let i = 0; i < 90; i++) {
+    const date = new Date(now);
+    date.setDate(date.getDate() - i);
+    const dateStr = date.toISOString().split('T')[0];
+    const dayOfWeek = date.getDay();
+
+    if (dayOfWeek === 0 || dayOfWeek === 6) continue;
+
+    const visitCount = Math.floor(Math.random() * 4);
+    if (visitCount > 0) {
+      const dayMembers = [...members].sort(() => Math.random() - 0.5).slice(0, visitCount);
+      dayMembers.forEach(member => {
+        visits.push({
+          date: dateStr,
+          no_jemaat: member.no_jemaat,
+          nama_jemaat: member.nama_jemaat,
+          visitType: randomItem(['Home Visit', 'Hospital Visit', 'Phone Call', 'Coffee Meeting']),
+          notes: `${member.nama_jemaat} - kunjungan rutin`,
+        });
+      });
+    }
+  }
+
+  return visits.sort((a, b) => new Date(b.date) - new Date(a.date));
+}
+
 // ============================================================
 // EXPORTS
 // ============================================================
@@ -369,6 +916,10 @@ export {
   cgfGroups,
   cgfMembers,
   cgfAttendance,
+  pelayan,
+  cnx_jemaat_status_history,
+  event_history,
+  event_participation,
 
   // Constants
   GENDERS,
@@ -394,4 +945,20 @@ export {
   getCGFInterestFunnel,
   getKuliahKerjaRatio,
   getBirthdayMembers,
+  getStatusDistribution,
+  getStatusTrend,
+  getMinistryParticipation,
+  getTotalServingMembers,
+  getServingPercentage,
+  getRecentStatusChanges,
+  getAtRiskMembers,
+  getServiceFrequencyDistribution,
+  getUpcomingEvents,
+  getWorshipTeamComposition,
+  getEventAttendanceTrend,
+  getMultiSkillDistribution,
+  getCGHealthData,
+  getMemberEngagementScore,
+  getAverageEngagementScore,
+  getCareVisitData,
 };
