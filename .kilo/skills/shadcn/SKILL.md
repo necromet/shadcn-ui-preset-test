@@ -233,7 +233,7 @@ npx shadcn@latest docs button dialog select
 npx shadcn@latest view @shadcn/button
 ```
 
-**Named presets:** `base-nova`, `radix-nova`
+**Named presets:** `base-maia`, `radix-maia`
 **Templates:** `next`, `vite`, `start`, `react-router`, `astro` (all support `--monorepo`) and `laravel` (not supported for monorepo)
 **Preset codes:** Base62 strings starting with `a` (e.g. `a2r6bw`), from [ui.shadcn.com](https://ui.shadcn.com).
 

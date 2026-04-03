@@ -76,7 +76,7 @@ function KPISection() {
               </div>
             </div>
             <div className="mt-3">
-              <p className="text-2xl font-bold">
+              <p className="text-2xl font-semibold">
                 {kpis[item.key]}{item.suffix || ""}
               </p>
               <div className="flex items-center gap-1 mt-1">

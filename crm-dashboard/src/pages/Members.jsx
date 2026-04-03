@@ -401,8 +401,6 @@ export function Members() {
                         title="No members found"
                         description="Start by adding your first church member to the system, or adjust your search filters."
                         illustration="/illustrations/empty-states/no-members.svg"
-                        actionLabel="Add Member"
-                        onAction={openAddDialog}
                       />
                     </TableCell>
                   </TableRow>

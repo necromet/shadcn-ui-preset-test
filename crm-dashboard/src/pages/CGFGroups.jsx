@@ -119,7 +119,7 @@ export function CGFGroups() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h2 className="text-2xl font-bold">{selectedGroup.nama_cgf}</h2>
+            <h2 className="text-2xl font-semibold">{selectedGroup.nama_cgf}</h2>
             <p className="text-sm text-muted-foreground">{selectedGroup.leader_name}</p>
           </div>
         </div>
@@ -152,7 +152,7 @@ export function CGFGroups() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold">{groupMembers.length}</p>
+              <p className="text-2xl font-semibold">{groupMembers.length}</p>
             </CardContent>
           </Card>
         </div>
@@ -304,7 +304,7 @@ export function CGFGroups() {
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">CGF Groups</h2>
+          <h2 className="text-2xl font-semibold">CGF Groups</h2>
           <p className="text-sm text-muted-foreground">Kelola Cell Group Fellowship</p>
         </div>
         <Button onClick={handleCreateGroup}>

@@ -89,7 +89,7 @@ export function Attendance() {
     <div className="flex flex-col gap-6">
       <div className="flex items-center gap-3">
         <Calendar className="h-6 w-6" />
-        <h1 className="text-2xl font-bold">Attendance Tracking</h1>
+        <h1 className="text-2xl font-semibold">Attendance Tracking</h1>
       </div>
 
       {/* Tab Buttons */}
