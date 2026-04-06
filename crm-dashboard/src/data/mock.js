@@ -73,6 +73,29 @@ const members = [
 ];
 
 // ============================================================
+// MOCK DATA - PELAYANAN INFO (Service/Ministry Types)
+// ============================================================
+
+const pelayananInfo = [
+  { pelayanan_id: 'P001', nama_pelayanan: 'Worship Leader' },
+  { pelayanan_id: 'P002', nama_pelayanan: 'Singer' },
+  { pelayanan_id: 'P003', nama_pelayanan: 'Pianist' },
+  { pelayanan_id: 'P004', nama_pelayanan: 'Saxophone' },
+  { pelayanan_id: 'P005', nama_pelayanan: 'Filler Musician' },
+  { pelayanan_id: 'P006', nama_pelayanan: 'Bass Guitarist' },
+  { pelayanan_id: 'P007', nama_pelayanan: 'Drummer' },
+  { pelayanan_id: 'P008', nama_pelayanan: 'Multimedia' },
+  { pelayanan_id: 'P009', nama_pelayanan: 'Sound Engineer' },
+  { pelayanan_id: 'P010', nama_pelayanan: 'Caring Team' },
+  { pelayanan_id: 'P011', nama_pelayanan: 'Connexion Crew' },
+  { pelayanan_id: 'P012', nama_pelayanan: 'Supporting Crew' },
+  { pelayanan_id: 'P013', nama_pelayanan: 'CForce' },
+  { pelayanan_id: 'P014', nama_pelayanan: 'CG Leader' },
+  { pelayanan_id: 'P015', nama_pelayanan: 'Community PIC' },
+  { pelayanan_id: 'P016', nama_pelayanan: 'Others' },
+];
+
+// ============================================================
 // MOCK DATA - PELAYAN (Service/Ministry Members)
 // ============================================================
 
@@ -421,6 +444,22 @@ function getAttendance(filters = {}) {
   }
 
   return result;
+}
+
+function getPelayananInfo() {
+  return [...pelayananInfo];
+}
+
+function getPelayananInfoById(pelayanan_id) {
+  return pelayananInfo.find(p => p.pelayanan_id === pelayanan_id) || null;
+}
+
+function getPelayan() {
+  return [...pelayan];
+}
+
+function getPelayanById(no_jemaat) {
+  return pelayan.find(p => p.no_jemaat === no_jemaat) || null;
 }
 
 function getDashboardKPIs() {
@@ -917,6 +956,7 @@ export {
   cgfMembers,
   cgfAttendance,
   pelayan,
+  pelayananInfo,
   cnx_jemaat_status_history,
   event_history,
   event_participation,
@@ -936,6 +976,10 @@ export {
   getCGFGroupById,
   getCGFMembers,
   getAttendance,
+  getPelayananInfo,
+  getPelayananInfoById,
+  getPelayan,
+  getPelayanById,
   getDashboardKPIs,
   getGenderDistribution,
   getAgeDistribution,

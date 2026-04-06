@@ -12,6 +12,8 @@ import { Attendance } from "./pages/Attendance.jsx"
 import { Analytics } from "./pages/Analytics.jsx"
 import { Login } from "./pages/Login.jsx"
 import { Settings } from "./pages/Settings.jsx"
+import { PelayananInfo } from "./pages/PelayananInfo.jsx"
+import { Pelayan } from "./pages/Pelayan.jsx"
 
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
@@ -54,6 +56,8 @@ function App() {
                     <Route path="/cgf" element={<CGFGroups />} />
                     <Route path="/attendance" element={<Attendance />} />
                     <Route path="/analytics" element={<Analytics />} />
+                    <Route path="/pelayanan" element={<PelayananInfo />} />
+                    <Route path="/pelayan" element={<Pelayan />} />
                     <Route path="/settings" element={<Settings />} />
                   </Routes>
                 </AppLayout>

@@ -1,0 +1,2697 @@
+openapi: 3.0.3
+info:
+  title: Church Management System API
+  description: |
+    API for managing church members, cell groups (CGF), attendance, ministries, and events.
+    This API provides CRUD operations for all entities and dashboard analytics endpoints.
+  version: 1.0.0
+  contact:
+    name: Church Admin
+    email: admin@church.org
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local development server
+  - url: https://api.church.org/v1
+    description: Production server
+
+tags:
+  - name: Members
+    description: Church members management
+  - name: CGF
+    description: Cell Group Fellowship management
+  - name: Attendance
+    description: CGF attendance tracking
+  - name: Ministry
+    description: Ministry and service management
+  - name: Events
+    description: Event management
+  - name: Analytics
+    description: Dashboard analytics and reports
+  - name: Status
+    description: Member status history
+
+security:
+  - BearerAuth: []
+
+paths:
+  # ==================== MEMBERS ENDPOINTS ====================
+  /members:
+    get:
+      tags: [Members]
+      summary: Get all members
+      description: Retrieve a paginated list of church members with optional filtering
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/SortBy'
+        - $ref: '#/components/parameters/SortOrder'
+        - name: search
+          in: query
+          description: Search by member name
+          schema:
+            type: string
+            example: "John"
+        - name: jenis_kelamin
+          in: query
+          description: Filter by gender
+          schema:
+            type: string
+            enum: [Laki-laki, Perempuan]
+        - name: kategori_domisili
+          in: query
+          description: Filter by domicile category
+          schema:
+            type: string
+            example: "Jakarta"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberListResponse'
+              example:
+                success: true
+                data:
+                  - no_jemaat: 1
+                    nama_jemaat: "John Doe"
+                    jenis_kelamin: "Laki-laki"
+                    tanggal_lahir: "1990-05-15"
+                    tahun_lahir: 1990
+                    bulan_lahir: 5
+                    kuliah_kerja: "Software Engineer"
+                    no_handphone: "081234567890"
+                    ketertarikan_cgf: "Yes"
+                    nama_cgf: "Grace CGF"
+                    kategori_domisili: "Jakarta"
+                    alamat_domisili: "Jl. Sudirman No. 123"
+                pagination:
+                  page: 1
+                  limit: 10
+                  total: 100
+                  totalPages: 10
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    post:
+      tags: [Members]
+      summary: Create a new member
+      description: Register a new church member
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberCreate'
+            example:
+              nama_jemaat: "Jane Smith"
+              jenis_kelamin: "Perempuan"
+              tanggal_lahir: "1995-08-20"
+              tahun_lahir: 1995
+              bulan_lahir: 8
+              kuliah_kerja: "Designer"
+              no_handphone: "081987654321"
+              ketertarikan_cgf: "Yes"
+              nama_cgf: "Faith CGF"
+              kategori_domisili: "Bandung"
+              alamat_domisili: "Jl. Asia Afrika No. 45"
+      responses:
+        '201':
+          description: Member created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /members/{no_jemaat}:
+    parameters:
+      - $ref: '#/components/parameters/MemberId'
+    get:
+      tags: [Members]
+      summary: Get member by ID
+      description: Retrieve a single member by their member number
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    put:
+      tags: [Members]
+      summary: Update member
+      description: Update all fields of a member
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberUpdate'
+      responses:
+        '200':
+          description: Member updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags: [Members]
+      summary: Partially update member
+      description: Update specific fields of a member
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberPartialUpdate'
+      responses:
+        '200':
+          description: Member updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Members]
+      summary: Delete member
+      description: Remove a member from the system
+      responses:
+        '200':
+          description: Member deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ==================== CGF ENDPOINTS ====================
+  /cgf:
+    get:
+      tags: [CGF]
+      summary: Get all CGF groups
+      description: Retrieve all Cell Group Fellowship groups with optional filtering
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: hari
+          in: query
+          description: Filter by meeting day
+          schema:
+            type: string
+            enum: [Senin, Selasa, Rabu, Kamis, Jumat, Sabtu, Minggu]
+        - name: search
+          in: query
+          description: Search by CGF name or location
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CGFListResponse'
+              example:
+                success: true
+                data:
+                  - id: "CGF01"
+                    nama_cgf: "Grace CGF"
+                    lokasi_1: "Jakarta Selatan"
+                    lokasi_2: "Bintaro"
+                    hari: "Senin"
+                pagination:
+                  page: 1
+                  limit: 10
+                  total: 25
+                  totalPages: 3
+
+    post:
+      tags: [CGF]
+      summary: Create a new CGF group
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CGFCreate'
+      responses:
+        '201':
+          description: CGF created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CGFResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /cgf/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: CGF group ID (5 characters)
+        schema:
+          type: string
+          minLength: 5
+          maxLength: 5
+          example: "CGF01"
+
+    get:
+      tags: [CGF]
+      summary: Get CGF by ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CGFResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags: [CGF]
+      summary: Update CGF group
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CGFUpdate'
+      responses:
+        '200':
+          description: CGF updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CGFResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [CGF]
+      summary: Delete CGF group
+      responses:
+        '200':
+          description: CGF deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ==================== CGF MEMBERS ENDPOINTS ====================
+  /cgf/members:
+    get:
+      tags: [CGF]
+      summary: Get all CGF member assignments
+      description: Retrieve all member assignments to CGF groups
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: nama_cgf
+          in: query
+          description: Filter by CGF name
+          schema:
+            type: string
+        - name: is_leader
+          in: query
+          description: Filter by leader status
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CGFMemberListResponse'
+
+    post:
+      tags: [CGF]
+      summary: Assign member to CGF
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CGFMemberCreate'
+      responses:
+        '201':
+          description: Member assigned to CGF successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CGFMemberResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /cgf/members/{no_jemaat}:
+    parameters:
+      - $ref: '#/components/parameters/MemberId'
+
+    get:
+      tags: [CGF]
+      summary: Get CGF assignment by member ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CGFMemberResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags: [CGF]
+      summary: Update CGF member assignment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CGFMemberUpdate'
+      responses:
+        '200':
+          description: Assignment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CGFMemberResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [CGF]
+      summary: Remove member from CGF
+      responses:
+        '200':
+          description: Member removed from CGF successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ==================== ATTENDANCE ENDPOINTS ====================
+  /attendance:
+    get:
+      tags: [Attendance]
+      summary: Get all attendance records
+      description: Retrieve attendance records with filtering options
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: no_jemaat
+          in: query
+          description: Filter by member ID
+          schema:
+            type: integer
+        - name: cg_id
+          in: query
+          description: Filter by CGF ID
+          schema:
+            type: string
+        - name: tanggal
+          in: query
+          description: Filter by date (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+        - name: keterangan
+          in: query
+          description: Filter by attendance status
+          schema:
+            type: string
+            enum: [hadir, izin, tidak_hadir, tamu]
+        - name: start_date
+          in: query
+          description: Start date for date range filter
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          description: End date for date range filter
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendanceListResponse'
+              example:
+                success: true
+                data:
+                  - id: 1
+                    no_jemaat: 1
+                    cg_id: "CGF01"
+                    tanggal: "2024-01-15"
+                    keterangan: "hadir"
+                    member:
+                      nama_jemaat: "John Doe"
+                pagination:
+                  page: 1
+                  limit: 10
+                  total: 500
+                  totalPages: 50
+
+    post:
+      tags: [Attendance]
+      summary: Record attendance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttendanceCreate'
+      responses:
+        '201':
+          description: Attendance recorded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendanceResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /attendance/bulk:
+    post:
+      tags: [Attendance]
+      summary: Bulk record attendance
+      description: Record attendance for multiple members at once
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [cg_id, tanggal, records]
+              properties:
+                cg_id:
+                  type: string
+                  example: "CGF01"
+                tanggal:
+                  type: string
+                  format: date
+                  example: "2024-01-15"
+                records:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/AttendanceRecord'
+                  example:
+                    - no_jemaat: 1
+                      keterangan: "hadir"
+                    - no_jemaat: 2
+                      keterangan: "izin"
+      responses:
+        '201':
+          description: Bulk attendance recorded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Attendance'
+                  message:
+                    type: string
+                    example: "Attendance records created successfully"
+
+  /attendance/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Attendance record ID
+        schema:
+          type: integer
+
+    get:
+      tags: [Attendance]
+      summary: Get attendance record by ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendanceResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags: [Attendance]
+      summary: Update attendance record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttendanceUpdate'
+      responses:
+        '200':
+          description: Attendance updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendanceResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Attendance]
+      summary: Delete attendance record
+      responses:
+        '200':
+          description: Attendance deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ==================== MINISTRY INFO ENDPOINTS ====================
+  /ministries:
+    get:
+      tags: [Ministry]
+      summary: Get all ministry types
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: search
+          in: query
+          description: Search by ministry name
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MinistryListResponse'
+              example:
+                success: true
+                data:
+                  - pelayanan_id: "WL001"
+                    nama_pelayanan: "Worship Leader"
+                  - pelayanan_id: "SN001"
+                    nama_pelayanan: "Singer"
+                pagination:
+                  page: 1
+                  limit: 10
+                  total: 10
+                  totalPages: 1
+
+    post:
+      tags: [Ministry]
+      summary: Create a new ministry type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MinistryCreate'
+      responses:
+        '201':
+          description: Ministry created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MinistryResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /ministries/{pelayanan_id}:
+    parameters:
+      - name: pelayanan_id
+        in: path
+        required: true
+        description: Ministry ID (5 characters)
+        schema:
+          type: string
+          minLength: 5
+          maxLength: 5
+
+    get:
+      tags: [Ministry]
+      summary: Get ministry by ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MinistryResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags: [Ministry]
+      summary: Update ministry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MinistryUpdate'
+      responses:
+        '200':
+          description: Ministry updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MinistryResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Ministry]
+      summary: Delete ministry
+      responses:
+        '200':
+          description: Ministry deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ==================== PELAYAN (MINISTRY MEMBERS) ENDPOINTS ====================
+  /pelayan:
+    get:
+      tags: [Ministry]
+      summary: Get all ministry members
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: search
+          in: query
+          description: Search by member name
+          schema:
+            type: string
+        - name: role
+          in: query
+          description: Filter by specific ministry role
+          schema:
+            type: string
+            enum: [is_wl, is_singer, is_pianis, is_saxophone, is_filler, is_bass_gitar, is_drum, is_mulmed, is_sound, is_caringteam, is_connexion_crew, is_supporting_crew, is_cforce, is_cg_leader, is_community_pic]
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PelayanListResponse'
+              example:
+                success: true
+                data:
+                  - no_jemaat: 1
+                    nama_jemaat: "John Doe"
+                    is_wl: true
+                    is_singer: true
+                    is_pianis: false
+                    is_saxophone: false
+                    is_filler: false
+                    is_bass_gitar: false
+                    is_drum: false
+                    is_mulmed: false
+                    is_sound: false
+                    is_caringteam: false
+                    is_connexion_crew: false
+                    is_supporting_crew: false
+                    is_cforce: false
+                    is_cg_leader: true
+                    is_community_pic: false
+                    total_pelayanan: 3
+                pagination:
+                  page: 1
+                  limit: 10
+                  total: 50
+                  totalPages: 5
+
+    post:
+      tags: [Ministry]
+      summary: Add ministry member
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PelayanCreate'
+      responses:
+        '201':
+          description: Ministry member added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PelayanResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /pelayan/{no_jemaat}:
+    parameters:
+      - $ref: '#/components/parameters/MemberId'
+
+    get:
+      tags: [Ministry]
+      summary: Get ministry member by ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PelayanResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags: [Ministry]
+      summary: Update ministry member
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PelayanUpdate'
+      responses:
+        '200':
+          description: Ministry member updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PelayanResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags: [Ministry]
+      summary: Partially update ministry member
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PelayanPartialUpdate'
+      responses:
+        '200':
+          description: Ministry member updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PelayanResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Ministry]
+      summary: Remove ministry member
+      responses:
+        '200':
+          description: Ministry member removed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ==================== STATUS HISTORY ENDPOINTS ====================
+  /status-history:
+    get:
+      tags: [Status]
+      summary: Get all status history
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: no_jemaat
+          in: query
+          description: Filter by member ID
+          schema:
+            type: integer
+        - name: status
+          in: query
+          description: Filter by status
+          schema:
+            type: string
+            enum: [Active, Inactive, Sabbatical, Moved]
+        - name: start_date
+          in: query
+          description: Start date filter
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          description: End date filter
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusHistoryListResponse'
+
+    post:
+      tags: [Status]
+      summary: Create status change record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatusHistoryCreate'
+      responses:
+        '201':
+          description: Status history created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusHistoryResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /status-history/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+
+    get:
+      tags: [Status]
+      summary: Get status history by ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusHistoryResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags: [Status]
+      summary: Update status history
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatusHistoryUpdate'
+      responses:
+        '200':
+          description: Status history updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusHistoryResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Status]
+      summary: Delete status history
+      responses:
+        '200':
+          description: Status history deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /members/{no_jemaat}/status-history:
+    parameters:
+      - $ref: '#/components/parameters/MemberId'
+    get:
+      tags: [Status, Members]
+      summary: Get status history for a member
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusHistoryListResponse'
+
+  # ==================== EVENTS ENDPOINTS ====================
+  /events:
+    get:
+      tags: [Events]
+      summary: Get all events
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: search
+          in: query
+          description: Search by event name
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: Filter by event category
+          schema:
+            type: string
+            enum: [Camp, Retreat, Quarterly, Monthly, Special]
+        - name: start_date
+          in: query
+          description: Start date filter
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          description: End date filter
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventListResponse'
+              example:
+                success: true
+                data:
+                  - event_id: 1
+                    event_name: "Annual Youth Camp"
+                    event_date: "2024-03-15"
+                    category: "Camp"
+                    location: "Bogor Retreat Center"
+                    description: "Annual youth camping event"
+                pagination:
+                  page: 1
+                  limit: 10
+                  total: 20
+                  totalPages: 2
+
+    post:
+      tags: [Events]
+      summary: Create a new event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventCreate'
+      responses:
+        '201':
+          description: Event created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /events/{event_id}:
+    parameters:
+      - name: event_id
+        in: path
+        required: true
+        schema:
+          type: integer
+
+    get:
+      tags: [Events]
+      summary: Get event by ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags: [Events]
+      summary: Update event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventUpdate'
+      responses:
+        '200':
+          description: Event updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Events]
+      summary: Delete event
+      responses:
+        '200':
+          description: Event deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ==================== EVENT PARTICIPATION ENDPOINTS ====================
+  /events/{event_id}/participants:
+    parameters:
+      - name: event_id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags: [Events]
+      summary: Get event participants
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: role
+          in: query
+          description: Filter by role
+          schema:
+            type: string
+            enum: [Peserta, Panitia, Volunteer]
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventParticipationListResponse'
+
+    post:
+      tags: [Events]
+      summary: Register event participant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventParticipationCreate'
+      responses:
+        '201':
+          description: Participant registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventParticipationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /events/participation/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+
+    get:
+      tags: [Events]
+      summary: Get participation record by ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventParticipationResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags: [Events]
+      summary: Update participation record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventParticipationUpdate'
+      responses:
+        '200':
+          description: Participation updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventParticipationResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Events]
+      summary: Remove participation record
+      responses:
+        '200':
+          description: Participation removed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /members/{no_jemaat}/events:
+    parameters:
+      - $ref: '#/components/parameters/MemberId'
+    get:
+      tags: [Events, Members]
+      summary: Get events for a member
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventParticipationListResponse'
+
+  # ==================== ANALYTICS ENDPOINTS ====================
+  /analytics/dashboard:
+    get:
+      tags: [Analytics]
+      summary: Get dashboard KPIs
+      description: Retrieve key performance indicators for the dashboard
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      total_members:
+                        type: integer
+                        description: Total number of members
+                        example: 500
+                      active_members:
+                        type: integer
+                        description: Number of active members
+                        example: 450
+                      inactive_members:
+                        type: integer
+                        example: 30
+                      new_members_this_month:
+                        type: integer
+                        description: New members in current month
+                        example: 15
+                      total_cgf_groups:
+                        type: integer
+                        example: 25
+                      total_ministry_members:
+                        type: integer
+                        example: 80
+                      upcoming_events:
+                        type: integer
+                        description: Events in next 30 days
+                        example: 5
+                      attendance_rate_this_month:
+                        type: number
+                        format: float
+                        description: Attendance rate percentage
+                        example: 85.5
+              example:
+                success: true
+                data:
+                  total_members: 500
+                  active_members: 450
+                  inactive_members: 30
+                  new_members_this_month: 15
+                  total_cgf_groups: 25
+                  total_ministry_members: 80
+                  upcoming_events: 5
+                  attendance_rate_this_month: 85.5
+
+  /analytics/members/distribution:
+    get:
+      tags: [Analytics]
+      summary: Get member distribution
+      description: Get member distribution by various dimensions
+      parameters:
+        - name: type
+          in: query
+          required: true
+          description: Distribution type
+          schema:
+            type: string
+            enum: [gender, domicile, age_group, status]
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        label:
+                          type: string
+                          example: "Laki-laki"
+                        value:
+                          type: integer
+                          example: 250
+                        percentage:
+                          type: number
+                          format: float
+                          example: 50.0
+              example:
+                success: true
+                data:
+                  - label: "Laki-laki"
+                    value: 250
+                    percentage: 50.0
+                  - label: "Perempuan"
+                    value: 250
+                    percentage: 50.0
+
+  /analytics/members/trends:
+    get:
+      tags: [Analytics]
+      summary: Get member growth trends
+      description: Get monthly/weekly member growth data
+      parameters:
+        - name: period
+          in: query
+          description: Time period
+          schema:
+            type: string
+            enum: [weekly, monthly, yearly]
+            default: monthly
+        - name: months
+          in: query
+          description: Number of months to include
+          schema:
+            type: integer
+            default: 12
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        period:
+                          type: string
+                          example: "2024-01"
+                        new_members:
+                          type: integer
+                          example: 15
+                        total_members:
+                          type: integer
+                          example: 485
+                        active_members:
+                          type: integer
+                          example: 460
+              example:
+                success: true
+                data:
+                  - period: "2024-01"
+                    new_members: 15
+                    total_members: 485
+                    active_members: 460
+                  - period: "2024-02"
+                    new_members: 12
+                    total_members: 497
+                    active_members: 470
+
+  /analytics/attendance/summary:
+    get:
+      tags: [Analytics]
+      summary: Get attendance summary
+      description: Get attendance statistics and trends
+      parameters:
+        - name: cg_id
+          in: query
+          description: Filter by CGF ID
+          schema:
+            type: string
+        - name: start_date
+          in: query
+          description: Start date
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          description: End date
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      total_records:
+                        type: integer
+                        example: 1000
+                      hadir:
+                        type: integer
+                        example: 850
+                      izin:
+                        type: integer
+                        example: 80
+                      tidak_hadir:
+                        type: integer
+                        example: 50
+                      tamu:
+                        type: integer
+                        example: 20
+                      attendance_rate:
+                        type: number
+                        format: float
+                        example: 85.0
+              example:
+                success: true
+                data:
+                  total_records: 1000
+                  hadir: 850
+                  izin: 80
+                  tidak_hadir: 50
+                  tamu: 20
+                  attendance_rate: 85.0
+
+  /analytics/attendance/trends:
+    get:
+      tags: [Analytics]
+      summary: Get attendance trends
+      description: Get weekly/monthly attendance trends
+      parameters:
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum: [weekly, monthly]
+            default: weekly
+        - name: cg_id
+          in: query
+          description: Filter by CGF ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        period:
+                          type: string
+                          example: "2024-W03"
+                        total_expected:
+                          type: integer
+                          example: 50
+                        total_present:
+                          type: integer
+                          example: 42
+                        attendance_rate:
+                          type: number
+                          format: float
+                          example: 84.0
+
+  /analytics/cgf/summary:
+    get:
+      tags: [Analytics]
+      summary: Get CGF summary
+      description: Get CGF group statistics
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      total_groups:
+                        type: integer
+                        example: 25
+                      total_members_assigned:
+                        type: integer
+                        example: 400
+                      average_group_size:
+                        type: number
+                        format: float
+                        example: 16.0
+                      groups_by_day:
+                        type: object
+                        additionalProperties:
+                          type: integer
+                        example:
+                          Senin: 5
+                          Selasa: 4
+                          Rabu: 6
+                          Kamis: 3
+                          Jumat: 4
+                          Sabtu: 2
+                          Minggu: 1
+                      top_attendance_groups:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            cg_id:
+                              type: string
+                            nama_cgf:
+                              type: string
+                            attendance_rate:
+                              type: number
+                              format: float
+
+  /analytics/ministry/summary:
+    get:
+      tags: [Analytics]
+      summary: Get ministry summary
+      description: Get ministry participation statistics
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      total_ministry_members:
+                        type: integer
+                        example: 80
+                      role_distribution:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            role:
+                              type: string
+                              example: "Worship Leader"
+                            count:
+                              type: integer
+                              example: 5
+                      multi_role_members:
+                        type: integer
+                        description: Members serving in multiple ministries
+                        example: 25
+
+  /analytics/events/summary:
+    get:
+      tags: [Analytics]
+      summary: Get events summary
+      description: Get event statistics
+      parameters:
+        - name: year
+          in: query
+          description: Filter by year
+          schema:
+            type: integer
+            example: 2024
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      total_events:
+                        type: integer
+                        example: 20
+                      events_by_category:
+                        type: object
+                        additionalProperties:
+                          type: integer
+                        example:
+                          Camp: 2
+                          Retreat: 3
+                          Quarterly: 4
+                          Monthly: 8
+                          Special: 3
+                      total_participants:
+                        type: integer
+                        example: 1500
+                      average_participants_per_event:
+                        type: number
+                        format: float
+                        example: 75.0
+
+  /analytics/members/birthday:
+    get:
+      tags: [Analytics]
+      summary: Get upcoming birthdays
+      description: Get members with birthdays in the next N days
+      parameters:
+        - name: days
+          in: query
+          description: Number of days to look ahead
+          schema:
+            type: integer
+            default: 30
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        no_jemaat:
+                          type: integer
+                        nama_jemaat:
+                          type: string
+                        tanggal_lahir:
+                          type: string
+                          format: date
+                        upcoming_birthday:
+                          type: string
+                          format: date
+                        age_turning:
+                          type: integer
+
+components:
+  # ==================== SECURITY SCHEMAS ====================
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  # ==================== PARAMETERS ====================
+  parameters:
+    Page:
+      name: page
+      in: query
+      description: Page number
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+
+    Limit:
+      name: limit
+      in: query
+      description: Items per page
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+
+    SortBy:
+      name: sort_by
+      in: query
+      description: Field to sort by
+      schema:
+        type: string
+        default: "created_at"
+
+    SortOrder:
+      name: sort_order
+      in: query
+      description: Sort direction
+      schema:
+        type: string
+        enum: [asc, desc]
+        default: "desc"
+
+    MemberId:
+      name: no_jemaat
+      in: path
+      required: true
+      description: Member number (primary key)
+      schema:
+        type: integer
+        minimum: 1
+
+  # ==================== RESPONSES ====================
+  responses:
+    BadRequest:
+      description: Bad request - validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              code: 400
+              message: "Validation error"
+              details:
+                - field: "nama_jemaat"
+                  message: "Name is required"
+
+    Unauthorized:
+      description: Unauthorized - invalid or missing token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              code: 401
+              message: "Unauthorized access"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              code: 404
+              message: "Resource not found"
+
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              code: 500
+              message: "Internal server error"
+
+  # ==================== SCHEMAS ====================
+  schemas:
+    # Common Schemas
+    SuccessMessage:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Operation completed successfully"
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: 400
+            message:
+              type: string
+              example: "Error message"
+            details:
+              type: array
+              items:
+                type: object
+                properties:
+                  field:
+                    type: string
+                  message:
+                    type: string
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        limit:
+          type: integer
+          example: 10
+        total:
+          type: integer
+          example: 100
+        totalPages:
+          type: integer
+          example: 10
+
+    # Member Schemas
+    Member:
+      type: object
+      properties:
+        no_jemaat:
+          type: integer
+          description: Member number (primary key)
+          example: 1
+        nama_jemaat:
+          type: string
+          example: "John Doe"
+        jenis_kelamin:
+          type: string
+          enum: [Laki-laki, Perempuan]
+          example: "Laki-laki"
+        tanggal_lahir:
+          type: string
+          format: date
+          example: "1990-05-15"
+        tahun_lahir:
+          type: integer
+          example: 1990
+        bulan_lahir:
+          type: integer
+          minimum: 1
+          maximum: 12
+          example: 5
+        kuliah_kerja:
+          type: string
+          example: "Software Engineer"
+        no_handphone:
+          type: string
+          example: "081234567890"
+        ketertarikan_cgf:
+          type: string
+          example: "Yes"
+        nama_cgf:
+          type: string
+          example: "Grace CGF"
+        kategori_domisili:
+          type: string
+          example: "Jakarta"
+        alamat_domisili:
+          type: string
+          example: "Jl. Sudirman No. 123"
+
+    MemberCreate:
+      type: object
+      required: [nama_jemaat, jenis_kelamin, tanggal_lahir]
+      properties:
+        nama_jemaat:
+          type: string
+          minLength: 2
+          example: "Jane Smith"
+        jenis_kelamin:
+          type: string
+          enum: [Laki-laki, Perempuan]
+        tanggal_lahir:
+          type: string
+          format: date
+        tahun_lahir:
+          type: integer
+        bulan_lahir:
+          type: integer
+          minimum: 1
+          maximum: 12
+        kuliah_kerja:
+          type: string
+        no_handphone:
+          type: string
+        ketertarikan_cgf:
+          type: string
+        nama_cgf:
+          type: string
+        kategori_domisili:
+          type: string
+        alamat_domisili:
+          type: string
+
+    MemberUpdate:
+      type: object
+      required: [nama_jemaat, jenis_kelamin, tanggal_lahir]
+      properties:
+        nama_jemaat:
+          type: string
+          minLength: 2
+        jenis_kelamin:
+          type: string
+          enum: [Laki-laki, Perempuan]
+        tanggal_lahir:
+          type: string
+          format: date
+        tahun_lahir:
+          type: integer
+        bulan_lahir:
+          type: integer
+          minimum: 1
+          maximum: 12
+        kuliah_kerja:
+          type: string
+        no_handphone:
+          type: string
+        ketertarikan_cgf:
+          type: string
+        nama_cgf:
+          type: string
+        kategori_domisili:
+          type: string
+        alamat_domisili:
+          type: string
+
+    MemberPartialUpdate:
+      type: object
+      properties:
+        nama_jemaat:
+          type: string
+          minLength: 2
+        jenis_kelamin:
+          type: string
+          enum: [Laki-laki, Perempuan]
+        tanggal_lahir:
+          type: string
+          format: date
+        tahun_lahir:
+          type: integer
+        bulan_lahir:
+          type: integer
+          minimum: 1
+          maximum: 12
+        kuliah_kerja:
+          type: string
+        no_handphone:
+          type: string
+        ketertarikan_cgf:
+          type: string
+        nama_cgf:
+          type: string
+        kategori_domisili:
+          type: string
+        alamat_domisili:
+          type: string
+
+    MemberResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          $ref: '#/components/schemas/Member'
+
+    MemberListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Member'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    # CGF Schemas
+    CGF:
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 5
+          maxLength: 5
+          example: "CGF01"
+        nama_cgf:
+          type: string
+          example: "Grace CGF"
+        lokasi_1:
+          type: string
+          example: "Jakarta Selatan"
+        lokasi_2:
+          type: string
+          example: "Bintaro"
+        hari:
+          type: string
+          enum: [Senin, Selasa, Rabu, Kamis, Jumat, Sabtu, Minggu]
+          example: "Senin"
+
+    CGFCreate:
+      type: object
+      required: [id, nama_cgf, lokasi_1, hari]
+      properties:
+        id:
+          type: string
+          minLength: 5
+          maxLength: 5
+        nama_cgf:
+          type: string
+        lokasi_1:
+          type: string
+        lokasi_2:
+          type: string
+        hari:
+          type: string
+          enum: [Senin, Selasa, Rabu, Kamis, Jumat, Sabtu, Minggu]
+
+    CGFUpdate:
+      type: object
+      required: [nama_cgf, lokasi_1, hari]
+      properties:
+        nama_cgf:
+          type: string
+        lokasi_1:
+          type: string
+        lokasi_2:
+          type: string
+        hari:
+          type: string
+          enum: [Senin, Selasa, Rabu, Kamis, Jumat, Sabtu, Minggu]
+
+    CGFResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          $ref: '#/components/schemas/CGF'
+
+    CGFListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CGF'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    # CGF Member Schemas
+    CGFMember:
+      type: object
+      properties:
+        no_jemaat:
+          type: integer
+          example: 1
+        nama_cgf:
+          type: string
+          example: "Grace CGF"
+        is_leader:
+          type: boolean
+          example: false
+        member:
+          $ref: '#/components/schemas/Member'
+
+    CGFMemberCreate:
+      type: object
+      required: [no_jemaat, nama_cgf]
+      properties:
+        no_jemaat:
+          type: integer
+        nama_cgf:
+          type: string
+        is_leader:
+          type: boolean
+          default: false
+
+    CGFMemberUpdate:
+      type: object
+      properties:
+        nama_cgf:
+          type: string
+        is_leader:
+          type: boolean
+
+    CGFMemberResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          $ref: '#/components/schemas/CGFMember'
+
+    CGFMemberListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CGFMember'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    # Attendance Schemas
+    Attendance:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Auto-generated ID
+          example: 1
+        no_jemaat:
+          type: integer
+          example: 1
+        cg_id:
+          type: string
+          example: "CGF01"
+        tanggal:
+          type: string
+          format: date
+          example: "2024-01-15"
+        keterangan:
+          type: string
+          enum: [hadir, izin, tidak_hadir, tamu]
+          example: "hadir"
+        member:
+          $ref: '#/components/schemas/Member'
+
+    AttendanceCreate:
+      type: object
+      required: [no_jemaat, cg_id, tanggal, keterangan]
+      properties:
+        no_jemaat:
+          type: integer
+        cg_id:
+          type: string
+        tanggal:
+          type: string
+          format: date
+        keterangan:
+          type: string
+          enum: [hadir, izin, tidak_hadir, tamu]
+
+    AttendanceRecord:
+      type: object
+      required: [no_jemaat, keterangan]
+      properties:
+        no_jemaat:
+          type: integer
+          example: 1
+        keterangan:
+          type: string
+          enum: [hadir, izin, tidak_hadir, tamu]
+
+    AttendanceUpdate:
+      type: object
+      properties:
+        keterangan:
+          type: string
+          enum: [hadir, izin, tidak_hadir, tamu]
+        tanggal:
+          type: string
+          format: date
+
+    AttendanceResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          $ref: '#/components/schemas/Attendance'
+
+    AttendanceListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attendance'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    # Ministry Schemas
+    Ministry:
+      type: object
+      properties:
+        pelayanan_id:
+          type: string
+          minLength: 5
+          maxLength: 5
+          example: "WL001"
+        nama_pelayanan:
+          type: string
+          example: "Worship Leader"
+
+    MinistryCreate:
+      type: object
+      required: [pelayanan_id, nama_pelayanan]
+      properties:
+        pelayanan_id:
+          type: string
+          minLength: 5
+          maxLength: 5
+        nama_pelayanan:
+          type: string
+
+    MinistryUpdate:
+      type: object
+      required: [nama_pelayanan]
+      properties:
+        nama_pelayanan:
+          type: string
+
+    MinistryResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          $ref: '#/components/schemas/Ministry'
+
+    MinistryListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ministry'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    # Pelayan (Ministry Member) Schemas
+    Pelayan:
+      type: object
+      properties:
+        no_jemaat:
+          type: integer
+          example: 1
+        nama_jemaat:
+          type: string
+          example: "John Doe"
+        is_wl:
+          type: boolean
+          example: false
+        is_singer:
+          type: boolean
+          example: true
+        is_pianis:
+          type: boolean
+          example: false
+        is_saxophone:
+          type: boolean
+          example: false
+        is_filler:
+          type: boolean
+          example: false
+        is_bass_gitar:
+          type: boolean
+          example: false
+        is_drum:
+          type: boolean
+          example: false
+        is_mulmed:
+          type: boolean
+          example: false
+        is_sound:
+          type: boolean
+          example: false
+        is_caringteam:
+          type: boolean
+          example: false
+        is_connexion_crew:
+          type: boolean
+          example: false
+        is_supporting_crew:
+          type: boolean
+          example: false
+        is_cforce:
+          type: boolean
+          example: false
+        is_cg_leader:
+          type: boolean
+          example: true
+        is_community_pic:
+          type: boolean
+          example: false
+        total_pelayanan:
+          type: integer
+          description: Total number of ministry roles
+          example: 3
+
+    PelayanCreate:
+      type: object
+      required: [no_jemaat, nama_jemaat]
+      properties:
+        no_jemaat:
+          type: integer
+        nama_jemaat:
+          type: string
+        is_wl:
+          type: boolean
+          default: false
+        is_singer:
+          type: boolean
+          default: false
+        is_pianis:
+          type: boolean
+          default: false
+        is_saxophone:
+          type: boolean
+          default: false
+        is_filler:
+          type: boolean
+          default: false
+        is_bass_gitar:
+          type: boolean
+          default: false
+        is_drum:
+          type: boolean
+          default: false
+        is_mulmed:
+          type: boolean
+          default: false
+        is_sound:
+          type: boolean
+          default: false
+        is_caringteam:
+          type: boolean
+          default: false
+        is_connexion_crew:
+          type: boolean
+          default: false
+        is_supporting_crew:
+          type: boolean
+          default: false
+        is_cforce:
+          type: boolean
+          default: false
+        is_cg_leader:
+          type: boolean
+          default: false
+        is_community_pic:
+          type: boolean
+          default: false
+
+    PelayanUpdate:
+      type: object
+      required: [nama_jemaat]
+      properties:
+        nama_jemaat:
+          type: string
+        is_wl:
+          type: boolean
+        is_singer:
+          type: boolean
+        is_pianis:
+          type: boolean
+        is_saxophone:
+          type: boolean
+        is_filler:
+          type: boolean
+        is_bass_gitar:
+          type: boolean
+        is_drum:
+          type: boolean
+        is_mulmed:
+          type: boolean
+        is_sound:
+          type: boolean
+        is_caringteam:
+          type: boolean
+        is_connexion_crew:
+          type: boolean
+        is_supporting_crew:
+          type: boolean
+        is_cforce:
+          type: boolean
+        is_cg_leader:
+          type: boolean
+        is_community_pic:
+          type: boolean
+
+    PelayanPartialUpdate:
+      type: object
+      properties:
+        nama_jemaat:
+          type: string
+        is_wl:
+          type: boolean
+        is_singer:
+          type: boolean
+        is_pianis:
+          type: boolean
+        is_saxophone:
+          type: boolean
+        is_filler:
+          type: boolean
+        is_bass_gitar:
+          type: boolean
+        is_drum:
+          type: boolean
+        is_mulmed:
+          type: boolean
+        is_sound:
+          type: boolean
+        is_caringteam:
+          type: boolean
+        is_connexion_crew:
+          type: boolean
+        is_supporting_crew:
+          type: boolean
+        is_cforce:
+          type: boolean
+        is_cg_leader:
+          type: boolean
+        is_community_pic:
+          type: boolean
+
+    PelayanResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          $ref: '#/components/schemas/Pelayan'
+
+    PelayanListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pelayan'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    # Status History Schemas
+    StatusHistory:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        no_jemaat:
+          type: integer
+          example: 1
+        status:
+          type: string
+          enum: [Active, Inactive, Sabbatical, Moved]
+          example: "Active"
+        changed_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        reason:
+          type: string
+          example: "Initial registration"
+        member:
+          $ref: '#/components/schemas/Member'
+
+    StatusHistoryCreate:
+      type: object
+      required: [no_jemaat, status]
+      properties:
+        no_jemaat:
+          type: integer
+        status:
+          type: string
+          enum: [Active, Inactive, Sabbatical, Moved]
+        reason:
+          type: string
+
+    StatusHistoryUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [Active, Inactive, Sabbatical, Moved]
+        reason:
+          type: string
+
+    StatusHistoryResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          $ref: '#/components/schemas/StatusHistory'
+
+    StatusHistoryListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatusHistory'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    # Event Schemas
+    Event:
+      type: object
+      properties:
+        event_id:
+          type: integer
+          example: 1
+        event_name:
+          type: string
+          example: "Annual Youth Camp"
+        event_date:
+          type: string
+          format: date
+          example: "2024-03-15"
+        category:
+          type: string
+          enum: [Camp, Retreat, Quarterly, Monthly, Special]
+          example: "Camp"
+        location:
+          type: string
+          example: "Bogor Retreat Center"
+        description:
+          type: string
+          example: "Annual youth camping event"
+
+    EventCreate:
+      type: object
+      required: [event_name, event_date, category]
+      properties:
+        event_name:
+          type: string
+        event_date:
+          type: string
+          format: date
+        category:
+          type: string
+          enum: [Camp, Retreat, Quarterly, Monthly, Special]
+        location:
+          type: string
+        description:
+          type: string
+
+    EventUpdate:
+      type: object
+      required: [event_name, event_date, category]
+      properties:
+        event_name:
+          type: string
+        event_date:
+          type: string
+          format: date
+        category:
+          type: string
+          enum: [Camp, Retreat, Quarterly, Monthly, Special]
+        location:
+          type: string
+        description:
+          type: string
+
+    EventResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          $ref: '#/components/schemas/Event'
+
+    EventListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    # Event Participation Schemas
+    EventParticipation:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        event_id:
+          type: integer
+          example: 1
+        no_jemaat:
+          type: integer
+          example: 1
+        role:
+          type: string
+          enum: [Peserta, Panitia, Volunteer]
+          example: "Peserta"
+        registered_at:
+          type: string
+          format: date-time
+          example: "2024-01-20T09:00:00Z"
+        event:
+          $ref: '#/components/schemas/Event'
+        member:
+          $ref: '#/components/schemas/Member'
+
+    EventParticipationCreate:
+      type: object
+      required: [event_id, no_jemaat, role]
+      properties:
+        event_id:
+          type: integer
+        no_jemaat:
+          type: integer
+        role:
+          type: string
+          enum: [Peserta, Panitia, Volunteer]
+
+    EventParticipationUpdate:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [Peserta, Panitia, Volunteer]
+
+    EventParticipationResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          $ref: '#/components/schemas/EventParticipation'
+
+    EventParticipationListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventParticipation'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
