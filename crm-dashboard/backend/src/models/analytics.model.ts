@@ -75,31 +75,9 @@ export const AnalyticsModel = {
     const result = await query<DashboardKPIs>(`
       SELECT
         (SELECT COUNT(*) FROM cnx_jemaat_clean) as total_members,
-        (SELECT COUNT(*) FROM cnx_jemaat_status_history WHERE status = 'Active' AND id IN (
-          SELECT MAX(id) FROM cnx_jemaat_status_history GROUP BY no_jemaat
-        )) as active_members,
-        (SELECT COUNT(*) FROM cnx_jemaat_status_history WHERE status != 'Active' AND id IN (
-          SELECT MAX(id) FROM cnx_jemaat_status_history GROUP BY no_jemaat
-        )) as inactive_members,
-        (SELECT COUNT(*) FROM cnx_jemaat_clean WHERE
-          EXTRACT(MONTH FROM tanggal_lahir::date) = EXTRACT(MONTH FROM CURRENT_DATE)
-          AND EXTRACT(YEAR FROM tanggal_lahir::date) >= EXTRACT(YEAR FROM CURRENT_DATE) - 1
-        ) as new_members_this_month,
         (SELECT COUNT(*) FROM cgf_info) as total_cgf_groups,
-        (SELECT COUNT(DISTINCT no_jemaat) FROM pelayan WHERE
-          is_wl = 1 OR is_singer = 1 OR is_pianis = 1 OR is_saxophone = 1 OR is_filler = 1 OR
-          is_bass_gitar = 1 OR is_drum = 1 OR is_mulmed = 1 OR is_sound = 1 OR is_caringteam = 1 OR
-          is_connexion_crew = 1 OR is_supporting_crew = 1 OR is_cforce = 1 OR is_cg_leader = 1 OR is_community_pic = 1
-        ) as total_ministry_members,
-        (SELECT COUNT(*) FROM event_history WHERE event_date >= CURRENT_DATE) as upcoming_events,
-        COALESCE((
-          SELECT ROUND(
-            COUNT(*) FILTER (WHERE keterangan = 'hadir') * 100.0 / NULLIF(COUNT(*), 0), 1
-          )
-          FROM cgf_attendance
-          WHERE tanggal >= DATE_TRUNC('month', CURRENT_DATE)
-            AND tanggal < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month'
-        ), 0) as attendance_rate_this_month
+        (SELECT COUNT(DISTINCT no_jemaat) FROM pelayan) as total_ministry_members,
+        (SELECT COUNT(nama_cgf) from cnx_jemaat_clean where nama_cgf = 'Belum CGF') as members_without_cgf
     `);
     return result.rows[0];
   },
@@ -166,10 +144,13 @@ export const AnalyticsModel = {
 
   async getCGFSizes(): Promise<CGFSizeItem[]> {
     const result = await query<{ nama_cgf: string; member_count: string }>(`
-      SELECT nama_cgf, COUNT(*) as member_count
-      FROM cgf_members
-      GROUP BY nama_cgf
-      ORDER BY member_count DESC
+    SELECT ci.id as cg_id,
+    ci.nama_cgf,
+    count(cm.nama_cgf) as member_count
+    FROM cgf_info ci
+    LEFT JOIN cgf_members cm on ci.nama_cgf = cm.nama_cgf
+    GROUP BY 1, 2
+    ORDER BY count(cm.nama_cgf) DESC
     `);
 
     return result.rows.map((r) => ({
