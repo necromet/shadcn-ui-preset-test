@@ -6,6 +6,7 @@ import {
   ArrowUpRight,
   ArrowDownRight,
 } from "lucide-react"
+import { useState, useEffect } from "react"
 import {
   PieChart,
   Pie,
@@ -43,21 +44,21 @@ import { CareVisitTracker } from "../components/dashboard/CareVisitTracker.jsx"
 const kpiConfig = [
   {
     title: "Total Members",
-    key: "totalMembers",
+    key: "total_members",
     icon: Users,
     trend: "up",
     change: "+5.2%",
   },
   {
     title: "Total CGF Groups",
-    key: "totalCGFGroups",
+    key: "total_cgf_groups",
     icon: UserCheck,
     trend: "up",
     change: "+2",
   },
   {
     title: "Members Without CGF",
-    key: "membersWithoutCGF",
+    key: "members_without_cgf",
     icon: Calendar,
     trend: "down",
     change: "-3",
@@ -73,7 +74,31 @@ const kpiConfig = [
 ]
 
 function KPISection() {
-  const kpis = getDashboardKPIs()
+  const [kpis, setKpis] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+
+  useEffect(() => {
+    async function loadKPIData() {
+      try {
+        setLoading(true);
+        const data = await getDashboardKPIs();
+        setKpis(data);
+      } catch (err) {
+        setError(err);
+        console.error("Failed to load KPIs:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadKPIData();
+  }, []);
+  // Show loading state
+  if (loading) return <div className="text-center p-8">Loading KPIs...</div>;
+  
+  // Show error state
+  if (error) return <div className="text-center p-8 text-red-500">Failed to load dashboard data</div>;
 
   return (
     <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
@@ -117,11 +142,33 @@ function KPISection() {
 }
 
 function GenderPieChart() {
-  const { male, female } = getGenderDistribution()
-  const data = [
-    { name: "Laki-laki", value: male },
-    { name: "Perempuan", value: female },
-  ]
+  const [genders, setGenders] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function loadGenderData() {
+      try {
+        setLoading(true);
+        const data = await getGenderDistribution();
+        setGenders(data);
+      } catch (err) {
+        setError(err);
+        console.error("Failed to load gender data:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadGenderData();
+  }, []);
+  if (loading) return <div className="text-center p-8">Loading gender chart...</div>;
+  
+  if (error) return <div className="text-center p-8 text-red-500">Failed to load gender distribution</div>;
+
+  const data = genders.map(item => ({
+    name: item.label === "Laki-Laki" ? "Male" : "Female",
+    value: item.value
+  }));
   const COLORS = ["var(--chart-1)", "var(--chart-2)"]
 
   return (
@@ -139,7 +186,7 @@ function GenderPieChart() {
                 cy="50%"
                 innerRadius={60}
                 outerRadius={100}
-                paddingAngle={4}
+                paddingAngle={0}
                 dataKey="value"
                 label={({ name, percent }) =>
                   `${name} (${(percent * 100).toFixed(0)}%)`
@@ -168,11 +215,36 @@ function GenderPieChart() {
 }
 
 function CGFSizeBarChart() {
-  const cgfSizes = getCGFSizes()
+  const [cgfSizes, setCgfSizes] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function loadCGFSizes() {
+      try {
+        setLoading(true);
+        const data = await getCGFSizes();
+        setCgfSizes(data);
+      } catch (err) {
+        setError(err);
+        console.error("Failed to load CGF sizes:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadCGFSizes();
+  }, []);
+  if (loading) return <div className="text-center p-8">Loading CGF sizes...</div>;
+  
+  if (error) return <div className="text-center p-8 text-red-500">Failed to load CGF sizes</div>;
+
   const data = cgfSizes.map((cgf) => ({
+    cg_id: cgf.cg_id,
     name: cgf.nama_cgf.replace("CGF ", ""),
-    members: cgf.memberCount,
+    members: cgf.member_count,
   }))
+
+  console.log(data);
 
   return (
     <Card>
@@ -212,7 +284,7 @@ function CGFSizeBarChart() {
               <Bar
                 dataKey="members"
                 fill="var(--chart-1)"
-                radius={[0, 4, 4, 0]}
+                radius={[0, 8, 8, 0]}
               />
             </BarChart>
           </ResponsiveContainer>

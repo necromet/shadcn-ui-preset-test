@@ -5,6 +5,7 @@
 // UTILITY HELPERS
 // ============================================================
 
+const API_BASE = import.meta.env.VITE_API_URL;
 const GENDERS = ['Laki-laki', 'Perempuan'];
 const DOMISILI_AREAS = ['Jakarta Selatan', 'Jakarta Barat', 'Jakarta Utara', 'Tangerang', 'Bekasi', 'Depok'];
 const CGF_INTEREST = ['Sudah Join', 'Belum Join', 'Tertarik'];
@@ -462,34 +463,14 @@ function getPelayanById(no_jemaat) {
   return pelayan.find(p => p.no_jemaat === no_jemaat) || null;
 }
 
-function getDashboardKPIs() {
-  const totalMembers = members.length;
-  const totalCGFGroups = cgfGroups.length;
-  const membersWithoutCGF = members.filter(m => m.ketertarikan_cgf !== 'Sudah Join').length;
-
-  // Current month attendance rate (March 2026)
-  const currentMonthStart = '2026-03-01';
-  const currentMonthEnd = '2026-03-31';
-  const currentMonthAttendance = cgfAttendance.filter(
-    r => r.tanggal >= currentMonthStart && r.tanggal <= currentMonthEnd
-  );
-  const hadirCount = currentMonthAttendance.filter(r => r.keterangan === 'hadir').length;
-  const attendanceRateCurrentMonth = currentMonthAttendance.length > 0
-    ? Math.round((hadirCount / currentMonthAttendance.length) * 100)
-    : 0;
-
-  return {
-    totalMembers,
-    totalCGFGroups,
-    membersWithoutCGF,
-    attendanceRateCurrentMonth,
-  };
+export async function getDashboardKPIs() {
+  const res = await fetch(`${API_BASE}/analytics/dashboard`)
+  return (await res.json()).data
 }
 
-function getGenderDistribution() {
-  const male = members.filter(m => m.jenis_kelamin === 'Laki-laki').length;
-  const female = members.filter(m => m.jenis_kelamin === 'Perempuan').length;
-  return { male, female };
+export async function getGenderDistribution() {
+  const res = await fetch(`${API_BASE}/analytics/members/distribution`)
+  return (await res.json()).data
 }
 
 function getAgeDistribution() {
@@ -517,15 +498,20 @@ function getDomisiliDistribution() {
   return distribution;
 }
 
-function getCGFSizes() {
-  return cgfGroups.map(group => {
-    const size = cgfMembers.filter(cm => cm.cg_id === group.cg_id).length;
-    return {
-      cg_id: group.cg_id,
-      nama_cgf: group.nama_cgf,
-      memberCount: size,
-    };
-  });
+// function getCGFSizes() {
+//   return cgfGroups.map(group => {
+//     const size = cgfMembers.filter(cm => cm.cg_id === group.cg_id).length;
+//     return {
+//       cg_id: group.cg_id,
+//       nama_cgf: group.nama_cgf,
+//       member_count: size,
+//     };
+//   });
+// }
+
+export async function getCGFSizes() {
+  const res = await fetch(`${API_BASE}/analytics/members/distribution`)
+  return (await res.json()).data
 }
 
 function getAttendanceTrend() {
@@ -980,11 +966,11 @@ export {
   getPelayananInfoById,
   getPelayan,
   getPelayanById,
-  getDashboardKPIs,
-  getGenderDistribution,
+  // getDashboardKPIs,
+  // getGenderDistribution,
   getAgeDistribution,
   getDomisiliDistribution,
-  getCGFSizes,
+  // getCGFSizes,
   getAttendanceTrend,
   getCGFInterestFunnel,
   getKuliahKerjaRatio,
