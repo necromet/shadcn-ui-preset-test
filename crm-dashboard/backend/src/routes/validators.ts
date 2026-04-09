@@ -349,7 +349,7 @@ export type PelayanListResponse = z.infer<typeof PelayanListResponseSchema>;
 export const StatusHistorySchema = z.object({
   id: z.number().int().optional(),
   no_jemaat: z.number().int().optional(),
-  status: z.enum(['Active', 'Inactive', 'Sabbatical', 'Moved']).optional(),
+  status: z.enum(['Active', 'Inactive', 'No Information', 'Moved']).optional(),
   changed_at: z.string().optional(),
   reason: z.string().optional(),
   member: MemberSchema.optional(),
@@ -358,13 +358,13 @@ export type StatusHistory = z.infer<typeof StatusHistorySchema>;
 
 export const StatusHistoryCreateSchema = z.object({
   no_jemaat: z.number().int(),
-  status: z.enum(['Active', 'Inactive', 'Sabbatical', 'Moved']),
+  status: z.enum(['Active', 'Inactive', 'No Information', 'Moved']),
   reason: z.string().optional(),
 });
 export type StatusHistoryCreate = z.infer<typeof StatusHistoryCreateSchema>;
 
 export const StatusHistoryUpdateSchema = z.object({
-  status: z.enum(['Active', 'Inactive', 'Sabbatical', 'Moved']).optional(),
+  status: z.enum(['Active', 'Inactive', 'No Information', 'Moved']).optional(),
   reason: z.string().optional(),
 });
 export type StatusHistoryUpdate = z.infer<typeof StatusHistoryUpdateSchema>;

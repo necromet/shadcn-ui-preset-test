@@ -143,9 +143,9 @@ const cnx_jemaat_status_history = [
   { id: 6, no_jemaat: 1004, status: 'Active', changed_at: '2025-11-01T08:00:00Z', reason: 'Kembali dari penugasan luar kota' },
   // Yohanes Pratama - Active throughout
   { id: 7, no_jemaat: 1005, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
-  // Esther Lim - Sabbatical
+  // Esther Lim - No Information
   { id: 8, no_jemaat: 1006, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
-  { id: 9, no_jemaat: 1006, status: 'Sabbatical', changed_at: '2025-12-01T08:00:00Z', reason: 'Istirahat untuk pemulihan kesehatan' },
+  { id: 9, no_jemaat: 1006, status: 'No Information', changed_at: '2025-12-01T08:00:00Z', reason: 'Istirahat untuk pemulihan kesehatan' },
   // Yakobus Santoso - Active throughout
   { id: 10, no_jemaat: 1007, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Ruth Natalia - Active throughout
@@ -185,9 +185,9 @@ const cnx_jemaat_status_history = [
   { id: 30, no_jemaat: 1022, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Natan Ridwan - Active throughout
   { id: 31, no_jemaat: 1023, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
-  // Lidia Purnamasari - Active, then Sabbatical
+  // Lidia Purnamasari - Active, then No Information
   { id: 32, no_jemaat: 1024, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
-  { id: 33, no_jemaat: 1024, status: 'Sabbatical', changed_at: '2025-11-15T08:00:00Z', reason: 'Istirahat karena kondisi kesehatan' },
+  { id: 33, no_jemaat: 1024, status: 'No Information', changed_at: '2025-11-15T08:00:00Z', reason: 'Istirahat karena kondisi kesehatan' },
   // Imanuel Sihombing - Active throughout
   { id: 34, no_jemaat: 1025, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Kirenius Sagala - Active throughout
@@ -510,7 +510,7 @@ function getDomisiliDistribution() {
 // }
 
 export async function getCGFSizes() {
-  const res = await fetch(`${API_BASE}/analytics/members/distribution`)
+  const res = await fetch(`${API_BASE}/analytics/cgf/sizes`)
   return (await res.json()).data
 }
 
@@ -566,18 +566,15 @@ function getBirthdayMembers() {
   return members.filter(m => m.bulan_lahir === currentMonth);
 }
 
-function getStatusDistribution() {
-  const latestStatuses = {};
-  cnx_jemaat_status_history.forEach(record => {
-    if (!latestStatuses[record.no_jemaat] || new Date(record.changed_at) > new Date(latestStatuses[record.no_jemaat].changed_at)) {
-      latestStatuses[record.no_jemaat] = record;
-    }
-  });
+export async function getStatusDistribution() {
+  const res = await fetch(`${API_BASE}/analytics/members/status/distribution`)
+  const result = await res.json()
 
-  const distribution = { Active: 0, Inactive: 0, Sabbatical: 0, Moved: 0 };
-  Object.values(latestStatuses).forEach(record => {
-    if (distribution[record.status] !== undefined) {
-      distribution[record.status]++;
+  // Convert array [{ status_aktif: 'Active', count: 10 }, ...] to object { Active: 10, ... }
+  const distribution = { Active: 0, Inactive: 0, 'No Information': 0, Moved: 0 };
+  result.data.forEach(item => {
+    if (distribution[item.status_aktif] !== undefined) {
+      distribution[item.status_aktif] = item.count;
     }
   });
   return distribution;
@@ -601,7 +598,7 @@ function getStatusTrend() {
       }
     });
 
-    const counts = { Active: 0, Inactive: 0, Sabbatical: 0, Moved: 0 };
+    const counts = { Active: 0, Inactive: 0, 'No Information': 0, Moved: 0 };
     Object.values(latestStatuses).forEach(record => {
       if (counts[record.status] !== undefined) {
         counts[record.status]++;
@@ -716,14 +713,14 @@ function getAtRiskMembers() {
       }
     }
 
-    // Sabbatical for 3+ months
-    if (latestStatus.status === 'Sabbatical' && new Date(latestStatus.changed_at) <= threeMonthsAgo) {
+    // No Information for 3+ months
+    if (latestStatus.status === 'No Information' && new Date(latestStatus.changed_at) <= threeMonthsAgo) {
       if (!riskLevel) {
         riskLevel = 'medium';
-        riskReason = 'Sabbatical selama lebih dari 3 bulan';
+        riskReason = 'No Information selama lebih dari 3 bulan';
         riskScore = 3;
       } else {
-        riskReason += '; Sabbatical selama lebih dari 3 bulan';
+        riskReason += '; No Information selama lebih dari 3 bulan';
         riskScore = Math.max(riskScore, 4);
       }
     }
@@ -847,7 +844,7 @@ function getCGHealthData() {
       const latestStatus = cnx_jemaat_status_history
         .filter(r => r.no_jemaat === no_jemaat)
         .sort((a, b) => new Date(b.changed_at) - new Date(a.changed_at))[0];
-      return latestStatus && (latestStatus.status === 'Inactive' || latestStatus.status === 'Sabbatical');
+      return latestStatus && (latestStatus.status === 'Inactive' || latestStatus.status === 'No Information');
     }).length;
 
     return {
@@ -879,7 +876,7 @@ function getMemberEngagementScore(no_jemaat) {
     .sort((a, b) => new Date(b.changed_at) - new Date(a.changed_at));
   if (memberHistory.length > 0) {
     if (memberHistory[0].status === 'Active') statusScore = 20;
-    else if (memberHistory[0].status === 'Sabbatical') statusScore = 10;
+    else if (memberHistory[0].status === 'No Information') statusScore = 10;
     else if (memberHistory[0].status === 'Inactive') statusScore = 5;
     else statusScore = 0;
 
@@ -975,7 +972,7 @@ export {
   getCGFInterestFunnel,
   getKuliahKerjaRatio,
   getBirthdayMembers,
-  getStatusDistribution,
+  // getStatusDistribution, // now exported directly from function definition
   getStatusTrend,
   getMinistryParticipation,
   getTotalServingMembers,

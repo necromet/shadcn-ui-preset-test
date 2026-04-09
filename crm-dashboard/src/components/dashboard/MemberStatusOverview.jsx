@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Users, UserCheck, UserX, UserMinus, MapPin, TrendingUp } from "lucide-react"
 import {
   PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -12,7 +12,7 @@ import { getStatusDistribution, getStatusTrend, getTotalServingMembers, getServi
 const STATUS_CONFIG = {
   Active: { icon: UserCheck, color: "var(--chart-1)", badgeVariant: "success" },
   Inactive: { icon: UserX, color: "var(--destructive)", badgeVariant: "destructive" },
-  Sabbatical: { icon: UserMinus, color: "var(--chart-3)", badgeVariant: "warning" },
+  'No Information': { icon: UserMinus, color: "var(--chart-3)", badgeVariant: "warning" },
   Moved: { icon: MapPin, color: "var(--chart-4)", badgeVariant: "warning" },
 }
 
@@ -67,10 +67,33 @@ function PieTooltip({ active, payload }) {
 
 export function MemberStatusOverview() {
   const [dateRange, setDateRange] = useState("6m")
-  const distribution = getStatusDistribution()
+  const [distribution, setDistribution] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    async function loadStatusDistribution() {
+      try {
+        setLoading(true)
+        const data = await getStatusDistribution()
+        setDistribution(data)
+      } catch (err) {
+        setError(err)
+        console.error("Failed to load status distribution:", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadStatusDistribution()
+  }, [])
+  console.log(distribution)
+  
   const trend = getStatusTrend()
   const totalServing = getTotalServingMembers()
   const servingPercentage = getServingPercentage()
+
+  if (loading) return <div className="text-center p-8">Loading status overview...</div>
+  if (error) return <div className="text-center p-8 text-red-500">Failed to load status distribution</div>
 
   const totalMembers = Object.values(distribution).reduce((a, b) => a + b, 0)
 
@@ -238,7 +261,7 @@ export function MemberStatusOverview() {
                   />
                   <Line
                     type="monotone"
-                    dataKey="Sabbatical"
+                    dataKey="No Information"
                     stroke="var(--chart-3)"
                     strokeWidth={2}
                     dot={{ r: 3 }}

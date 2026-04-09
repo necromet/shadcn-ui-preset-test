@@ -131,6 +131,40 @@ router.get('/analytics/attendance/trends', async (req: Request, res: Response, n
 });
 
 /**
+ * Get status distribution
+ * GET /analytics/members/status/distribution
+ */
+router.get('/analytics/members/status/distribution', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const distribution = await AnalyticsModel.getStatusDistribution();
+
+    res.json({
+      success: true,
+      data: distribution,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * Get CGF sizes
+ * GET /analytics/cgf/sizes
+ */
+router.get('/analytics/cgf/sizes', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const cgfSizes = await AnalyticsModel.getCGFSizes();
+
+    res.json({
+      success: true,
+      data: cgfSizes,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
  * Get CGF summary
  * GET /analytics/cgf/summary
  */

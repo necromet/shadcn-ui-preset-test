@@ -10,7 +10,7 @@ import { getRecentStatusChanges, cnx_jemaat_status_history } from "../../data/mo
 const STATUS_STYLES = {
   Active: { className: "bg-chart-1/20 text-chart-1" },
   Inactive: { className: "bg-destructive/20 text-destructive" },
-  Sabbatical: { className: "bg-chart-3/20 text-chart-3" },
+  'No Information': { className: "bg-chart-3/20 text-chart-3" },
   Moved: { className: "bg-chart-4/20 text-chart-4" },
 }
 

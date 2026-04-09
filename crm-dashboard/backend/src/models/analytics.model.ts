@@ -25,6 +25,7 @@ export interface AttendanceTrendItem {
 }
 
 export interface CGFSizeItem {
+  cg_id: number;
   nama_cgf: string;
   member_count: number;
 }
@@ -38,7 +39,7 @@ export interface BirthdayMember {
 }
 
 export interface StatusDistributionItem {
-  status: string;
+  status_aktif: string;
   count: number;
 }
 
@@ -143,7 +144,7 @@ export const AnalyticsModel = {
   },
 
   async getCGFSizes(): Promise<CGFSizeItem[]> {
-    const result = await query<{ nama_cgf: string; member_count: string }>(`
+    const result = await query<{ cg_id: string; nama_cgf: string; member_count: string }>(`
     SELECT ci.id as cg_id,
     ci.nama_cgf,
     count(cm.nama_cgf) as member_count
@@ -154,6 +155,7 @@ export const AnalyticsModel = {
     `);
 
     return result.rows.map((r) => ({
+      cg_id: parseInt(r.cg_id, 10),
       nama_cgf: r.nama_cgf,
       member_count: parseInt(r.member_count, 10),
     }));
@@ -267,18 +269,15 @@ export const AnalyticsModel = {
   },
 
   async getStatusDistribution(): Promise<StatusDistributionItem[]> {
-    const result = await query<{ status: string; count: string }>(`
-      SELECT status, COUNT(*) as count
-      FROM cnx_jemaat_status_history
-      WHERE id IN (
-        SELECT MAX(id) FROM cnx_jemaat_status_history GROUP BY no_jemaat
-      )
-      GROUP BY status
+    const result = await query<{ status_aktif: string; count: string }>(`
+      SELECT status_aktif, COUNT(*) as count
+      FROM cnx_jemaat_clean
+      GROUP BY status_aktif
       ORDER BY count DESC
     `);
 
     return result.rows.map((r) => ({
-      status: r.status,
+      status_aktif: r.status_aktif,
       count: parseInt(r.count, 10),
     }));
   },

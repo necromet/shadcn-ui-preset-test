@@ -10,7 +10,7 @@ END $$;
 
 -- Create enum type for status history
 DO $$ BEGIN
-    CREATE TYPE member_status_enum AS ENUM ('Active', 'Inactive', 'Sabbatical', 'Moved');
+    CREATE TYPE member_status_enum AS ENUM ('Active', 'Inactive', 'No Information', 'Moved');
 EXCEPTION
     WHEN duplicate_object THEN NULL;
 END $$;

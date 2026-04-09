@@ -3,19 +3,19 @@ import { query } from '../config/database';
 export interface StatusHistory {
   id: number;
   no_jemaat: number;
-  status: 'Active' | 'Inactive' | 'Sabbatical' | 'Moved';
+  status: 'Active' | 'Inactive' | 'No Information' | 'Moved';
   changed_at: string;
   reason: string | null;
 }
 
 export interface StatusHistoryCreateData {
   no_jemaat: number;
-  status: 'Active' | 'Inactive' | 'Sabbatical' | 'Moved';
+  status: 'Active' | 'Inactive' | 'No Information' | 'Moved';
   reason?: string;
 }
 
 export interface StatusHistoryUpdateData {
-  status?: 'Active' | 'Inactive' | 'Sabbatical' | 'Moved';
+  status?: 'Active' | 'Inactive' | 'No Information' | 'Moved';
   reason?: string;
 }
 
