@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"
 import { BarChart3, TrendingUp } from "lucide-react"
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -23,7 +24,23 @@ function CustomTooltip({ active, payload, label }) {
 }
 
 export function ServiceFrequency() {
-  const data = getServiceFrequencyDistribution()
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        setLoading(true)
+        const distributionData = await getServiceFrequencyDistribution()
+        setData(distributionData)
+      } catch (err) {
+        console.error("Failed to load service frequency distribution:", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadData()
+  }, [])
 
   const totalMembers = data.reduce((sum, d) => sum + d.count, 0)
   const totalServices = data.reduce((sum, d) => {

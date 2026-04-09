@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"
 import { Layers, Users, BarChart3 } from "lucide-react"
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
@@ -5,7 +6,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card.jsx"
 import { Badge } from "../ui/badge.jsx"
 import { cn } from "../../lib/utils.js"
-import { getMultiSkillDistribution, pelayan } from "../../data/mock.js"
+import { getMultiSkillDistribution } from "../../data/mock.js"
 
 const BAR_COLORS = [
   "var(--chart-1)",
@@ -27,7 +28,26 @@ function CustomTooltip({ active, payload, label }) {
 }
 
 export function MultiSkillAnalysis() {
-  const rawData = getMultiSkillDistribution()
+  const [rawData, setRawData] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        setLoading(true)
+        const data = await getMultiSkillDistribution()
+        setRawData(data)
+      } catch (err) {
+        console.error("Failed to load multi-skill distribution:", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadData()
+  }, [])
+
+  // Calculate totalServing from rawData
+  const totalServing = rawData.reduce((sum, item) => sum + item.count, 0)
 
   const chartData = rawData.map((item) => ({
     ministries: item.skills === 0 ? "0" : item.skills >= 4 ? "4+" : String(item.skills),
@@ -48,7 +68,6 @@ export function MultiSkillAnalysis() {
   const finalData = Object.values(merged).sort((a, b) => a.sortKey - b.sortKey)
 
   // Calculate stats
-  const totalServing = pelayan.length
   const totalMinistries = rawData.reduce((sum, item) => sum + item.skills * item.count, 0)
   const avgMinistries = totalServing > 0 ? (totalMinistries / totalServing).toFixed(1) : 0
 

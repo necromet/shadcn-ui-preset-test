@@ -1,11 +1,11 @@
-import { useMemo } from "react"
+import { useState, useEffect } from "react"
 import { ArrowRight, Clock } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card.jsx"
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "../ui/table.jsx"
 import { Badge } from "../ui/badge.jsx"
 import { Avatar, AvatarFallback } from "../ui/avatar.jsx"
 import { cn } from "../../lib/utils.js"
-import { getRecentStatusChanges, cnx_jemaat_status_history } from "../../data/mock.js"
+import { getRecentStatusChanges, getStatusHistoryForMember } from "../../data/mock.js"
 
 const STATUS_STYLES = {
   Active: { className: "bg-chart-1/20 text-chart-1" },
@@ -32,13 +32,12 @@ function formatDate(dateStr) {
   })
 }
 
-function getPreviousStatus(no_jemaat, currentChangedAt) {
-  const memberHistory = cnx_jemaat_status_history
-    .filter(
-      (r) => r.no_jemaat === no_jemaat && new Date(r.changed_at) < new Date(currentChangedAt)
-    )
+async function getPreviousStatus(no_jemaat, currentChangedAt) {
+  const memberHistory = await getStatusHistoryForMember(no_jemaat);
+  const filtered = memberHistory
+    .filter((r) => new Date(r.changed_at) < new Date(currentChangedAt))
     .sort((a, b) => new Date(b.changed_at) - new Date(a.changed_at))
-  return memberHistory.length > 0 ? memberHistory[0].status : null
+  return filtered.length > 0 ? filtered[0].status : null
 }
 
 function StatusBadge({ status }) {
@@ -56,13 +55,41 @@ function StatusBadge({ status }) {
 }
 
 export function RecentStatusChanges() {
-  const changes = getRecentStatusChanges(10)
+  const [changes, setChanges] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const enrichedChanges = useMemo(() => {
-    return changes.map((change) => ({
-      ...change,
-      previousStatus: getPreviousStatus(change.no_jemaat, change.changed_at),
-    }))
+  useEffect(() => {
+    async function loadData() {
+      try {
+        setLoading(true)
+        const data = await getRecentStatusChanges(10)
+        setChanges(data)
+      } catch (err) {
+        console.error("Failed to load recent status changes:", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadData()
+  }, [])
+
+  const [enrichedChanges, setEnrichedChanges] = useState([])
+
+  useEffect(() => {
+    async function enrichChanges() {
+      const enriched = await Promise.all(
+        changes.map(async (change) => ({
+          ...change,
+          previousStatus: await getPreviousStatus(change.no_jemaat, change.changed_at),
+        }))
+      )
+      setEnrichedChanges(enriched)
+    }
+    if (changes.length > 0) {
+      enrichChanges()
+    } else {
+      setEnrichedChanges([])
+    }
   }, [changes])
 
   return (

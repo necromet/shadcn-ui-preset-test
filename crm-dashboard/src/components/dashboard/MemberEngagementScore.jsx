@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"
 import { Gauge, TrendingUp, Users, Award } from "lucide-react"
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -48,16 +49,40 @@ function CustomTooltip({ active, payload, label }) {
 }
 
 export function MemberEngagementScore() {
-  const avgScore = getAverageEngagementScore()
-  const scoreColor = getScoreColor(avgScore)
+  const [avgScore, setAvgScore] = useState(0)
+  const [scoreDistribution, setScoreDistribution] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const scoreDistribution = SCORE_RANGES.map((range) => {
-    const count = members.filter((m) => {
-      const score = getMemberEngagementScore(m.no_jemaat)
-      return score >= range.min && score <= range.max
-    }).length
-    return { range: range.range, count }
-  })
+  useEffect(() => {
+    async function loadData() {
+      try {
+        setLoading(true)
+        const avg = await getAverageEngagementScore()
+        setAvgScore(avg)
+
+        // Calculate score distribution
+        const distribution = await Promise.all(
+          SCORE_RANGES.map(async (range) => {
+            const count = (await Promise.all(
+              members.map(async (m) => {
+                const score = await getMemberEngagementScore(m.no_jemaat)
+                return score >= range.min && score <= range.max ? 1 : 0
+              })
+            )).reduce((sum, val) => sum + val, 0)
+            return { range: range.range, count }
+          })
+        )
+        setScoreDistribution(distribution)
+      } catch (err) {
+        console.error("Failed to load engagement scores:", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadData()
+  }, [])
+
+  const scoreColor = getScoreColor(avgScore)
 
   return (
     <Card>

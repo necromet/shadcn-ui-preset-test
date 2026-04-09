@@ -212,10 +212,14 @@ function AttendanceTrendChart() {
 
 function CGFSizeComparisonChart() {
   const sizes = getCGFSizes()
+  if (!sizes || !Array.isArray(sizes)) {
+      return <div>Loading or No Data Available...</div>;
+  }
+
   const data = sizes.map(s => ({
-    name: s.nama_cgf.replace("CGF ", ""),
-    count: s.memberCount,
-  }))
+      name: s.nama_cgf.replace("CGF ", ""),
+      count: s.memberCount,
+  }));
 
   return (
     <Card>

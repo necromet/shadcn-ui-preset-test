@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"
 import { Music, Mic, Piano, Drum } from "lucide-react"
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip,
@@ -21,7 +22,25 @@ function CustomTooltip({ active, payload }) {
 }
 
 export function WorshipTeamComposition() {
-  const { vocalists, instrumentalists } = getWorshipTeamComposition()
+  const [composition, setComposition] = useState({ vocalists: { total: 0, singers: 0, worshipLeaders: 0 }, instrumentalists: { total: 0, pianist: 0, saxophone: 0, bass: 0, drums: 0, filler: 0 } })
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        setLoading(true)
+        const data = await getWorshipTeamComposition()
+        setComposition(data)
+      } catch (err) {
+        console.error("Failed to load worship team composition:", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadData()
+  }, [])
+
+  const { vocalists, instrumentalists } = composition
 
   const pieData = [
     { name: "Vocalists", value: vocalists.total },

@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { BarChart3, ArrowUpDown } from "lucide-react"
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
@@ -38,8 +38,28 @@ function CustomTooltip({ active, payload }) {
 
 export function MinistryParticipation() {
   const [sortOrder, setSortOrder] = useState("desc")
-  const totalServing = getTotalServingMembers()
-  const rawData = getMinistryParticipation()
+  const [totalServing, setTotalServing] = useState(0)
+  const [rawData, setRawData] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        setLoading(true)
+        const [servingCount, participationData] = await Promise.all([
+          getTotalServingMembers(),
+          getMinistryParticipation(),
+        ])
+        setTotalServing(servingCount)
+        setRawData(participationData)
+      } catch (err) {
+        console.error("Failed to load ministry participation data:", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadData()
+  }, [])
 
   const sortedData = useMemo(() => {
     const data = [...rawData]

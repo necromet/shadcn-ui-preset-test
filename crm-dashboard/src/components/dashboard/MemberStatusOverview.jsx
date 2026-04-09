@@ -68,29 +68,35 @@ function PieTooltip({ active, payload }) {
 export function MemberStatusOverview() {
   const [dateRange, setDateRange] = useState("6m")
   const [distribution, setDistribution] = useState(null)
+  const [trend, setTrend] = useState([])
+  const [totalServing, setTotalServing] = useState(0)
+  const [servingPercentage, setServingPercentage] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    async function loadStatusDistribution() {
+    async function loadData() {
       try {
         setLoading(true)
-        const data = await getStatusDistribution()
-        setDistribution(data)
+        const [distData, trendData, servingCount, servingPct] = await Promise.all([
+          getStatusDistribution(),
+          getStatusTrend(),
+          getTotalServingMembers(),
+          getServingPercentage(),
+        ])
+        setDistribution(distData)
+        setTrend(trendData)
+        setTotalServing(servingCount)
+        setServingPercentage(servingPct)
       } catch (err) {
         setError(err)
-        console.error("Failed to load status distribution:", err)
+        console.error("Failed to load status overview data:", err)
       } finally {
         setLoading(false)
       }
     }
-    loadStatusDistribution()
+    loadData()
   }, [])
-  console.log(distribution)
-  
-  const trend = getStatusTrend()
-  const totalServing = getTotalServingMembers()
-  const servingPercentage = getServingPercentage()
 
   if (loading) return <div className="text-center p-8">Loading status overview...</div>
   if (error) return <div className="text-center p-8 text-red-500">Failed to load status distribution</div>

@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { Search, Plus, Pencil, Trash2, ChevronLeft, ChevronRight, X } from "lucide-react"
 import { Card, CardContent } from "../components/ui/card.jsx"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table.jsx"
@@ -71,7 +71,15 @@ const EMPTY_FORM = {
 }
 
 export function Pelayan() {
-  const [pelayanList, setPelayanList] = useState(() => getPelayan())
+  const [pelayanList, setPelayanList] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    getPelayan()
+      .then((data) => setPelayanList(data))
+      .catch((err) => console.error('Failed to fetch pelayan:', err))
+      .finally(() => setLoading(false))
+  }, [])
   const [searchQuery, setSearchQuery] = useState("")
   const [roleFilter, setRoleFilter] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
@@ -267,6 +275,14 @@ export function Pelayan() {
             </div>
           </form>
         </div>
+      </div>
+    )
+  }
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64">
+        <p className="text-muted-foreground">Loading pelayan...</p>
       </div>
     )
   }

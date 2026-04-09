@@ -455,22 +455,32 @@ function getPelayananInfoById(pelayanan_id) {
   return pelayananInfo.find(p => p.pelayanan_id === pelayanan_id) || null;
 }
 
-function getPelayan() {
-  return [...pelayan];
+export async function getPelayan() {
+  const res = await fetch(`${API_BASE}/ministry/pelayan?limit=1000`);
+  const json = await res.json();
+  return json.data || [];
 }
 
-function getPelayanById(no_jemaat) {
-  return pelayan.find(p => p.no_jemaat === no_jemaat) || null;
+export async function getPelayanById(no_jemaat) {
+  const res = await fetch(`${API_BASE}/ministry/pelayan/${no_jemaat}`);
+  const json = await res.json();
+  return json.data ?? null;
+}
+
+export async function getStatusHistory() {
+  const res = await fetch(`${API_BASE}/status/status-history?limit=1000`);
+  const json = await res.json();
+  return json.data || [];
 }
 
 export async function getDashboardKPIs() {
   const res = await fetch(`${API_BASE}/analytics/dashboard`)
-  return (await res.json()).data
+  return (await res.json()).data ?? {};
 }
 
 export async function getGenderDistribution() {
   const res = await fetch(`${API_BASE}/analytics/members/distribution`)
-  return (await res.json()).data
+  return (await res.json()).data ?? [];
 }
 
 function getAgeDistribution() {
@@ -511,7 +521,7 @@ function getDomisiliDistribution() {
 
 export async function getCGFSizes() {
   const res = await fetch(`${API_BASE}/analytics/cgf/sizes`)
-  return (await res.json()).data
+  return (await res.json()).data ?? [];
 }
 
 function getAttendanceTrend() {
@@ -572,7 +582,7 @@ export async function getStatusDistribution() {
 
   // Convert array [{ status_aktif: 'Active', count: 10 }, ...] to object { Active: 10, ... }
   const distribution = { Active: 0, Inactive: 0, 'No Information': 0, Moved: 0 };
-  result.data.forEach(item => {
+  (result.data || []).forEach(item => {
     if (distribution[item.status_aktif] !== undefined) {
       distribution[item.status_aktif] = item.count;
     }
@@ -580,7 +590,8 @@ export async function getStatusDistribution() {
   return distribution;
 }
 
-function getStatusTrend() {
+export async function getStatusTrend() {
+  const statusHistory = await getStatusHistory();
   const now = new Date('2026-04-03');
   const months = [];
 
@@ -590,7 +601,7 @@ function getStatusTrend() {
     const monthLabel = d.toLocaleString('en-US', { month: 'short', year: 'numeric' });
 
     const latestStatuses = {};
-    cnx_jemaat_status_history.forEach(record => {
+    statusHistory.forEach(record => {
       if (new Date(record.changed_at) <= monthEnd) {
         if (!latestStatuses[record.no_jemaat] || new Date(record.changed_at) > new Date(latestStatuses[record.no_jemaat].changed_at)) {
           latestStatuses[record.no_jemaat] = record;
@@ -611,8 +622,9 @@ function getStatusTrend() {
   return months;
 }
 
-function getMinistryParticipation() {
-  const totalServing = pelayan.length;
+export async function getMinistryParticipation() {
+  const pelayanData = await getPelayan();
+  const totalServing = pelayanData.length;
   const ministryFields = [
     { key: 'is_wl', name: 'Worship Leader' },
     { key: 'is_singer', name: 'Singer' },
@@ -632,7 +644,7 @@ function getMinistryParticipation() {
   ];
 
   return ministryFields.map(m => {
-    const count = pelayan.filter(p => p[m.key]).length;
+    const count = pelayanData.filter(p => p[m.key]).length;
     return {
       ministry: m.name,
       count,
@@ -641,15 +653,23 @@ function getMinistryParticipation() {
   }).sort((a, b) => b.count - a.count);
 }
 
-function getTotalServingMembers() {
-  return pelayan.length;
+export async function getTotalServingMembers() {
+  const pelayanData = await getPelayan();
+  return Array.isArray(pelayanData) ? pelayanData.length : 0;
 }
 
-function getServingPercentage() {
-  const dist = getStatusDistribution();
-  const activeMembers = dist.Active;
-  const serving = pelayan.filter(p => {
-    const memberStatus = cnx_jemaat_status_history
+export async function getServingPercentage() {
+  const [pelayanData, statusHistory, dist] = await Promise.all([
+    getPelayan(),
+    getStatusHistory(),
+    getStatusDistribution()
+  ]);
+  if (!Array.isArray(pelayanData) || !Array.isArray(statusHistory)) {
+    return 0;
+  }
+  const activeMembers = dist.Active || 0;
+  const serving = pelayanData.filter(p => {
+    const memberStatus = statusHistory
       .filter(r => r.no_jemaat === p.no_jemaat)
       .sort((a, b) => new Date(b.changed_at) - new Date(a.changed_at))[0];
     return memberStatus && memberStatus.status === 'Active';
@@ -657,8 +677,9 @@ function getServingPercentage() {
   return activeMembers > 0 ? Math.round((serving / activeMembers) * 100) : 0;
 }
 
-function getRecentStatusChanges(limit = 10) {
-  const withNames = cnx_jemaat_status_history.map(record => {
+export async function getRecentStatusChanges(limit = 10) {
+  const statusHistory = await getStatusHistory();
+  const withNames = statusHistory.map(record => {
     const member = members.find(m => m.no_jemaat === record.no_jemaat);
     return {
       ...record,
@@ -670,7 +691,15 @@ function getRecentStatusChanges(limit = 10) {
     .slice(0, limit);
 }
 
-function getAtRiskMembers() {
+export async function getStatusHistoryForMember(no_jemaat) {
+  const statusHistory = await getStatusHistory();
+  return statusHistory
+    .filter(r => r.no_jemaat === no_jemaat)
+    .sort((a, b) => new Date(b.changed_at) - new Date(a.changed_at));
+}
+
+export async function getAtRiskMembers() {
+  const statusHistory = await getStatusHistory();
   const now = new Date('2026-04-03');
   const thirtyDaysAgo = new Date(now);
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -682,7 +711,7 @@ function getAtRiskMembers() {
   const atRisk = [];
 
   members.forEach(member => {
-    const memberHistory = cnx_jemaat_status_history
+    const memberHistory = statusHistory
       .filter(r => r.no_jemaat === member.no_jemaat)
       .sort((a, b) => new Date(b.changed_at) - new Date(a.changed_at));
 
@@ -740,10 +769,11 @@ function getAtRiskMembers() {
   return atRisk.sort((a, b) => b.riskScore - a.riskScore);
 }
 
-function getServiceFrequencyDistribution() {
+export async function getServiceFrequencyDistribution() {
+  const pelayanData = await getPelayan();
   const buckets = { '0': 0, '1-5': 0, '6-10': 0, '11-20': 0, '21-50': 0, '51+': 0 };
 
-  pelayan.forEach(p => {
+  pelayanData.forEach(p => {
     const t = p.total_pelayanan;
     if (t === 0) buckets['0']++;
     else if (t <= 5) buckets['1-5']++;
@@ -756,7 +786,7 @@ function getServiceFrequencyDistribution() {
   return Object.entries(buckets).map(([range, count]) => ({ range, count }));
 }
 
-function getUpcomingEvents(limit = 3) {
+export async function getUpcomingEvents(limit = 3) {
   const now = '2026-04-03';
   const upcoming = event_history
     .filter(e => e.event_date > now)
@@ -769,24 +799,25 @@ function getUpcomingEvents(limit = 3) {
   });
 }
 
-function getWorshipTeamComposition() {
+export async function getWorshipTeamComposition() {
+  const pelayanData = await getPelayan();
   const vocalists = {
-    total: pelayan.filter(p => p.is_singer || p.is_wl).length,
-    singers: pelayan.filter(p => p.is_singer).length,
-    worshipLeaders: pelayan.filter(p => p.is_wl).length,
+    total: pelayanData.filter(p => p.is_singer || p.is_wl).length,
+    singers: pelayanData.filter(p => p.is_singer).length,
+    worshipLeaders: pelayanData.filter(p => p.is_wl).length,
   };
   const instrumentalists = {
-    total: pelayan.filter(p => p.is_pianis || p.is_saxophone || p.is_bass_gitar || p.is_drum || p.is_filler).length,
-    pianist: pelayan.filter(p => p.is_pianis).length,
-    saxophone: pelayan.filter(p => p.is_saxophone).length,
-    bass: pelayan.filter(p => p.is_bass_gitar).length,
-    drums: pelayan.filter(p => p.is_drum).length,
-    filler: pelayan.filter(p => p.is_filler).length,
+    total: pelayanData.filter(p => p.is_pianis || p.is_saxophone || p.is_bass_gitar || p.is_drum || p.is_filler).length,
+    pianist: pelayanData.filter(p => p.is_pianis).length,
+    saxophone: pelayanData.filter(p => p.is_saxophone).length,
+    bass: pelayanData.filter(p => p.is_bass_gitar).length,
+    drums: pelayanData.filter(p => p.is_drum).length,
+    filler: pelayanData.filter(p => p.is_filler).length,
   };
   return { vocalists, instrumentalists };
 }
 
-function getEventAttendanceTrend() {
+export async function getEventAttendanceTrend() {
   const now = new Date('2026-04-03');
   const months = [];
 
@@ -812,9 +843,10 @@ function getEventAttendanceTrend() {
   return months;
 }
 
-function getMultiSkillDistribution() {
+export async function getMultiSkillDistribution() {
+  const pelayanData = await getPelayan();
   const distribution = {};
-  pelayan.forEach(p => {
+  pelayanData.forEach(p => {
     const count = [p.is_wl, p.is_singer, p.is_pianis, p.is_saxophone, p.is_filler, p.is_bass_gitar, p.is_drum, p.is_mulmed, p.is_sound, p.is_caringteam, p.is_connexion_crew, p.is_supporting_crew, p.is_cforce, p.is_cg_leader, p.is_community_pic].filter(Boolean).length;
     const key = count.toString();
     distribution[key] = (distribution[key] || 0) + 1;
@@ -825,7 +857,8 @@ function getMultiSkillDistribution() {
     .sort((a, b) => a.skills - b.skills);
 }
 
-function getCGHealthData() {
+export async function getCGHealthData() {
+  const statusHistory = await getStatusHistory();
   return cgfGroups.map(group => {
     const groupMemberIds = cgfMembers.filter(cm => cm.cg_id === group.cg_id).map(cm => cm.no_jemaat);
     const memberCount = groupMemberIds.length;
@@ -841,7 +874,7 @@ function getCGHealthData() {
     }).length;
 
     const atRiskMembers = groupMemberIds.filter(no_jemaat => {
-      const latestStatus = cnx_jemaat_status_history
+      const latestStatus = statusHistory
         .filter(r => r.no_jemaat === no_jemaat)
         .sort((a, b) => new Date(b.changed_at) - new Date(a.changed_at))[0];
       return latestStatus && (latestStatus.status === 'Inactive' || latestStatus.status === 'No Information');
@@ -860,9 +893,13 @@ function getCGHealthData() {
   });
 }
 
-function getMemberEngagementScore(no_jemaat) {
+export async function getMemberEngagementScore(no_jemaat) {
+  const [pelayanData, statusHistory] = await Promise.all([
+    getPelayan(),
+    getStatusHistory()
+  ]);
   let serviceScore = 0;
-  const memberPelayan = pelayan.find(p => p.no_jemaat === no_jemaat);
+  const memberPelayan = pelayanData.find(p => p.no_jemaat === no_jemaat);
   if (memberPelayan) {
     serviceScore = Math.min(memberPelayan.total_pelayanan / 50, 1) * 40;
   }
@@ -871,7 +908,7 @@ function getMemberEngagementScore(no_jemaat) {
   const eventScore = Math.min(memberEvents.length / 8, 1) * 30;
 
   let statusScore = 20;
-  const memberHistory = cnx_jemaat_status_history
+  const memberHistory = statusHistory
     .filter(r => r.no_jemaat === no_jemaat)
     .sort((a, b) => new Date(b.changed_at) - new Date(a.changed_at));
   if (memberHistory.length > 0) {
@@ -892,8 +929,8 @@ function getMemberEngagementScore(no_jemaat) {
   return Math.round(serviceScore + eventScore + statusScore + versatilityScore);
 }
 
-function getAverageEngagementScore() {
-  const scores = members.map(m => getMemberEngagementScore(m.no_jemaat));
+export async function getAverageEngagementScore() {
+  const scores = await Promise.all(members.map(m => getMemberEngagementScore(m.no_jemaat)));
   const total = scores.reduce((sum, s) => sum + s, 0);
   return Math.round(total / scores.length);
 }
@@ -929,11 +966,11 @@ function getCareVisitData() {
 }
 
 // ============================================================
-// EXPORTS
+// EXPORTS (commented out - using direct exports from functions)
 // ============================================================
 
 export {
-  // Raw data
+//   // Raw data
   members,
   cgfGroups,
   cgfMembers,
@@ -943,16 +980,16 @@ export {
   cnx_jemaat_status_history,
   event_history,
   event_participation,
-
-  // Constants
+//
+//   // Constants
   GENDERS,
   DOMISILI_AREAS,
   CGF_INTEREST,
   KULIAH_KERJA,
   ATTENDANCE_STATUS,
   CGF_NAMES,
-
-  // Helper functions
+//
+//   // Helper functions
   getMembers,
   getMemberById,
   getCGFGroups,
@@ -961,8 +998,8 @@ export {
   getAttendance,
   getPelayananInfo,
   getPelayananInfoById,
-  getPelayan,
-  getPelayanById,
+  // getPelayan,
+  // getPelayananById,
   // getDashboardKPIs,
   // getGenderDistribution,
   getAgeDistribution,
@@ -973,19 +1010,19 @@ export {
   getKuliahKerjaRatio,
   getBirthdayMembers,
   // getStatusDistribution, // now exported directly from function definition
-  getStatusTrend,
-  getMinistryParticipation,
-  getTotalServingMembers,
-  getServingPercentage,
-  getRecentStatusChanges,
-  getAtRiskMembers,
-  getServiceFrequencyDistribution,
-  getUpcomingEvents,
-  getWorshipTeamComposition,
-  getEventAttendanceTrend,
-  getMultiSkillDistribution,
-  getCGHealthData,
-  getMemberEngagementScore,
-  getAverageEngagementScore,
+  // getStatusTrend,
+  // getMinistryParticipation,
+  // getTotalServingMembers,
+  // getServingPercentage,
+  // getRecentStatusChanges,
+  // getAtRiskMembers,
+  // getServiceFrequencyDistribution,
+  // getUpcomingEvents,
+  // getWorshipTeamComposition,
+  // getEventAttendanceTrend,
+  // getMultiSkillDistribution,
+  // getCGHealthData,
+  // getMemberEngagementScore,
+  // getAverageEngagementScore,
   getCareVisitData,
 };
