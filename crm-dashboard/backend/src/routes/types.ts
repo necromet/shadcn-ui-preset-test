@@ -39,6 +39,8 @@ export interface Member {
   nama_cgf?: string;
   kategori_domisili?: string;
   alamat_domisili?: string;
+  status_aktif?: string;
+  status_keterangan?: string;
 }
 
 export interface MemberCreate {
@@ -53,6 +55,8 @@ export interface MemberCreate {
   nama_cgf?: string;
   kategori_domisili?: string;
   alamat_domisili?: string;
+  status_aktif?: string;
+  status_keterangan?: string;
 }
 
 export interface MemberUpdate {
@@ -67,6 +71,8 @@ export interface MemberUpdate {
   nama_cgf?: string;
   kategori_domisili?: string;
   alamat_domisili?: string;
+  status_aktif?: string;
+  status_keterangan?: string;
 }
 
 export interface MemberPartialUpdate {
@@ -81,6 +87,8 @@ export interface MemberPartialUpdate {
   nama_cgf?: string;
   kategori_domisili?: string;
   alamat_domisili?: string;
+  status_aktif?: string;
+  status_keterangan?: string;
 }
 
 export interface MemberResponse {

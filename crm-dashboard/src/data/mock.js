@@ -393,12 +393,16 @@ const cgfAttendance = generateAttendanceRecords();
 // HELPER FUNCTIONS
 // ============================================================
 
-function getMembers() {
-  return [...members];
+async function getMembers() {
+  const res = await fetch(`${API_BASE}/members?limit=1000`);
+  const json = await res.json();
+  return json.data || [];
 }
 
-function getMemberById(no_jemaat) {
-  return members.find(m => m.no_jemaat === no_jemaat) || null;
+async function getMemberById(no_jemaat) {
+  const res = await fetch(`${API_BASE}/members/${no_jemaat}`);
+  const json = await res.json();
+  return json.data ?? null;
 }
 
 function getCGFGroups() {
@@ -409,10 +413,11 @@ function getCGFGroupById(cg_id) {
   return cgfGroups.find(g => g.cg_id === cg_id) || null;
 }
 
-function getCGFMembers(cg_id) {
+async function getCGFMembers(cg_id) {
   const assignments = cgfMembers.filter(cm => cm.cg_id === cg_id);
+  const membersData = await getMembers();
   return assignments.map(assignment => {
-    const member = members.find(m => m.no_jemaat === assignment.no_jemaat);
+    const member = membersData.find(m => m.no_jemaat === assignment.no_jemaat);
     return {
       ...member,
       is_leader: assignment.is_leader,
@@ -483,10 +488,11 @@ export async function getGenderDistribution() {
   return (await res.json()).data ?? [];
 }
 
-function getAgeDistribution() {
+async function getAgeDistribution() {
   const currentYear = 2026;
   const distribution = { '10s': 0, '20s': 0, '30s': 0, '40s': 0, '50s': 0, '60s+': 0 };
 
+  const members = await getMembers();
   members.forEach(m => {
     const age = currentYear - m.tahun_lahir;
     if (age < 20) distribution['10s']++;
@@ -500,8 +506,9 @@ function getAgeDistribution() {
   return distribution;
 }
 
-function getDomisiliDistribution() {
+async function getDomisiliDistribution() {
   const distribution = {};
+  const members = await getMembers();
   DOMISILI_AREAS.forEach(area => {
     distribution[area] = members.filter(m => m.kategori_domisili === area).length;
   });
@@ -558,21 +565,24 @@ function getAttendanceTrend() {
   return weeklyData;
 }
 
-function getCGFInterestFunnel() {
+async function getCGFInterestFunnel() {
+  const members = await getMembers();
   const tertarik = members.filter(m => m.ketertarikan_cgf === 'Tertarik').length;
   const belumJoin = members.filter(m => m.ketertarikan_cgf === 'Belum Join').length;
   const sudahJoin = members.filter(m => m.ketertarikan_cgf === 'Sudah Join').length;
   return { tertarik, belumJoin, sudahJoin };
 }
 
-function getKuliahKerjaRatio() {
+async function getKuliahKerjaRatio() {
+  const members = await getMembers();
   const kuliah = members.filter(m => m.kuliah_kerja === 'Kuliah').length;
   const kerja = members.filter(m => m.kuliah_kerja === 'Kerja').length;
   return { kuliah, kerja };
 }
 
-function getBirthdayMembers() {
+async function getBirthdayMembers() {
   const currentMonth = 4; // April
+  const members = await getMembers();
   return members.filter(m => m.bulan_lahir === currentMonth);
 }
 
@@ -679,6 +689,7 @@ export async function getServingPercentage() {
 
 export async function getRecentStatusChanges(limit = 10) {
   const statusHistory = await getStatusHistory();
+  const members = await getMembers();
   const withNames = statusHistory.map(record => {
     const member = members.find(m => m.no_jemaat === record.no_jemaat);
     return {
@@ -700,6 +711,7 @@ export async function getStatusHistoryForMember(no_jemaat) {
 
 export async function getAtRiskMembers() {
   const statusHistory = await getStatusHistory();
+  const members = await getMembers();
   const now = new Date('2026-04-03');
   const thirtyDaysAgo = new Date(now);
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);

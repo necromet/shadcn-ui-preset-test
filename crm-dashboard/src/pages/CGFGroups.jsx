@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "../components/ui/card.jsx";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table.jsx";
 import { Button } from "../components/ui/button.jsx";
@@ -10,18 +10,27 @@ import { getCGFGroups, getCGFMembers, getMembers, getAttendance } from "../data/
 
 export function CGFGroups() {
   const [groups, setGroups] = useState(getCGFGroups());
-  const [allMembers, setAllMembers] = useState(getMembers());
-  const [cgfMemberAssignments, setCgfMemberAssignments] = useState(() => {
-    const groupsList = getCGFGroups();
-    const assignments = [];
-    groupsList.forEach(g => {
-      const members = getCGFMembers(g.cg_id);
-      members.forEach(m => {
-        assignments.push({ no_jemaat: m.no_jemaat, cg_id: g.cg_id, is_leader: m.is_leader });
-      });
-    });
-    return assignments;
-  });
+  const [allMembers, setAllMembers] = useState([]);
+  const [cgfMemberAssignments, setCgfMemberAssignments] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const membersData = await getMembers()
+      setAllMembers(membersData)
+      
+      // Load CGF member assignments
+      const groupsList = getCGFGroups();
+      const assignments = [];
+      for (const g of groupsList) {
+        const members = await getCGFMembers(g.cg_id);
+        members.forEach(m => {
+          assignments.push({ no_jemaat: m.no_jemaat, cg_id: g.cg_id, is_leader: m.is_leader });
+        });
+      }
+      setCgfMemberAssignments(assignments);
+    }
+    fetchData()
+  }, [])
 
   const [selectedGroupId, setSelectedGroupId] = useState(null);
   const [showGroupDialog, setShowGroupDialog] = useState(false);

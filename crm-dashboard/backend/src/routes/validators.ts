@@ -58,6 +58,8 @@ export const MemberCreateSchema = z.object({
   nama_cgf: z.string().optional(),
   kategori_domisili: z.string().optional(),
   alamat_domisili: z.string().optional(),
+  status_aktif: z.string().optional(),
+  status_keterangan: z.string().optional(),
 });
 export type MemberCreate = z.infer<typeof MemberCreateSchema>;
 
@@ -73,6 +75,8 @@ export const MemberUpdateSchema = z.object({
   nama_cgf: z.string().optional(),
   kategori_domisili: z.string().optional(),
   alamat_domisili: z.string().optional(),
+  status_aktif: z.string().optional(),
+  status_keterangan: z.string().optional(),
 });
 export type MemberUpdate = z.infer<typeof MemberUpdateSchema>;
 
@@ -88,6 +92,8 @@ export const MemberPartialUpdateSchema = z.object({
   nama_cgf: z.string().optional(),
   kategori_domisili: z.string().optional(),
   alamat_domisili: z.string().optional(),
+  status_aktif: z.string().optional(),
+  status_keterangan: z.string().optional(),
 });
 export type MemberPartialUpdate = z.infer<typeof MemberPartialUpdateSchema>;
 

@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { Calendar, Check, Save, Filter, History } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table"
@@ -31,7 +31,15 @@ const STATUS_LABEL = {
 export function Attendance() {
   const [activeTab, setActiveTab] = useState("take")
   const cgfGroups = useMemo(() => getCGFGroups(), [])
-  const allMembers = useMemo(() => getMembers(), [])
+  const [allMembers, setAllMembers] = useState([])
+
+  useEffect(() => {
+    async function fetchMembers() {
+      const membersData = await getMembers()
+      setAllMembers(membersData)
+    }
+    fetchMembers()
+  }, [])
 
   // Take Attendance state
   const [selectedCGF, setSelectedCGF] = useState("")

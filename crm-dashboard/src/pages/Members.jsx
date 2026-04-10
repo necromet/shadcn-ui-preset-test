@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { Search, Plus, Pencil, Trash2, ChevronLeft, ChevronRight, X, UserPlus } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card.jsx"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table.jsx"
@@ -24,8 +24,16 @@ const EMPTY_FORM = {
 }
 
 export function Members() {
-  const [members, setMembers] = useState(() => getMembers())
+  const [members, setMembers] = useState([])
   const cgfGroups = useMemo(() => getCGFGroups(), [])
+
+  useEffect(() => {
+    async function fetchMembers() {
+      const membersData = await getMembers()
+      setMembers(membersData)
+    }
+    fetchMembers()
+  }, [])
   const [searchQuery, setSearchQuery] = useState("")
   const [filters, setFilters] = useState({ gender: "", cgfStatus: "", domisili: "" })
   const [currentPage, setCurrentPage] = useState(1)
@@ -49,7 +57,7 @@ export function Members() {
       result = result.filter(
         (m) =>
           m.nama_jemaat.toLowerCase().includes(q) ||
-          m.no_handphone.includes(q) ||
+          (m.no_handphone && m.no_handphone.includes(q)) ||
           String(m.no_jemaat).includes(q)
       )
     }
