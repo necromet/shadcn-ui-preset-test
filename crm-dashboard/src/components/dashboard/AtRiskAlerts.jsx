@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"
 import { AlertTriangle, ChevronRight } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card.jsx"
 import { Badge } from "../ui/badge.jsx"
@@ -39,7 +40,15 @@ function RiskScoreMeter({ score, max = 5 }) {
 }
 
 export function AtRiskAlerts() {
-  const atRiskMembers = getAtRiskMembers()
+  const [atRiskMembers, setAtRiskMembers] = useState([])
+
+  useEffect(() => {
+    async function fetchAtRiskMembers() {
+      const membersData = await getAtRiskMembers()
+      setAtRiskMembers(membersData)
+    }
+    fetchAtRiskMembers()
+  }, [])
 
   return (
     <Card>

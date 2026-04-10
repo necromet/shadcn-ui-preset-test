@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"
 import { TrendingUp, Calendar } from "lucide-react"
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
@@ -38,7 +39,15 @@ function CustomTooltip({ active, payload, label }) {
 }
 
 export function EventAttendanceTrends() {
-  const rawData = getEventAttendanceTrend()
+  const [rawData, setRawData] = useState([])
+
+  useEffect(() => {
+    async function fetchData() {
+      const data = await getEventAttendanceTrend()
+      setRawData(data)
+    }
+    fetchData()
+  }, [])
 
   const totalAttendance = rawData.reduce((sum, month) => {
     return sum + CATEGORIES.reduce((s, cat) => s + (month[cat.key] || 0), 0)
