@@ -7,9 +7,9 @@ const router = Router();
 
 /**
  * Get all ministry types
- * GET /types
+ * GET /ministry/types
  */
-router.get('/types', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/ministry/types', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 20;
@@ -33,9 +33,9 @@ router.get('/types', async (req: Request, res: Response, next: NextFunction) => 
 
 /**
  * Create a new ministry type
- * POST /types
+ * POST /ministry/types
  */
-router.post('/types', validate(schemas.MinistryCreateSchema), async (req: Request, res: Response, next: NextFunction) => {
+router.post('/ministry/types', validate(schemas.MinistryCreateSchema), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const ministryType = await MinistryModel.createMinistryType(req.body);
 
@@ -50,9 +50,9 @@ router.post('/types', validate(schemas.MinistryCreateSchema), async (req: Reques
 
 /**
  * Get ministry type by ID
- * GET /types/:pelayananId
+ * GET /ministry/types/:pelayananId
  */
-router.get('/types/:pelayananId', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/ministry/types/:pelayananId', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { pelayananId } = req.params;
     const ministryType = await MinistryModel.getMinistryTypeById(pelayananId);
@@ -76,9 +76,9 @@ router.get('/types/:pelayananId', async (req: Request, res: Response, next: Next
 
 /**
  * Update ministry type
- * PUT /types/:pelayananId
+ * PUT /ministry/types/:pelayananId
  */
-router.put('/types/:pelayananId', validate(schemas.MinistryUpdateSchema), async (req: Request, res: Response, next: NextFunction) => {
+router.put('/ministry/types/:pelayananId', validate(schemas.MinistryUpdateSchema), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { pelayananId } = req.params;
     const ministryType = await MinistryModel.updateMinistryType(pelayananId, req.body);
@@ -102,9 +102,9 @@ router.put('/types/:pelayananId', validate(schemas.MinistryUpdateSchema), async 
 
 /**
  * Delete ministry type
- * DELETE /types/:pelayananId
+ * DELETE /ministry/types/:pelayananId
  */
-router.delete('/types/:pelayananId', async (req: Request, res: Response, next: NextFunction) => {
+router.delete('/ministry/types/:pelayananId', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { pelayananId } = req.params;
     const deleted = await MinistryModel.deleteMinistryType(pelayananId);
@@ -125,9 +125,9 @@ router.delete('/types/:pelayananId', async (req: Request, res: Response, next: N
 
 /**
  * Get all pelayan
- * GET /pelayan
+ * GET /ministry/pelayan
  */
-router.get('/pelayan', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/ministry/pelayan', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 20;
@@ -151,9 +151,9 @@ router.get('/pelayan', async (req: Request, res: Response, next: NextFunction) =
 
 /**
  * Add ministry member
- * POST /pelayan
+ * POST /ministry/pelayan
  */
-router.post('/pelayan', validate(schemas.PelayanCreateSchema), async (req: Request, res: Response, next: NextFunction) => {
+router.post('/ministry/pelayan', validate(schemas.PelayanCreateSchema), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const pelayan = await MinistryModel.createPelayan(req.body);
 
@@ -168,9 +168,9 @@ router.post('/pelayan', validate(schemas.PelayanCreateSchema), async (req: Reque
 
 /**
  * Get pelayan by ID
- * GET /pelayan/:no_jemaat
+ * GET /ministry/pelayan/:no_jemaat
  */
-router.get('/pelayan/:no_jemaat', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/ministry/pelayan/:no_jemaat', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const no_jemaat = parseInt(req.params.no_jemaat, 10);
     const pelayan = await MinistryModel.getPelayanById(no_jemaat);
@@ -194,9 +194,9 @@ router.get('/pelayan/:no_jemaat', async (req: Request, res: Response, next: Next
 
 /**
  * Update pelayan
- * PUT /pelayan/:no_jemaat
+ * PUT /ministry/pelayan/:no_jemaat
  */
-router.put('/pelayan/:no_jemaat', validate(schemas.PelayanUpdateSchema), async (req: Request, res: Response, next: NextFunction) => {
+router.put('/ministry/pelayan/:no_jemaat', validate(schemas.PelayanUpdateSchema), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const no_jemaat = parseInt(req.params.no_jemaat, 10);
     const pelayan = await MinistryModel.updatePelayan(no_jemaat, req.body);
@@ -220,9 +220,9 @@ router.put('/pelayan/:no_jemaat', validate(schemas.PelayanUpdateSchema), async (
 
 /**
  * Partially update pelayan
- * PATCH /pelayan/:no_jemaat
+ * PATCH /ministry/pelayan/:no_jemaat
  */
-router.patch('/pelayan/:no_jemaat', validate(schemas.PelayanPartialUpdateSchema), async (req: Request, res: Response, next: NextFunction) => {
+router.patch('/ministry/pelayan/:no_jemaat', validate(schemas.PelayanPartialUpdateSchema), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const no_jemaat = parseInt(req.params.no_jemaat, 10);
     const pelayan = await MinistryModel.updatePelayan(no_jemaat, req.body);
@@ -246,9 +246,9 @@ router.patch('/pelayan/:no_jemaat', validate(schemas.PelayanPartialUpdateSchema)
 
 /**
  * Remove pelayan
- * DELETE /pelayan/:no_jemaat
+ * DELETE /ministry/pelayan/:no_jemaat
  */
-router.delete('/pelayan/:no_jemaat', async (req: Request, res: Response, next: NextFunction) => {
+router.delete('/ministry/pelayan/:no_jemaat', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const no_jemaat = parseInt(req.params.no_jemaat, 10);
     const deleted = await MinistryModel.deletePelayan(no_jemaat);

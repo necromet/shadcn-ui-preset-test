@@ -609,7 +609,7 @@ paths:
           $ref: '#/components/responses/NotFound'
 
   # ==================== MINISTRY INFO ENDPOINTS ====================
-  /ministries:
+  /ministry/types:
     get:
       tags: [Ministry]
       summary: Get all ministry types
@@ -660,7 +660,7 @@ paths:
         '400':
           $ref: '#/components/responses/BadRequest'
 
-  /ministries/{pelayanan_id}:
+  /ministry/types/{pelayanan_id}:
     parameters:
       - name: pelayanan_id
         in: path
@@ -717,7 +717,7 @@ paths:
           $ref: '#/components/responses/NotFound'
 
   # ==================== PELAYAN (MINISTRY MEMBERS) ENDPOINTS ====================
-  /pelayan:
+  /ministry/pelayan:
     get:
       tags: [Ministry]
       summary: Get all ministry members
@@ -788,7 +788,7 @@ paths:
         '400':
           $ref: '#/components/responses/BadRequest'
 
-  /pelayan/{no_jemaat}:
+  /ministry/pelayan/{no_jemaat}:
     parameters:
       - $ref: '#/components/parameters/MemberId'
 
@@ -857,7 +857,7 @@ paths:
           $ref: '#/components/responses/NotFound'
 
   # ==================== STATUS HISTORY ENDPOINTS ====================
-  /status-history:
+  /status/status-history:
     get:
       tags: [Status]
       summary: Get all status history
@@ -914,7 +914,7 @@ paths:
         '400':
           $ref: '#/components/responses/BadRequest'
 
-  /status-history/{id}:
+  /status/status-history/{id}:
     parameters:
       - name: id
         in: path
@@ -967,7 +967,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /members/{no_jemaat}/status-history:
+  /status/members/{no_jemaat}/status-history:
     parameters:
       - $ref: '#/components/parameters/MemberId'
     get:
@@ -1882,6 +1882,12 @@ components:
         alamat_domisili:
           type: string
           example: "Jl. Sudirman No. 123"
+        status_aktif:
+          type: string
+          example: "Active"
+        status_keterangan:
+          type: string
+          example: "Status aktif"
 
     MemberCreate:
       type: object
@@ -1915,6 +1921,10 @@ components:
           type: string
         alamat_domisili:
           type: string
+        status_aktif:
+          type: string
+        status_keterangan:
+          type: string
 
     MemberUpdate:
       type: object
@@ -1947,6 +1957,10 @@ components:
           type: string
         alamat_domisili:
           type: string
+        status_aktif:
+          type: string
+        status_keterangan:
+          type: string
 
     MemberPartialUpdate:
       type: object
@@ -1977,6 +1991,10 @@ components:
         kategori_domisili:
           type: string
         alamat_domisili:
+          type: string
+        status_aktif:
+          type: string
+        status_keterangan:
           type: string
 
     MemberResponse:

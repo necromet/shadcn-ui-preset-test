@@ -14,6 +14,8 @@ export interface Member {
   nama_cgf: string | null;
   kategori_domisili: string | null;
   alamat_domisili: string | null;
+  status_aktif: string | null;
+  status_keterangan: string | null;
 }
 
 export interface MemberCreateData {
@@ -28,6 +30,8 @@ export interface MemberCreateData {
   nama_cgf?: string;
   kategori_domisili?: string;
   alamat_domisili?: string;
+  status_aktif?: string;
+  status_keterangan?: string;
 }
 
 export interface MemberUpdateData {
@@ -42,6 +46,8 @@ export interface MemberUpdateData {
   nama_cgf?: string;
   kategori_domisili?: string;
   alamat_domisili?: string;
+  status_aktif?: string;
+  status_keterangan?: string;
 }
 
 export interface MemberFilters {

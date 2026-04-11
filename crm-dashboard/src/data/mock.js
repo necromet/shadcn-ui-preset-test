@@ -8,7 +8,7 @@
 const API_BASE = import.meta.env.VITE_API_URL;
 const GENDERS = ['Laki-laki', 'Perempuan'];
 const DOMISILI_AREAS = ['Jakarta Selatan', 'Jakarta Barat', 'Jakarta Utara', 'Tangerang', 'Bekasi', 'Depok'];
-const CGF_INTEREST = ['Sudah Join', 'Belum Join', 'Tertarik'];
+const CGF_INTEREST = ['Belum Mau Join', 'Mau Join', 'Sudah Join', 'Sudah Tidak Join'];
 const KULIAH_KERJA = ['Kuliah', 'Kerja'];
 const ATTENDANCE_STATUS = ['hadir', 'izin', 'tidak_hadir', 'tamu'];
 const CGF_NAMES = [
@@ -54,21 +54,20 @@ const members = [
   { no_jemaat: 1016, nama_jemaat: 'Mikhaela Tampubolon', jenis_kelamin: 'Perempuan', tanggal_lahir: '1983-05-19', tahun_lahir: 1983, bulan_lahir: 5, kuliah_kerja: 'Kerja', no_handphone: '081234567016', ketertarikan_cgf: 'Sudah Join', nama_cgf: 'CGF Pengendalian Diri', kategori_domisili: 'Jakarta Barat', alamat_domisili: 'Jl. Daan Mogot Km. 12 No. 8' },
   { no_jemaat: 1017, nama_jemaat: 'Gabriel Saputra', jenis_kelamin: 'Laki-laki', tanggal_lahir: '2001-04-11', tahun_lahir: 2001, bulan_lahir: 4, kuliah_kerja: 'Kuliah', no_handphone: '081234567017', ketertarikan_cgf: 'Sudah Join', nama_cgf: 'CGF Kasih', kategori_domisili: 'Tangerang', alamat_domisili: 'Jl. Alam Sutera No. 19' },
   { no_jemaat: 1018, nama_jemaat: 'Brenda Anggraini', jenis_kelamin: 'Perempuan', tanggal_lahir: '1998-06-23', tahun_lahir: 1998, bulan_lahir: 6, kuliah_kerja: 'Kuliah', no_handphone: '081234567018', ketertarikan_cgf: 'Sudah Join', nama_cgf: 'CGF Damai', kategori_domisili: 'Jakarta Utara', alamat_domisili: 'Jl. Sunter Agung No. 28' },
-  { no_jemaat: 1019, nama_jemaat: 'Michael Putra', jenis_kelamin: 'Laki-laki', tanggal_lahir: '1979-12-01', tahun_lahir: 1979, bulan_lahir: 12, kuliah_kerja: 'Kerja', no_handphone: '081234567019', ketertarikan_cgf: 'Tertarik', nama_cgf: null, kategori_domisili: 'Jakarta Selatan', alamat_domisili: 'Jl. Fatmawati No. 67' },
-  { no_jemaat: 1020, nama_jemaat: 'Catherine Widodo', jenis_kelamin: 'Perempuan', tanggal_lahir: '1992-03-07', tahun_lahir: 1992, bulan_lahir: 3, kuliah_kerja: 'Kerja', no_handphone: '081234567020', ketertarikan_cgf: 'Tertarik', nama_cgf: null, kategori_domisili: 'Depok', alamat_domisili: 'Jl. Cinere Raya No. 40' },
-  { no_jemaat: 1021, nama_jemaat: 'Ezra Nugroho', jenis_kelamin: 'Laki-laki', tanggal_lahir: '2003-08-15', tahun_lahir: 2003, bulan_lahir: 8, kuliah_kerja: 'Kuliah', no_handphone: '081234567021', ketertarikan_cgf: 'Tertarik', nama_cgf: null, kategori_domisili: 'Jakarta Barat', alamat_domisili: 'Jl. Green Garden No. 11' },
-  { no_jemaat: 1022, nama_jemaat: 'Abigail Larasati', jenis_kelamin: 'Perempuan', tanggal_lahir: '2001-09-30', tahun_lahir: 2001, bulan_lahir: 9, kuliah_kerja: 'Kuliah', no_handphone: '081234567022', ketertarikan_cgf: 'Belum Join', nama_cgf: null, kategori_domisili: 'Bekasi', alamat_domisili: 'Jl. Harapan Indah No. 25' },
+  { no_jemaat: 1019, nama_jemaat: 'Michael Putra', jenis_kelamin: 'Laki-laki', tanggal_lahir: '1979-12-01', tahun_lahir: 1979, bulan_lahir: 12, kuliah_kerja: 'Kerja', no_handphone: '081234567019', ketertarikan_cgf: 'Mau Join', nama_cgf: null, kategori_domisili: 'Jakarta Selatan', alamat_domisili: 'Jl. Fatmawati No. 67' },
+  { no_jemaat: 1020, nama_jemaat: 'Catherine Widodo', jenis_kelamin: 'Perempuan', tanggal_lahir: '1992-03-07', tahun_lahir: 1992, bulan_lahir: 3, kuliah_kerja: 'Kerja', no_handphone: '081234567020', ketertarikan_cgf: 'Mau Join', nama_cgf: null, kategori_domisili: 'Depok', alamat_domisili: 'Jl. Cinere Raya No. 40' },
+  { no_jemaat: 1021, nama_jemaat: 'Ezra Nugroho', jenis_kelamin: 'Laki-laki', tanggal_lahir: '2003-08-15', tahun_lahir: 2003, bulan_lahir: 8, kuliah_kerja: 'Kuliah', no_handphone: '081234567021', ketertarikan_cgf: 'Mau Join', nama_cgf: null, kategori_domisili: 'Jakarta Barat', alamat_domisili: 'Jl. Green Garden No. 11' },
+  { no_jemaat: 1022, nama_jemaat: 'Abigail Larasati', jenis_kelamin: 'Perempuan', tanggal_lahir: '2001-09-30', tahun_lahir: 2001, bulan_lahir: 9, kuliah_kerja: 'Kuliah', no_handphone: '081234567022', ketertarikan_cgf: 'Belum Mau Join', nama_cgf: null, kategori_domisili: 'Bekasi', alamat_domisili: 'Jl. Harapan Indah No. 25' },
   { no_jemaat: 1023, nama_jemaat: 'Natan Ridwan', jenis_kelamin: 'Laki-laki', tanggal_lahir: '1960-02-14', tahun_lahir: 1960, bulan_lahir: 2, kuliah_kerja: 'Kerja', no_handphone: '081234567023', ketertarikan_cgf: 'Sudah Join', nama_cgf: 'CGF Sukacita', kategori_domisili: 'Jakarta Selatan', alamat_domisili: 'Jl. Blok M Square No. 3' },
   { no_jemaat: 1024, nama_jemaat: 'Lidia Purnamasari', jenis_kelamin: 'Perempuan', tanggal_lahir: '1958-07-08', tahun_lahir: 1958, bulan_lahir: 7, kuliah_kerja: 'Kerja', no_handphone: '081234567024', ketertarikan_cgf: 'Sudah Join', nama_cgf: 'CGF Sabar', kategori_domisili: 'Jakarta Utara', alamat_domisili: 'Jl. Pantai Indah Kapuk No. 9' },
   { no_jemaat: 1025, nama_jemaat: 'Imanuel Sihombing', jenis_kelamin: 'Laki-laki', tanggal_lahir: '1965-11-21', tahun_lahir: 1965, bulan_lahir: 11, kuliah_kerja: 'Kerja', no_handphone: '081234567025', ketertarikan_cgf: 'Sudah Join', nama_cgf: 'CGF Kesetiaan', kategori_domisili: 'Bekasi', alamat_domisili: 'Jl. Galaxy No. 18' },
-  { no_jemaat: 1026, nama_jemaat: 'Kirenius Sagala', jenis_kelamin: 'Laki-laki', tanggal_lahir: '2002-04-03', tahun_lahir: 2002, bulan_lahir: 4, kuliah_kerja: 'Kuliah', no_handphone: '081234567026', ketertarikan_cgf: 'Belum Join', nama_cgf: null, kategori_domisili: 'Tangerang', alamat_domisili: 'Jl. Ciputat No. 60' },
+  { no_jemaat: 1026, nama_jemaat: 'Kirenius Sagala', jenis_kelamin: 'Laki-laki', tanggal_lahir: '2002-04-03', tahun_lahir: 2002, bulan_lahir: 4, kuliah_kerja: 'Kuliah', no_handphone: '081234567026', ketertarikan_cgf: 'Belum Mau Join', nama_cgf: null, kategori_domisili: 'Tangerang', alamat_domisili: 'Jl. Ciputat No. 60' },
   { no_jemaat: 1027, nama_jemaat: 'Naomi Simanjuntak', jenis_kelamin: 'Perempuan', tanggal_lahir: '1986-01-29', tahun_lahir: 1986, bulan_lahir: 1, kuliah_kerja: 'Kerja', no_handphone: '081234567027', ketertarikan_cgf: 'Sudah Join', nama_cgf: 'CGF Kerendahan Hati', kategori_domisili: 'Jakarta Selatan', alamat_domisili: 'Jl. Senayan No. 2' },
   { no_jemaat: 1028, nama_jemaat: 'Obed Manurung', jenis_kelamin: 'Laki-laki', tanggal_lahir: '1970-06-16', tahun_lahir: 1970, bulan_lahir: 6, kuliah_kerja: 'Kerja', no_handphone: '081234567028', ketertarikan_cgf: 'Sudah Join', nama_cgf: 'CGF Kemurahan', kategori_domisili: 'Depok', alamat_domisili: 'Jl. Sawangan No. 70' },
   { no_jemaat: 1029, nama_jemaat: 'Priscilla Anggraeni', jenis_kelamin: 'Perempuan', tanggal_lahir: '1996-10-10', tahun_lahir: 1996, bulan_lahir: 10, kuliah_kerja: 'Kerja', no_handphone: '081234567029', ketertarikan_cgf: 'Sudah Join', nama_cgf: 'CGF Pengendalian Diri', kategori_domisili: 'Jakarta Barat', alamat_domisili: 'Jl. Tomang No. 35' },
-  { no_jemaat: 1030, nama_jemaat: 'Rafael Hutapea', jenis_kelamin: 'Laki-laki', tanggal_lahir: '1994-02-28', tahun_lahir: 1994, bulan_lahir: 2, kuliah_kerja: 'Kerja', no_handphone: '081234567030', ketertarikan_cgf: 'Belum Join', nama_cgf: null, kategori_domisili: 'Jakarta Utara', alamat_domisili: 'Jl. Ancol Timur No. 14' },
-  { no_jemaat: 1031, nama_jemaat: 'Sela Marpaung', jenis_kelamin: 'Perempuan', tanggal_lahir: '1976-05-05', tahun_lahir: 1976, bulan_lahir: 5, kuliah_kerja: 'Kerja', no_handphone: '081234567031', ketertarikan_cgf: 'Sudah Join', nama_cgf: 'CGF Kasih', kategori_domisili: 'Jakarta Selatan', alamat_domisili: 'Jl. Cipete Raya No. 50' },
-  { no_jemaat: 1032, nama_jemaat: 'Titus Sibarani', jenis_kelamin: 'Laki-laki', tanggal_lahir: '2004-12-12', tahun_lahir: 2004, bulan_lahir: 12, kuliah_kerja: 'Kuliah', no_handphone: '081234567032', ketertarikan_cgf: 'Tertarik', nama_cgf: null, kategori_domisili: 'Bekasi', alamat_domisili: 'Jl. Bintara No. 42' },
-  { no_jemaat: 1033, nama_jemaat: 'Ulfa Ramadhani', jenis_kelamin: 'Perempuan', tanggal_lahir: '1999-09-19', tahun_lahir: 1999, bulan_lahir: 9, kuliah_kerja: 'Kuliah', no_handphone: '081234567033', ketertarikan_cgf: 'Belum Join', nama_cgf: null, kategori_domisili: 'Jakarta Barat', alamat_domisili: 'Jl. Srengseng No. 20' },
+  { no_jemaat: 1030, nama_jemaat: 'Rafael Hutapea', jenis_kelamin: 'Laki-laki', tanggal_lahir: '1994-02-28', tahun_lahir: 1994, bulan_lahir: 2, kuliah_kerja: 'Kerja', no_handphone: '081234567030', ketertarikan_cgf: 'Belum Mau Join', nama_cgf: null, kategori_domisili: 'Jakarta Utara', alamat_domisili: 'Jl. Ancol Timur No. 14' },
+  { no_jemaat: 1032, nama_jemaat: 'Titus Sibarani', jenis_kelamin: 'Laki-laki', tanggal_lahir: '2004-12-12', tahun_lahir: 2004, bulan_lahir: 12, kuliah_kerja: 'Kuliah', no_handphone: '081234567032', ketertarikan_cgf: 'Mau Join', nama_cgf: null, kategori_domisili: 'Bekasi', alamat_domisili: 'Jl. Bintara No. 42' },
+  { no_jemaat: 1033, nama_jemaat: 'Ulfa Ramadhani', jenis_kelamin: 'Perempuan', tanggal_lahir: '1999-09-19', tahun_lahir: 1999, bulan_lahir: 9, kuliah_kerja: 'Kuliah', no_handphone: '081234567033', ketertarikan_cgf: 'Belum Mau Join', nama_cgf: null, kategori_domisili: 'Jakarta Barat', alamat_domisili: 'Jl. Srengseng No. 20' },
   { no_jemaat: 1034, nama_jemaat: 'Viktor Nainggolan', jenis_kelamin: 'Laki-laki', tanggal_lahir: '1955-03-23', tahun_lahir: 1955, bulan_lahir: 3, kuliah_kerja: 'Kerja', no_handphone: '081234567034', ketertarikan_cgf: 'Sudah Join', nama_cgf: 'CGF Damai', kategori_domisili: 'Jakarta Selatan', alamat_domisili: 'Jl. Radio Dalam No. 7' },
   { no_jemaat: 1035, nama_jemaat: 'Wisye Pakpahan', jenis_kelamin: 'Perempuan', tanggal_lahir: '1962-08-15', tahun_lahir: 1962, bulan_lahir: 8, kuliah_kerja: 'Kerja', no_handphone: '081234567035', ketertarikan_cgf: 'Sudah Join', nama_cgf: 'CGF Sukacita', kategori_domisili: 'Tangerang', alamat_domisili: 'Jl. Serpong Utara No. 55' },
 ];
@@ -393,12 +392,18 @@ const cgfAttendance = generateAttendanceRecords();
 // HELPER FUNCTIONS
 // ============================================================
 
-function getMembers() {
-  return [...members];
+async function getMembers() {
+  if (membersCache) return membersCache;
+  membersCache = fetch(`${API_BASE}/members?limit=1000`)
+    .then(res => res.json())
+    .then(json => json.data || []);
+  return membersCache;
 }
 
-function getMemberById(no_jemaat) {
-  return members.find(m => m.no_jemaat === no_jemaat) || null;
+async function getMemberById(no_jemaat) {
+  const res = await fetch(`${API_BASE}/members/${no_jemaat}`);
+  const json = await res.json();
+  return json.data ?? null;
 }
 
 function getCGFGroups() {
@@ -409,10 +414,11 @@ function getCGFGroupById(cg_id) {
   return cgfGroups.find(g => g.cg_id === cg_id) || null;
 }
 
-function getCGFMembers(cg_id) {
+async function getCGFMembers(cg_id) {
   const assignments = cgfMembers.filter(cm => cm.cg_id === cg_id);
+  const membersData = await getMembers();
   return assignments.map(assignment => {
-    const member = members.find(m => m.no_jemaat === assignment.no_jemaat);
+    const member = membersData.find(m => m.no_jemaat === assignment.no_jemaat);
     return {
       ...member,
       is_leader: assignment.is_leader,
@@ -455,10 +461,17 @@ function getPelayananInfoById(pelayanan_id) {
   return pelayananInfo.find(p => p.pelayanan_id === pelayanan_id) || null;
 }
 
+// Cache for API calls to prevent redundant requests
+let pelayanCache = null;
+let statusHistoryCache = null;
+let membersCache = null;
+
 export async function getPelayan() {
-  const res = await fetch(`${API_BASE}/ministry/pelayan?limit=1000`);
-  const json = await res.json();
-  return json.data || [];
+  if (pelayanCache) return pelayanCache;
+  pelayanCache = fetch(`${API_BASE}/ministry/pelayan?limit=1000`)
+    .then(res => res.json())
+    .then(json => json.data || []);
+  return pelayanCache;
 }
 
 export async function getPelayanById(no_jemaat) {
@@ -468,9 +481,11 @@ export async function getPelayanById(no_jemaat) {
 }
 
 export async function getStatusHistory() {
-  const res = await fetch(`${API_BASE}/status/status-history?limit=1000`);
-  const json = await res.json();
-  return json.data || [];
+  if (statusHistoryCache) return statusHistoryCache;
+  statusHistoryCache = fetch(`${API_BASE}/status/status-history?limit=1000`)
+    .then(res => res.json())
+    .then(json => json.data || []);
+  return statusHistoryCache;
 }
 
 export async function getDashboardKPIs() {
@@ -483,10 +498,11 @@ export async function getGenderDistribution() {
   return (await res.json()).data ?? [];
 }
 
-function getAgeDistribution() {
+async function getAgeDistribution() {
   const currentYear = 2026;
   const distribution = { '10s': 0, '20s': 0, '30s': 0, '40s': 0, '50s': 0, '60s+': 0 };
 
+  const members = await getMembers();
   members.forEach(m => {
     const age = currentYear - m.tahun_lahir;
     if (age < 20) distribution['10s']++;
@@ -500,8 +516,9 @@ function getAgeDistribution() {
   return distribution;
 }
 
-function getDomisiliDistribution() {
+async function getDomisiliDistribution() {
   const distribution = {};
+  const members = await getMembers();
   DOMISILI_AREAS.forEach(area => {
     distribution[area] = members.filter(m => m.kategori_domisili === area).length;
   });
@@ -558,21 +575,25 @@ function getAttendanceTrend() {
   return weeklyData;
 }
 
-function getCGFInterestFunnel() {
-  const tertarik = members.filter(m => m.ketertarikan_cgf === 'Tertarik').length;
-  const belumJoin = members.filter(m => m.ketertarikan_cgf === 'Belum Join').length;
+async function getCGFInterestFunnel() {
+  const members = await getMembers();
+  const belumMauJoin = members.filter(m => m.ketertarikan_cgf === 'Belum Mau Join').length;
+  const mauJoin = members.filter(m => m.ketertarikan_cgf === 'Mau Join').length;
   const sudahJoin = members.filter(m => m.ketertarikan_cgf === 'Sudah Join').length;
-  return { tertarik, belumJoin, sudahJoin };
+  const sudahTidakJoin = members.filter(m => m.ketertarikan_cgf === 'Sudah Tidak Join').length;
+  return { belumMauJoin, mauJoin, sudahJoin, sudahTidakJoin };
 }
 
-function getKuliahKerjaRatio() {
+async function getKuliahKerjaRatio() {
+  const members = await getMembers();
   const kuliah = members.filter(m => m.kuliah_kerja === 'Kuliah').length;
   const kerja = members.filter(m => m.kuliah_kerja === 'Kerja').length;
   return { kuliah, kerja };
 }
 
-function getBirthdayMembers() {
+async function getBirthdayMembers() {
   const currentMonth = 4; // April
+  const members = await getMembers();
   return members.filter(m => m.bulan_lahir === currentMonth);
 }
 
@@ -679,6 +700,7 @@ export async function getServingPercentage() {
 
 export async function getRecentStatusChanges(limit = 10) {
   const statusHistory = await getStatusHistory();
+  const members = await getMembers();
   const withNames = statusHistory.map(record => {
     const member = members.find(m => m.no_jemaat === record.no_jemaat);
     return {
@@ -700,6 +722,7 @@ export async function getStatusHistoryForMember(no_jemaat) {
 
 export async function getAtRiskMembers() {
   const statusHistory = await getStatusHistory();
+  const members = await getMembers();
   const now = new Date('2026-04-03');
   const thirtyDaysAgo = new Date(now);
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);

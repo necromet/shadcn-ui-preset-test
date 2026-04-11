@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"
 import { Users, TrendingUp, AlertCircle, Crown } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "../ui/card.jsx"
 import { Badge } from "../ui/badge.jsx"
@@ -41,7 +42,15 @@ function getInitials(name) {
 }
 
 export function CGHealthDashboard() {
-  const cgData = getCGHealthData()
+  const [cgData, setCgData] = useState([])
+
+  useEffect(() => {
+    async function fetchCGData() {
+      const data = await getCGHealthData()
+      setCgData(data)
+    }
+    fetchCGData()
+  }, [])
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">

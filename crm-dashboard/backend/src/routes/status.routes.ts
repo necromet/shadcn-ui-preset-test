@@ -7,9 +7,9 @@ const router = Router();
 
 /**
  * Get all status records
- * GET /status-history
+ * GET /status/status-history
  */
-router.get('/status-history', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/status/status-history', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 20;
@@ -33,9 +33,9 @@ router.get('/status-history', async (req: Request, res: Response, next: NextFunc
 
 /**
  * Create status change record
- * POST /status-history
+ * POST /status/status-history
  */
-router.post('/status-history', validate(schemas.StatusHistoryCreateSchema), async (req: Request, res: Response, next: NextFunction) => {
+router.post('/status/status-history', validate(schemas.StatusHistoryCreateSchema), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const statusRecord = await StatusModel.create(req.body);
 
@@ -50,9 +50,9 @@ router.post('/status-history', validate(schemas.StatusHistoryCreateSchema), asyn
 
 /**
  * Get status history by ID
- * GET /status-history/:id
+ * GET /status/status-history/:id
  */
-router.get('/status-history/:id', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/status/status-history/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = parseInt(req.params.id, 10);
     const statusRecord = await StatusModel.getById(id);
@@ -76,9 +76,9 @@ router.get('/status-history/:id', async (req: Request, res: Response, next: Next
 
 /**
  * Update status history
- * PUT /status-history/:id
+ * PUT /status/status-history/:id
  */
-router.put('/status-history/:id', validate(schemas.StatusHistoryUpdateSchema), async (req: Request, res: Response, next: NextFunction) => {
+router.put('/status/status-history/:id', validate(schemas.StatusHistoryUpdateSchema), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = parseInt(req.params.id, 10);
     const statusRecord = await StatusModel.update(id, req.body);
@@ -102,9 +102,9 @@ router.put('/status-history/:id', validate(schemas.StatusHistoryUpdateSchema), a
 
 /**
  * Delete status history
- * DELETE /status-history/:id
+ * DELETE /status/status-history/:id
  */
-router.delete('/status-history/:id', async (req: Request, res: Response, next: NextFunction) => {
+router.delete('/status/status-history/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = parseInt(req.params.id, 10);
     const deleted = await StatusModel.delete(id);
@@ -125,9 +125,9 @@ router.delete('/status-history/:id', async (req: Request, res: Response, next: N
 
 /**
  * Get status history for a member
- * GET /members/:no_jemaat/status-history
+ * GET /status/members/:no_jemaat/status-history
  */
-router.get('/members/:no_jemaat/status-history', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/status/members/:no_jemaat/status-history', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const no_jemaat = parseInt(req.params.no_jemaat, 10);
     const records = await StatusModel.getByMember(no_jemaat);

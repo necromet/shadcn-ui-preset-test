@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { Search, Plus, Pencil, Trash2, ChevronLeft, ChevronRight, X, UserPlus } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card.jsx"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table.jsx"
@@ -13,19 +13,27 @@ const PAGE_SIZE = 10
 const EMPTY_FORM = {
   no_jemaat: "",
   nama_jemaat: "",
-  jenis_kelamin: "Laki-laki",
+  jenis_kelamin: "Laki-Laki",
   tanggal_lahir: "",
   kuliah_kerja: "Kerja",
   no_handphone: "",
-  ketertarikan_cgf: "Belum Join",
+  ketertarikan_cgf: "Belum Mau Join",
   nama_cgf: "",
   kategori_domisili: "",
   alamat_domisili: "",
 }
 
 export function Members() {
-  const [members, setMembers] = useState(() => getMembers())
+  const [members, setMembers] = useState([])
   const cgfGroups = useMemo(() => getCGFGroups(), [])
+
+  useEffect(() => {
+    async function fetchMembers() {
+      const membersData = await getMembers()
+      setMembers(membersData)
+    }
+    fetchMembers()
+  }, [])
   const [searchQuery, setSearchQuery] = useState("")
   const [filters, setFilters] = useState({ gender: "", cgfStatus: "", domisili: "" })
   const [currentPage, setCurrentPage] = useState(1)
@@ -49,7 +57,7 @@ export function Members() {
       result = result.filter(
         (m) =>
           m.nama_jemaat.toLowerCase().includes(q) ||
-          m.no_handphone.includes(q) ||
+          (m.no_handphone && m.no_handphone.includes(q)) ||
           String(m.no_jemaat).includes(q)
       )
     }
@@ -145,8 +153,9 @@ export function Members() {
 
   function getCgfStatusBadge(status) {
     if (status === "Sudah Join") return <Badge variant="success">Sudah Join</Badge>
-    if (status === "Tertarik") return <Badge variant="warning">Tertarik</Badge>
-    return <Badge variant="secondary">Belum Join</Badge>
+    if (status === "Mau Join") return <Badge variant="warning">Mau Join</Badge>
+    if (status === "Sudah Tidak Join") return <Badge variant="destructive">Sudah Tidak Join</Badge>
+    return <Badge variant="secondary">Belum Mau Join</Badge>
   }
 
   function renderMemberForm(onSubmit, title) {
@@ -197,7 +206,7 @@ export function Members() {
                   onChange={(e) => handleFormChange("jenis_kelamin", e.target.value)}
                   className="h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
                 >
-                  <option value="Laki-laki">Laki-laki</option>
+                  <option value="Laki-Laki">Laki-laki</option>
                   <option value="Perempuan">Perempuan</option>
                 </select>
               </div>
@@ -243,9 +252,10 @@ export function Members() {
                   onChange={(e) => handleFormChange("ketertarikan_cgf", e.target.value)}
                   className="h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
                 >
-                  <option value="Belum Join">Belum Join</option>
-                  <option value="Sudah Join">Sudah Join</option>
-                  <option value="Tertarik">Tertarik</option>
+                <option value="Belum Mau Join">Belum Mau Join</option>
+                <option value="Mau Join">Mau Join</option>
+                <option value="Sudah Join">Sudah Join</option>
+                <option value="Sudah Tidak Join">Sudah Tidak Join</option>
                 </select>
               </div>
               <div className="flex flex-col gap-1.5">
@@ -341,7 +351,7 @@ export function Members() {
                 className="h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
               >
                 <option value="">All Gender</option>
-                <option value="Laki-laki">Laki-laki</option>
+                <option value="Laki-Laki">Laki-laki</option>
                 <option value="Perempuan">Perempuan</option>
               </select>
               <select
@@ -354,8 +364,9 @@ export function Members() {
               >
                 <option value="">All CGF Status</option>
                 <option value="Sudah Join">Sudah Join</option>
-                <option value="Belum Join">Belum Join</option>
-                <option value="Tertarik">Tertarik</option>
+                <option value="Belum Mau Join">Belum Mau Join</option>
+                <option value="Mau Join">Mau Join</option>
+                <option value="Sudah Tidak Join">Sudah Tidak Join</option>
               </select>
               <select
                 value={filters.domisili}

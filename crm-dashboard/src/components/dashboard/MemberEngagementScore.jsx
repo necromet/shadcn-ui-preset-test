@@ -8,7 +8,7 @@ import { Badge } from "../ui/badge.jsx"
 import { Progress } from "../ui/progress.jsx"
 import { Separator } from "../ui/separator.jsx"
 import { cn } from "../../lib/utils.js"
-import { getAverageEngagementScore, getMemberEngagementScore, members } from "../../data/mock.js"
+import { getAverageEngagementScore, getMemberEngagementScore, getMembers } from "../../data/mock.js"
 
 const SCORE_BREAKDOWN = [
   { label: "Service", weight: "40%" },
@@ -51,20 +51,24 @@ function CustomTooltip({ active, payload, label }) {
 export function MemberEngagementScore() {
   const [avgScore, setAvgScore] = useState(0)
   const [scoreDistribution, setScoreDistribution] = useState([])
+  const [totalMembers, setTotalMembers] = useState(0)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function loadData() {
       try {
         setLoading(true)
-        const avg = await getAverageEngagementScore()
+        const [avg, membersData] = await Promise.all([
+          getAverageEngagementScore(),
+          getMembers()
+        ])
         setAvgScore(avg)
 
         // Calculate score distribution
         const distribution = await Promise.all(
           SCORE_RANGES.map(async (range) => {
             const count = (await Promise.all(
-              members.map(async (m) => {
+              membersData.map(async (m) => {
                 const score = await getMemberEngagementScore(m.no_jemaat)
                 return score >= range.min && score <= range.max ? 1 : 0
               })
@@ -73,6 +77,7 @@ export function MemberEngagementScore() {
           })
         )
         setScoreDistribution(distribution)
+        setTotalMembers(membersData.length)
       } catch (err) {
         console.error("Failed to load engagement scores:", err)
       } finally {
@@ -160,7 +165,7 @@ export function MemberEngagementScore() {
             </div>
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
               <Users className="size-3" />
-              <span>{members.length} total members</span>
+              <span>{totalMembers} total members</span>
             </div>
           </div>
         </div>

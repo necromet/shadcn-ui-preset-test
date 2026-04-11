@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"
 import { Calendar, MapPin, Users, UserCheck, Heart } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "../ui/card.jsx"
 import { Badge } from "../ui/badge.jsx"
@@ -24,7 +25,15 @@ function formatDate(dateStr) {
 }
 
 export function UpcomingEvents() {
-  const events = getUpcomingEvents(3)
+  const [events, setEvents] = useState([])
+
+  useEffect(() => {
+    async function fetchEvents() {
+      const eventsData = await getUpcomingEvents(3)
+      setEvents(eventsData)
+    }
+    fetchEvents()
+  }, [])
 
   return (
     <Card>
