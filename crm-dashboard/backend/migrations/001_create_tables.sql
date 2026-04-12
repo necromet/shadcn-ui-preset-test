@@ -17,7 +17,7 @@ END $$;
 
 -- Create enum type for event categories
 DO $$ BEGIN
-    CREATE TYPE event_category_enum AS ENUM ('Camp', 'Retreat', 'Quarterly', 'Monthly', 'Special');
+    CREATE TYPE event_category_enum AS ENUM ('Camp', 'Retreat', 'Quarterly', 'Monthly', 'Special', 'Workshop');
 EXCEPTION
     WHEN duplicate_object THEN NULL;
 END $$;

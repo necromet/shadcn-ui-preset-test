@@ -999,7 +999,7 @@ paths:
           description: Filter by event category
           schema:
             type: string
-            enum: [Camp, Retreat, Quarterly, Monthly, Special]
+            enum: [Camp, Retreat, Quarterly, Monthly, Special, Workshop]
         - name: start_date
           in: query
           description: Start date filter
@@ -1627,6 +1627,7 @@ paths:
                           Quarterly: 4
                           Monthly: 8
                           Special: 3
+                          Workshop: 2
                       total_participants:
                         type: integer
                         example: 1500
@@ -2582,7 +2583,7 @@ components:
           example: "2024-03-15"
         category:
           type: string
-          enum: [Camp, Retreat, Quarterly, Monthly, Special]
+          enum: [Camp, Retreat, Quarterly, Monthly, Special, Workshop]
           example: "Camp"
         location:
           type: string
@@ -2602,7 +2603,7 @@ components:
           format: date
         category:
           type: string
-          enum: [Camp, Retreat, Quarterly, Monthly, Special]
+          enum: [Camp, Retreat, Quarterly, Monthly, Special, Workshop]
         location:
           type: string
         description:
@@ -2619,7 +2620,7 @@ components:
           format: date
         category:
           type: string
-          enum: [Camp, Retreat, Quarterly, Monthly, Special]
+          enum: [Camp, Retreat, Quarterly, Monthly, Special, Workshop]
         location:
           type: string
         description:

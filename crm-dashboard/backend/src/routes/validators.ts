@@ -392,27 +392,36 @@ export const EventSchema = z.object({
   event_id: z.number().int().optional(),
   event_name: z.string().optional(),
   event_date: z.string().optional(),
-  category: z.enum(['Camp', 'Retreat', 'Quarterly', 'Monthly', 'Special']).optional(),
+  category: z.enum(['Camp', 'Retreat', 'Quarterly', 'Monthly', 'Special', 'Workshop']).optional(),
   location: z.string().optional(),
   description: z.string().optional(),
+  gcal_event_id: z.string().nullable().optional(),
+  gcal_link: z.string().nullable().optional(),
+  last_synced_at: z.string().nullable().optional(),
 });
 export type Event = z.infer<typeof EventSchema>;
 
 export const EventCreateSchema = z.object({
   event_name: z.string(),
   event_date: z.string(),
-  category: z.enum(['Camp', 'Retreat', 'Quarterly', 'Monthly', 'Special']),
+  category: z.enum(['Camp', 'Retreat', 'Quarterly', 'Monthly', 'Special', 'Workshop']),
   location: z.string().optional(),
   description: z.string().optional(),
+  gcal_event_id: z.string().nullable().optional(),
+  gcal_link: z.string().nullable().optional(),
+  last_synced_at: z.string().nullable().optional(),
 });
 export type EventCreate = z.infer<typeof EventCreateSchema>;
 
 export const EventUpdateSchema = z.object({
-  event_name: z.string(),
-  event_date: z.string(),
-  category: z.enum(['Camp', 'Retreat', 'Quarterly', 'Monthly', 'Special']),
+  event_name: z.string().optional(),
+  event_date: z.string().optional(),
+  category: z.enum(['Camp', 'Retreat', 'Quarterly', 'Monthly', 'Special', 'Workshop']).optional(),
   location: z.string().optional(),
   description: z.string().optional(),
+  gcal_event_id: z.string().nullable().optional(),
+  gcal_link: z.string().nullable().optional(),
+  last_synced_at: z.string().nullable().optional(),
 });
 export type EventUpdate = z.infer<typeof EventUpdateSchema>;
 

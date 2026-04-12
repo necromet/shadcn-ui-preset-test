@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom"
-import { LayoutDashboard, Users, UserCheck, CalendarCheck, BarChart3, Settings, BookOpen, UserCog } from "lucide-react"
+import { LayoutDashboard, Users, UserCheck, CalendarCheck, BarChart3, Settings, BookOpen, UserCog, Calendar } from "lucide-react"
 import { cn } from "../../lib/utils.js"
 import { Button } from "../ui/button.jsx"
 
@@ -8,6 +8,7 @@ const navItems = [
   { icon: Users, label: "Members", path: "/members" },
   { icon: UserCheck, label: "CGF Groups", path: "/cgf" },
   { icon: CalendarCheck, label: "Attendance", path: "/attendance" },
+  { icon: Calendar, label: "Events", path: "/events" },
   { icon: BarChart3, label: "Analytics", path: "/analytics" },
   { icon: BookOpen, label: "Pelayanan", path: "/pelayanan" },
   { icon: UserCog, label: "Pelayan", path: "/pelayan" },

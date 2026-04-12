@@ -352,7 +352,7 @@ export interface Event {
   event_id?: number;
   event_name?: string;
   event_date?: string;
-  category?: 'Camp' | 'Retreat' | 'Quarterly' | 'Monthly' | 'Special';
+  category?: 'Camp' | 'Retreat' | 'Quarterly' | 'Monthly' | 'Special' | 'Workshop';
   location?: string;
   description?: string;
 }
@@ -360,7 +360,7 @@ export interface Event {
 export interface EventCreate {
   event_name: string;
   event_date: string;
-  category: 'Camp' | 'Retreat' | 'Quarterly' | 'Monthly' | 'Special';
+  category: 'Camp' | 'Retreat' | 'Quarterly' | 'Monthly' | 'Special' | 'Workshop';
   location?: string;
   description?: string;
 }
@@ -368,7 +368,7 @@ export interface EventCreate {
 export interface EventUpdate {
   event_name: string;
   event_date: string;
-  category: 'Camp' | 'Retreat' | 'Quarterly' | 'Monthly' | 'Special';
+  category: 'Camp' | 'Retreat' | 'Quarterly' | 'Monthly' | 'Special' | 'Workshop';
   location?: string;
   description?: string;
 }

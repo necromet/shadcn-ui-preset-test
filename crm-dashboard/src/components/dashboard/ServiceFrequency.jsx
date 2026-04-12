@@ -43,25 +43,10 @@ export function ServiceFrequency() {
   }, [])
 
   const totalMembers = data.reduce((sum, d) => sum + d.count, 0)
-  const totalServices = data.reduce((sum, d) => {
-    if (d.range === "0") return sum
-    if (d.range === "51+") return sum + d.count * 55
-    const mid = d.range.split("-").map(Number)
-    const avg = (mid[0] + mid[1]) / 2
-    return sum + d.count * avg
-  }, 0)
+  const totalServices = data.reduce((sum, d) => sum + d.count * d.avgServices, 0)
   const avgServicesPerMember = totalMembers > 0 ? Math.round(totalServices / totalMembers) : 0
 
-  const chartData = data.map((d) => {
-    let avgServices = 0
-    if (d.range === "0") avgServices = 0
-    else if (d.range === "51+") avgServices = 55
-    else {
-      const mid = d.range.split("-").map(Number)
-      avgServices = (mid[0] + mid[1]) / 2
-    }
-    return { ...d, avgServices }
-  })
+  const chartData = data
 
   return (
     <Card>

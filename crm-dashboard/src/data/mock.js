@@ -219,21 +219,25 @@ const cnx_jemaat_status_history = [
 // ============================================================
 
 const event_history = [
-  { event_id: 1, event_name: 'Easter Retreat 2025', event_date: '2025-04-18', category: 'Retreat', location: 'Villa Istana Bunga, Lembang', description: 'Retreat Paskah dengan tema "Kebangkitan dan Harapan Baru" selama 3 hari 2 malam' },
-  { event_id: 2, event_name: 'Worship Night Mei', event_date: '2025-05-17', category: 'Monthly', location: 'Gedung Gereja Utama', description: 'Malam pujian dan penyembahan bulanan dengan tema "Berserah"' },
-  { event_id: 3, event_name: 'Quarterly Fellowship Q2', event_date: '2025-06-14', category: 'Quarterly', location: 'Aula Serbaguna Komunitas', description: 'Fellowship triwulanan dengan games, makan bersama, dan sharing kesaksian' },
-  { event_id: 4, event_name: 'Youth Camp 2025', event_date: '2025-07-04', category: 'Camp', location: 'Bumi Perkemahan Cibubur', description: 'Kemah pemuda selama 4 hari dengan pelatihan kepemimpinan dan ibadah outdoor' },
-  { event_id: 5, event_name: 'Worship Night Agustus', event_date: '2025-08-16', category: 'Monthly', location: 'Gedung Gereja Utama', description: 'Malam pujian dengan tema "Kemerdekaan Sejati"' },
-  { event_id: 6, event_name: 'Quarterly Fellowship Q3', event_date: '2025-09-13', category: 'Quarterly', location: 'Aula Serbaguna Komunitas', description: 'Fellowship triwulanan dengan acara bakar-bakar dan sharing pelayanan' },
-  { event_id: 7, event_name: 'Family Retreat 2025', event_date: '2025-10-03', category: 'Retreat', location: 'Hotel Puncak Pass Resort', description: 'Retreat keluarga dengan sesi parenting dan family bonding' },
-  { event_id: 8, event_name: 'Worship Night November', event_date: '2025-11-15', category: 'Monthly', location: 'Gedung Gereja Utama', description: 'Malam pujian dengan tema "Syukur dan Pengharapan"' },
-  { event_id: 9, event_name: 'Christmas Service 2025', event_date: '2025-12-24', category: 'Special', location: 'Gedung Gereja Utama', description: 'Ibadah Natal dengan drama, paduan suara, dan perayaan kelahiran Kristus' },
-  { event_id: 10, event_name: 'New Year Revival 2026', event_date: '2026-01-01', category: 'Special', location: 'Gedung Gereja Utama', description: 'Ibadah pergantian tahun dengan doa syafaat dan komitmen baru' },
-  { event_id: 11, event_name: 'Quarterly Fellowship Q1 2026', event_date: '2026-01-17', category: 'Quarterly', location: 'Aula Serbaguna Komunitas', description: 'Fellowship triwulanan awal tahun dengan visi dan tujuan 2026' },
-  { event_id: 12, event_name: 'Worship Night Februari', event_date: '2026-02-14', category: 'Monthly', location: 'Gedung Gereja Utama', description: 'Malam pujian kasih dengan tema "Kasih yang Memulihkan"' },
-  { event_id: 13, event_name: 'Easter Retreat 2026', event_date: '2026-04-03', category: 'Retreat', location: 'Villa Istana Bunga, Lembang', description: 'Retreat Paskah dengan tema "Hidup Baru dalam Kristus"' },
-  { event_id: 14, event_name: 'Worship Night Maret', event_date: '2026-03-14', category: 'Monthly', location: 'Gedung Gereja Utama', description: 'Malam pujian dengan tema "Iman yang Teguh"' },
-  { event_id: 15, event_name: 'Quarterly Fellowship Q2 2026', event_date: '2026-04-18', category: 'Quarterly', location: 'Aula Serbaguna Komunitas', description: 'Fellowship triwulanan Q2 dengan tema "Pertumbuhan Bersama"' },
+  { event_id: 1, event_name: 'Easter Retreat 2025', event_date: '2025-04-18', category: 'Retreat', location: 'Villa Istana Bunga, Lembang', description: 'Retreat Paskah dengan tema "Kebangkitan dan Harapan Baru" selama 3 hari 2 malam', gcal_event_id: 'gcal_abc123', gcal_link: 'https://calendar.google.com/event?eid=abc123', last_synced_at: '2025-04-10T08:00:00Z' },
+  { event_id: 2, event_name: 'Worship Night Mei', event_date: '2025-05-17', category: 'Monthly', location: 'Gedung Gereja Utama', description: 'Malam pujian dan penyembahan bulanan dengan tema "Berserah"', gcal_event_id: 'gcal_def456', gcal_link: 'https://calendar.google.com/event?eid=def456', last_synced_at: '2025-05-10T09:00:00Z' },
+  { event_id: 3, event_name: 'Quarterly Fellowship Q2', event_date: '2025-06-14', category: 'Quarterly', location: 'Aula Serbaguna Komunitas', description: 'Fellowship triwulanan dengan games, makan bersama, dan sharing kesaksian', gcal_event_id: null, gcal_link: null, last_synced_at: null },
+  { event_id: 4, event_name: 'Youth Camp 2025', event_date: '2025-07-04', category: 'Camp', location: 'Bumi Perkemahan Cibubur', description: 'Kemah pemuda selama 4 hari dengan pelatihan kepemimpinan dan ibadah outdoor', gcal_event_id: 'gcal_ghi789', gcal_link: 'https://calendar.google.com/event?eid=ghi789', last_synced_at: '2025-06-28T10:00:00Z' },
+  { event_id: 5, event_name: 'Worship Night Agustus', event_date: '2025-08-16', category: 'Monthly', location: 'Gedung Gereja Utama', description: 'Malam pujian dengan tema "Kemerdekaan Sejati"', gcal_event_id: null, gcal_link: null, last_synced_at: null },
+  { event_id: 6, event_name: 'Quarterly Fellowship Q3', event_date: '2025-09-13', category: 'Quarterly', location: 'Aula Serbaguna Komunitas', description: 'Fellowship triwulanan dengan acara bakar-bakar dan sharing pelayanan', gcal_event_id: 'gcal_jkl012', gcal_link: 'https://calendar.google.com/event?eid=jkl012', last_synced_at: '2025-09-05T11:00:00Z' },
+  { event_id: 7, event_name: 'Family Retreat 2025', event_date: '2025-10-03', category: 'Retreat', location: 'Hotel Puncak Pass Resort', description: 'Retreat keluarga dengan sesi parenting dan family bonding', gcal_event_id: 'gcal_mno345', gcal_link: 'https://calendar.google.com/event?eid=mno345', last_synced_at: '2025-09-25T08:00:00Z' },
+  { event_id: 8, event_name: 'Worship Night November', event_date: '2025-11-15', category: 'Monthly', location: 'Gedung Gereja Utama', description: 'Malam pujian dengan tema "Syukur dan Pengharapan"', gcal_event_id: null, gcal_link: null, last_synced_at: null },
+  { event_id: 9, event_name: 'Christmas Service 2025', event_date: '2025-12-24', category: 'Special', location: 'Gedung Gereja Utama', description: 'Ibadah Natal dengan drama, paduan suara, dan perayaan kelahiran Kristus', gcal_event_id: 'gcal_pqr678', gcal_link: 'https://calendar.google.com/event?eid=pqr678', last_synced_at: '2025-12-15T09:00:00Z' },
+  { event_id: 10, event_name: 'New Year Revival 2026', event_date: '2026-01-01', category: 'Special', location: 'Gedung Gereja Utama', description: 'Ibadah pergantian tahun dengan doa syafaat dan komitmen baru', gcal_event_id: 'gcal_stu901', gcal_link: 'https://calendar.google.com/event?eid=stu901', last_synced_at: '2025-12-28T10:00:00Z' },
+  { event_id: 11, event_name: 'Quarterly Fellowship Q1 2026', event_date: '2026-01-17', category: 'Quarterly', location: 'Aula Serbaguna Komunitas', description: 'Fellowship triwulanan awal tahun dengan visi dan tujuan 2026', gcal_event_id: null, gcal_link: null, last_synced_at: null },
+  { event_id: 12, event_name: 'Worship Night Februari', event_date: '2026-02-14', category: 'Monthly', location: 'Gedung Gereja Utama', description: 'Malam pujian kasih dengan tema "Kasih yang Memulihkan"', gcal_event_id: 'gcal_vwx234', gcal_link: 'https://calendar.google.com/event?eid=vwx234', last_synced_at: '2026-02-08T08:00:00Z' },
+  { event_id: 13, event_name: 'Easter Retreat 2026', event_date: '2026-04-03', category: 'Retreat', location: 'Villa Istana Bunga, Lembang', description: 'Retreat Paskah dengan tema "Hidup Baru dalam Kristus"', gcal_event_id: 'gcal_yza567', gcal_link: 'https://calendar.google.com/event?eid=yza567', last_synced_at: '2026-03-28T09:00:00Z' },
+  { event_id: 14, event_name: 'Worship Night Maret', event_date: '2026-03-14', category: 'Monthly', location: 'Gedung Gereja Utama', description: 'Malam pujian dengan tema "Iman yang Teguh"', gcal_event_id: 'gcal_bcd890', gcal_link: 'https://calendar.google.com/event?eid=bcd890', last_synced_at: '2026-03-08T10:00:00Z' },
+  { event_id: 15, event_name: 'Quarterly Fellowship Q2 2026', event_date: '2026-04-18', category: 'Quarterly', location: 'Aula Serbaguna Komunitas', description: 'Fellowship triwulanan Q2 dengan tema "Pertumbuhan Bersama"', gcal_event_id: null, gcal_link: null, last_synced_at: null },
+  { event_id: 16, event_name: 'Prayer Breakfast', event_date: '2026-04-04', category: 'Monthly', location: 'Gedung Gereja Utama', description: 'Sarapan doa bersama untuk memulai bulan April dengan syukur', gcal_event_id: 'gcal_efg111', gcal_link: 'https://calendar.google.com/event?eid=efg111', last_synced_at: '2026-03-30T08:00:00Z' },
+  { event_id: 17, event_name: 'Community Service Day', event_date: '2026-04-05', category: 'Special', location: 'RPTRA Kalijodo', description: 'Pelayanan komunitas membersihkan taman dan berbagi kasih dengan warga sekitar', gcal_event_id: null, gcal_link: null, last_synced_at: null },
+  { event_id: 18, event_name: 'Youth Gathering', event_date: '2026-04-06', category: 'Monthly', location: 'Cafe Grace, Kemang', description: 'Pertemuan pemuda dengan diskusi dan fellowship santai', gcal_event_id: 'gcal_hij222', gcal_link: 'https://calendar.google.com/event?eid=hij222', last_synced_at: '2026-04-01T07:00:00Z' },
+  { event_id: 19, event_name: 'CGF Leaders Meeting', event_date: '2026-04-08', category: 'Quarterly', location: 'Ruang Rapat Gereja Lt. 2', description: 'Rapat koordinasi pemimpin CGF untuk program Q2 2026', gcal_event_id: null, gcal_link: null, last_synced_at: null },
 ];
 
 // ============================================================
@@ -405,6 +409,35 @@ async function getMemberById(no_jemaat) {
   const json = await res.json();
   return json.data ?? null;
 }
+
+async function getEvents(filters = {}) {
+  const params = new URLSearchParams();
+  if (filters.page) params.set('page', filters.page);
+  if (filters.limit) params.set('limit', filters.limit);
+  if (filters.category) params.set('category', filters.category);
+  if (filters.start_date) params.set('start_date', filters.start_date);
+  if (filters.end_date) params.set('end_date', filters.end_date);
+  const query = params.toString();
+  const res = await fetch(`${API_BASE}/events${query ? `?${query}` : ''}`);
+  const json = await res.json();
+  return json.data || [];
+}
+
+async function getEventById(eventId) {
+  const res = await fetch(`${API_BASE}/events/${eventId}`);
+  const json = await res.json();
+  return json.data ?? null;
+}
+
+// async function getUpcomingEvents(days = 7) {
+//   const now = new Date();
+//   const endDate = new Date(now);
+//   endDate.setDate(endDate.getDate() + days);
+//   const nowStr = now.toISOString().split('T')[0];
+//   const endStr = endDate.toISOString().split('T')[0];
+//   const events = await getEvents({ start_date: nowStr, end_date: endStr, limit: 100 });
+//   return events;
+// }
 
 function getCGFGroups() {
   return [...cgfGroups];
@@ -794,27 +827,37 @@ export async function getAtRiskMembers() {
 
 export async function getServiceFrequencyDistribution() {
   const pelayanData = await getPelayan();
-  const buckets = { '0': 0, '1-5': 0, '6-10': 0, '11-20': 0, '21-50': 0, '51+': 0 };
+  const buckets = { '1': 0, '2': 0, '3': 0, '4+': 0 };
+  const sums = { '1': 0, '2': 0, '3': 0, '4+': 0 };
 
   pelayanData.forEach(p => {
     const t = p.total_pelayanan;
-    if (t === 0) buckets['0']++;
-    else if (t <= 5) buckets['1-5']++;
-    else if (t <= 10) buckets['6-10']++;
-    else if (t <= 20) buckets['11-20']++;
-    else if (t <= 50) buckets['21-50']++;
-    else buckets['51+']++;
+    let key;
+    if (t === 1) key = '1';
+    else if (t === 2) key = '2';
+    else if (t === 3) key = '3';
+    else key = '4+';
+    buckets[key]++;
+    sums[key] += t;
   });
 
-  return Object.entries(buckets).map(([range, count]) => ({ range, count }));
+  return Object.entries(buckets).map(([range, count]) => ({
+    range,
+    count,
+    avgServices: count > 0 ? Math.round(sums[range] / count) : 0,
+  }));
 }
 
-export async function getUpcomingEvents(limit = 3) {
-  const now = '2026-04-03';
+export async function getUpcomingEvents(days = 7) {
+  const now = new Date('2026-04-03');
+  const endDate = new Date(now);
+  endDate.setDate(endDate.getDate() + days);
+  const nowStr = now.toISOString().split('T')[0];
+  const endStr = endDate.toISOString().split('T')[0];
+
   const upcoming = event_history
-    .filter(e => e.event_date > now)
-    .sort((a, b) => new Date(a.event_date) - new Date(b.event_date))
-    .slice(0, limit);
+    .filter(e => e.event_date >= nowStr && e.event_date <= endStr)
+    .sort((a, b) => new Date(a.event_date) - new Date(b.event_date));
 
   return upcoming.map(event => {
     const participantCount = event_participation.filter(ep => ep.event_id === event.event_id).length;
@@ -1015,6 +1058,8 @@ export {
 //   // Helper functions
   getMembers,
   getMemberById,
+  getEvents,
+  getEventById,
   getCGFGroups,
   getCGFGroupById,
   getCGFMembers,

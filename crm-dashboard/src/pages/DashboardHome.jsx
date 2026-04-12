@@ -306,7 +306,7 @@ export function DashboardHome() {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="ministry">Ministry</TabsTrigger>
           <TabsTrigger value="events">Events</TabsTrigger>
-          <TabsTrigger value="engagement">Engagement</TabsTrigger>
+          {/* <TabsTrigger value="engagement">Engagement</TabsTrigger> */}
           <TabsTrigger value="pastoral">Pastoral</TabsTrigger>
           <TabsTrigger value="cg-health">CG Health</TabsTrigger>
         </TabsList>

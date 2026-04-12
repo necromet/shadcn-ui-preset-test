@@ -12,6 +12,9 @@ const pool = new Pool({
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 5000,
   ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined,
+  keepAlive: true,
+  keepAliveInitialDelayMillis: 0,
+  allowExitOnIdle: true,
 });
 
 pool.on('error', (err: Error) => {
@@ -19,16 +22,46 @@ pool.on('error', (err: Error) => {
   process.exit(1);
 });
 
+function isRetriableError(error: any): boolean {
+  if (!error) return false;
+  const code = error.code || '';
+  const message = error.message || '';
+  return (
+    code === 'ECONNRESET' ||
+    code === 'ECONNREFUSED' ||
+    code === 'ETIMEDOUT' ||
+    message.includes('Connection terminated') ||
+    message.includes('connection closed') ||
+    message.includes('read ECONNRESET')
+  );
+}
+
+async function delay(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export async function query<T extends QueryResultRow = any>(
   text: string,
   params?: unknown[],
+  retries = 3,
 ): Promise<QueryResult<T>> {
-  try {
-    return await pool.query<T>(text, params);
-  } catch (error) {
-    console.error('Database query error:', error);
-    throw error;
+  let lastError: any;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      return await pool.query<T>(text, params);
+    } catch (error) {
+      lastError = error;
+      if (isRetriableError(error) && attempt < retries) {
+        const backoff = Math.pow(2, attempt) * 100;
+        console.warn(`Database query failed, retrying in ${backoff}ms (attempt ${attempt + 1}/${retries})`);
+        await delay(backoff);
+        continue;
+      }
+      break;
+    }
   }
+  console.error('Database query error:', lastError);
+  throw lastError;
 }
 
 export async function transaction<T>(

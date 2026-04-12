@@ -31,6 +31,8 @@ const pageTitles = {
   "/attendance": "Attendance",
   "/analytics": "Analytics",
   "/settings": "Settings",
+  "/pelayanan": "Pelayanan",
+  "/pelayan": "Pelayan"
 }
 
 export function Header({ onToggleSidebar, sidebarOpen }) {
@@ -70,7 +72,6 @@ export function Header({ onToggleSidebar, sidebarOpen }) {
           </Button>
           <div>
             <h1 className="text-xl font-semibold">{title}</h1>
-            <p className="text-sm text-muted-foreground">Connexion CMS</p>
           </div>
         </div>
         <div className="flex items-center gap-3">

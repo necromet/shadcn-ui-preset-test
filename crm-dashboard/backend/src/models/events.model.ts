@@ -4,29 +4,38 @@ export interface Event {
   event_id: number;
   event_name: string;
   event_date: string;
-  category: 'Camp' | 'Retreat' | 'Quarterly' | 'Monthly' | 'Special';
+  category: 'Camp' | 'Retreat' | 'Quarterly' | 'Monthly' | 'Special' | 'Workshop';
   location: string | null;
   description: string | null;
+  gcal_event_id: string | null;
+  gcal_link: string | null;
+  last_synced_at: string | null;
 }
 
 export interface EventCreateData {
   event_name: string;
   event_date: string;
-  category: 'Camp' | 'Retreat' | 'Quarterly' | 'Monthly' | 'Special';
+  category: 'Camp' | 'Retreat' | 'Quarterly' | 'Monthly' | 'Special' | 'Workshop';
   location?: string;
   description?: string;
+  gcal_event_id?: string | null;
+  gcal_link?: string | null;
+  last_synced_at?: string | null;
 }
 
 export interface EventUpdateData {
   event_name?: string;
   event_date?: string;
-  category?: 'Camp' | 'Retreat' | 'Quarterly' | 'Monthly' | 'Special';
+  category?: 'Camp' | 'Retreat' | 'Quarterly' | 'Monthly' | 'Special' | 'Workshop';
   location?: string;
   description?: string;
+  gcal_event_id?: string | null;
+  gcal_link?: string | null;
+  last_synced_at?: string | null;
 }
 
 export interface EventFilters {
-  category?: 'Camp' | 'Retreat' | 'Quarterly' | 'Monthly' | 'Special';
+  category?: 'Camp' | 'Retreat' | 'Quarterly' | 'Monthly' | 'Special' | 'Workshop';
   start_date?: string;
   end_date?: string;
 }
@@ -109,10 +118,19 @@ export const EventsModel = {
 
   async create(data: EventCreateData): Promise<Event> {
     const result = await query<Event>(
-      `INSERT INTO event_history (event_name, event_date, category, location, description)
-       VALUES ($1, $2, $3, $4, $5)
+      `INSERT INTO event_history (event_name, event_date, category, location, description, gcal_event_id, gcal_link, last_synced_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
        RETURNING *`,
-      [data.event_name, data.event_date, data.category, data.location || null, data.description || null],
+      [
+        data.event_name,
+        data.event_date,
+        data.category,
+        data.location || null,
+        data.description || null,
+        data.gcal_event_id || null,
+        data.gcal_link || null,
+        data.last_synced_at || null,
+      ],
     );
     return result.rows[0];
   },

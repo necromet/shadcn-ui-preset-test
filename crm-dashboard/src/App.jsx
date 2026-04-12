@@ -9,6 +9,7 @@ import { DashboardHome } from "./pages/DashboardHome.jsx"
 import { Members } from "./pages/Members.jsx"
 import { CGFGroups } from "./pages/CGFGroups.jsx"
 import { Attendance } from "./pages/Attendance.jsx"
+import { Events } from "./pages/Events.jsx"
 import { Analytics } from "./pages/Analytics.jsx"
 import { Login } from "./pages/Login.jsx"
 import { Settings } from "./pages/Settings.jsx"
@@ -55,6 +56,7 @@ function App() {
                     <Route path="/members" element={<Members />} />
                     <Route path="/cgf" element={<CGFGroups />} />
                     <Route path="/attendance" element={<Attendance />} />
+                    <Route path="/events" element={<Events />} />
                     <Route path="/analytics" element={<Analytics />} />
                     <Route path="/pelayanan" element={<PelayananInfo />} />
                     <Route path="/pelayan" element={<Pelayan />} />
