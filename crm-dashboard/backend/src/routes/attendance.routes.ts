@@ -71,7 +71,21 @@ router.post('/attendance/bulk', async (req: Request, res: Response, next: NextFu
       return;
     }
 
-    const created = await AttendanceModel.bulkCreate(cg_id, tanggal, records);
+    const validKeterangan = ['hadir', 'izin', 'tidak_hadir', 'tamu'];
+    const filteredRecords = records.filter(
+      (r: { no_jemaat: number; keterangan: string }) =>
+        r.no_jemaat && r.keterangan && validKeterangan.includes(r.keterangan),
+    );
+
+    if (filteredRecords.length === 0) {
+      res.status(400).json({
+        success: false,
+        error: { code: 400, message: 'No valid attendance records provided' },
+      });
+      return;
+    }
+
+    const created = await AttendanceModel.bulkCreate(cg_id, tanggal, filteredRecords);
 
     res.status(201).json({
       success: true,

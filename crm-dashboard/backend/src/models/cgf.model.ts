@@ -117,7 +117,8 @@ export const CGFModel = {
     const result = await query<CGFMember>(
       `SELECT cm.no_jemaat, cm.nama_cgf, cm.is_leader
        FROM cgf_members cm
-       WHERE cm.nama_cgf = $1
+       JOIN cgf_info ci ON cm.nama_cgf = ci.nama_cgf
+       WHERE ci.id = $1
        ORDER BY cm.is_leader DESC, cm.no_jemaat ASC`,
       [cgId],
     );
@@ -156,7 +157,10 @@ export const CGFModel = {
 
   async removeMemberFromGroup(noJemaat: number, cgId: string): Promise<boolean> {
     const result = await query(
-      'DELETE FROM cgf_members WHERE no_jemaat = $1 AND nama_cgf = $2',
+      `DELETE FROM cgf_members 
+       WHERE no_jemaat = $1 AND nama_cgf = (
+         SELECT nama_cgf FROM cgf_info WHERE id = $2
+       )`,
       [noJemaat, cgId],
     );
     return (result.rowCount ?? 0) > 0;
