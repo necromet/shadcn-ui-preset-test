@@ -252,6 +252,23 @@ router.get('/analytics/events/summary', async (req: Request, res: Response, next
 });
 
 /**
+ * Get event attendance trends
+ * GET /analytics/events/attendance-trend
+ */
+router.get('/analytics/events/attendance-trend', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const trends = await AnalyticsModel.getEventAttendanceTrends();
+
+    res.json({
+      success: true,
+      data: trends,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
  * Get birthday members
  * GET /analytics/members/birthday
  */

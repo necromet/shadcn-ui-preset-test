@@ -307,7 +307,7 @@ export function DashboardHome() {
           <TabsTrigger value="ministry">Ministry</TabsTrigger>
           <TabsTrigger value="events">Events</TabsTrigger>
           {/* <TabsTrigger value="engagement">Engagement</TabsTrigger> */}
-          <TabsTrigger value="pastoral">Pastoral</TabsTrigger>
+          {/* <TabsTrigger value="pastoral">Pastoral</TabsTrigger> */}
           <TabsTrigger value="cg-health">CG Health</TabsTrigger>
         </TabsList>
         <TabsContent value="overview" className="flex flex-col gap-6">

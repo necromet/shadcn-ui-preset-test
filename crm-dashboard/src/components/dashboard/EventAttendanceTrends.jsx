@@ -18,7 +18,9 @@ import { Button } from "../ui/button.jsx"
 import { Separator } from "../ui/separator.jsx"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs.jsx"
 import { cn } from "../../lib/utils.js"
-import { getEventAttendanceTrend, getEvents } from "../../data/mock.js"
+import { getEvents, fetchEventAttendanceTrends } from "../../data/mock.js"
+
+const API_BASE = import.meta.env.VITE_API_URL
 
 // ─── Shared constants ──────────────────────────────────────────────
 
@@ -101,14 +103,16 @@ function CalendarView({ allEvents }) {
   const monthLabel = currentDate.toLocaleString("en-US", { month: "long", year: "numeric" })
 
   const eventsByDay = useMemo(() => {
-    const prefix = `${year}-${String(month + 1).padStart(2, "0")}`
     const map = {}
     allEvents
-      .filter((e) => e.event_date.startsWith(prefix))
+      .filter((e) => {  
+      const eventDate = new Date(e.event_date);
+      return eventDate.getFullYear() === year && eventDate.getMonth() === month;
+    })
       .forEach((event) => {
-        const day = parseInt(event.event_date.split("-")[2], 10)
-        if (!map[day]) map[day] = []
-        map[day].push(event)
+        const day = new Date(event.event_date).getDate();
+      if (!map[day]) map[day] = [];
+      map[day].push(event);
       })
     return map
   }, [allEvents, year, month])
@@ -315,7 +319,7 @@ export function EventAttendanceTrends() {
   useEffect(() => {
     async function fetchData() {
       const [trendData, eventsData] = await Promise.all([
-        getEventAttendanceTrend(),
+        fetchEventAttendanceTrends(),
         getEvents({ limit: 100 }),
       ])
       setRawData(trendData)
