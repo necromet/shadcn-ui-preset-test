@@ -182,8 +182,10 @@ export function Events() {
                         <div>
                           <p className="font-medium">{event.event_name}</p>
                           {event.description && (
-                            <p className="text-sm text-muted-foreground line-clamp-1">{event.description}</p>
-                          )}
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {event.description.length > 30 ? `${event.description.substring(0, 30)}...` : event.description}
+                        </p>
+                      )}
                         </div>
                       </TableCell>
                       <TableCell>

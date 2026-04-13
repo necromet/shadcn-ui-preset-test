@@ -350,6 +350,49 @@ export const AnalyticsModel = {
     return result.rows;
   },
 
+  async getEventAttendanceTrends(): Promise<Record<string, unknown>[]> {
+    const result = await query<{
+      month: string;
+      category: string;
+      count: string;
+    }>(`
+      SELECT
+        TO_CHAR(eh.event_date, 'Mon YYYY') as month,
+        eh.category,
+        COUNT(ep.id) as count
+      FROM event_history eh
+      LEFT JOIN event_participation ep ON eh.event_id = ep.event_id
+      WHERE eh.event_date >= CURRENT_DATE - INTERVAL '6 months'
+      GROUP BY month, eh.category
+      ORDER BY MIN(eh.event_date) ASC, eh.category
+    `);
+
+    const trendMap = new Map<string, Record<string, unknown>>();
+    
+    result.rows.forEach((r) => {
+      const month = r.month;
+      const category = r.category;
+      const count = parseInt(r.count, 10);
+      
+      if (!trendMap.has(month)) {
+        trendMap.set(month, {
+          month,
+          Camp: 0,
+          Retreat: 0,
+          Quarterly: 0,
+          Monthly: 0,
+          Special: 0,
+          Workshop: 0,
+        });
+      }
+      
+      const monthData = trendMap.get(month)!;
+      monthData[category] = count;
+    });
+
+    return Array.from(trendMap.values());
+  },
+
   async getCGHealthData(): Promise<CGHealthItem[]> {
     const result = await query<{
       nama_cgf: string;

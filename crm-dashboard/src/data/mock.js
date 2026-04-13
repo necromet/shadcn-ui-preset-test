@@ -883,30 +883,10 @@ export async function getWorshipTeamComposition() {
   return { vocalists, instrumentalists };
 }
 
-export async function getEventAttendanceTrend() {
-  const now = new Date('2026-04-03');
-  const months = [];
-
-  for (let i = 11; i >= 0; i--) {
-    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    const monthEnd = new Date(d.getFullYear(), d.getMonth() + 1, 0);
-    const monthLabel = d.toLocaleString('en-US', { month: 'short', year: 'numeric' });
-
-    const monthEvents = event_history.filter(e => {
-      const eventDate = new Date(e.event_date);
-      return eventDate >= d && eventDate <= monthEnd;
-    });
-
-    const categories = { Camp: 0, Retreat: 0, Quarterly: 0, Monthly: 0, Special: 0 };
-    monthEvents.forEach(event => {
-      const count = event_participation.filter(ep => ep.event_id === event.event_id).length;
-      categories[event.category] += count;
-    });
-
-    months.push({ month: monthLabel, ...categories });
-  }
-
-  return months;
+export async function fetchEventAttendanceTrends() {
+  const res = await fetch(`${API_BASE}/analytics/events/attendance-trend`)
+  const json = await res.json()
+  return json.data || []
 }
 
 export async function getMultiSkillDistribution() {
