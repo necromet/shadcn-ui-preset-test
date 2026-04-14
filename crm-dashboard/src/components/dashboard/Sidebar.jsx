@@ -1,17 +1,31 @@
 import { NavLink } from "react-router-dom"
-import { LayoutDashboard, Users, UserCheck, CalendarCheck, BarChart3, Settings, BookOpen, UserCog, Calendar } from "lucide-react"
+import { LayoutDashboard, Users, UserCheck, CalendarCheck, Settings, BookOpen, UserCog, Calendar } from "lucide-react"
 import { cn } from "../../lib/utils.js"
 import { Button } from "../ui/button.jsx"
 
-const navItems = [
-  { icon: LayoutDashboard, label: "Dashboard", path: "/" },
-  { icon: Users, label: "Members", path: "/members" },
-  { icon: UserCheck, label: "CGF Groups", path: "/cgf" },
-  { icon: CalendarCheck, label: "Attendance", path: "/attendance" },
-  { icon: Calendar, label: "Events", path: "/events" },
-  { icon: BarChart3, label: "Analytics", path: "/analytics" },
-  { icon: BookOpen, label: "Pelayanan", path: "/pelayanan" },
-  { icon: UserCog, label: "Pelayan", path: "/pelayan" },
+const navSections = [
+  {
+    label: "Overview",
+    items: [
+      { icon: LayoutDashboard, label: "Dashboard", path: "/" },
+    ],
+  },
+  {
+    label: "Jemaat",
+    items: [
+      { icon: Users, label: "Members", path: "/members" },
+      { icon: CalendarCheck, label: "Attendance", path: "/attendance" },
+      { icon: Calendar, label: "Events", path: "/events" },
+      { icon: BookOpen, label: "Pelayanan", path: "/pelayanan" },
+      { icon: UserCog, label: "Pelayan", path: "/pelayan" },
+    ],
+  },
+  {
+    label: "CGF",
+    items: [
+      { icon: UserCheck, label: "CGF Groups", path: "/cgf" },
+    ],
+  },
 ]
 
 const bottomNavItems = [
@@ -43,47 +57,69 @@ export function Sidebar({ isOpen = true }) {
         </span>
       </div>
 
-      <nav className="flex-1 py-4 flex flex-col gap-1 items-center">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            end={item.path === "/"}
-            className={cn(
-              "transition-all duration-200",
-              isOpen ? "w-full px-2" : "w-9"
-            )}
-          >
-            {({ isActive }) => (
-              <Button
-                variant={isActive ? "secondary" : "ghost"}
-                size={isOpen ? "default" : "icon"}
+      <nav className="flex-1 py-4 flex flex-col gap-4 overflow-y-auto">
+        {navSections.map((section) => (
+          <div key={section.label} className="flex flex-col gap-1 px-2">
+            <span
+              className={cn(
+                "text-xs font-semibold uppercase tracking-wider text-sidebar-foreground/50 px-2 mb-1 transition-opacity duration-200",
+                isOpen ? "opacity-100" : "opacity-0 h-0"
+              )}
+            >
+              {section.label}
+            </span>
+            {section.items.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                end={item.path === "/"}
                 className={cn(
                   "transition-all duration-200",
-                  isOpen && "w-full justify-start gap-3",
-                  isActive && "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                  isOpen ? "w-full" : "w-9 mx-auto"
                 )}
               >
-                <item.icon className="size-4 shrink-0" />
-                {isOpen && (
-                  <span className="whitespace-nowrap transition-opacity duration-200">
-                    {item.label}
-                  </span>
+                {({ isActive }) => (
+                  <Button
+                    variant={isActive ? "secondary" : "ghost"}
+                    size={isOpen ? "default" : "icon"}
+                    className={cn(
+                      "transition-all duration-200",
+                      isOpen && "w-full justify-start gap-3",
+                      !isOpen && "mx-auto",
+                      isActive && "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                    )}
+                    title={!isOpen ? item.label : undefined}
+                  >
+                    <item.icon className="size-4 shrink-0" />
+                    {isOpen && (
+                      <span className="whitespace-nowrap transition-opacity duration-200">
+                        {item.label}
+                      </span>
+                    )}
+                  </Button>
                 )}
-              </Button>
-            )}
-          </NavLink>
+              </NavLink>
+            ))}
+          </div>
         ))}
       </nav>
 
-      <div className="border-t border-sidebar-border py-4 flex flex-col gap-1 items-center">
+      <div className="border-t border-sidebar-border py-4 flex flex-col gap-1 px-2">
+        <span
+          className={cn(
+            "text-xs font-semibold uppercase tracking-wider text-sidebar-foreground/50 px-2 mb-1 transition-opacity duration-200",
+            isOpen ? "opacity-100" : "opacity-0 h-0"
+          )}
+        >
+          Admin
+        </span>
         {bottomNavItems.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
             className={cn(
               "transition-all duration-200",
-              isOpen ? "w-full px-2" : "w-9"
+              isOpen ? "w-full" : "w-9 mx-auto"
             )}
           >
             {({ isActive }) => (
@@ -93,8 +129,10 @@ export function Sidebar({ isOpen = true }) {
                 className={cn(
                   "transition-all duration-200",
                   isOpen && "w-full justify-start gap-3",
+                  !isOpen && "mx-auto",
                   isActive && "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
                 )}
+                title={!isOpen ? item.label : undefined}
               >
                 <item.icon className="size-4 shrink-0" />
                 {isOpen && (

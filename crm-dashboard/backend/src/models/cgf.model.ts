@@ -165,4 +165,53 @@ export const CGFModel = {
     );
     return (result.rowCount ?? 0) > 0;
   },
+
+  async getGroupsWithMemberCounts(): Promise<{
+    cg_id: string;
+    nama_cgf: string;
+    hari: string;
+    lokasi: string;
+    leader_name: string;
+    member_count: number;
+    attendance_rate: number;
+  }[]> {
+    const groupsResult = await query<{
+      id: string;
+      nama_cgf: string;
+      hari: string;
+      lokasi_1: string;
+    }>('SELECT id, nama_cgf, hari, lokasi_1 FROM cgf_info ORDER BY nama_cgf');
+
+    const enriched = [];
+
+    for (const group of groupsResult.rows) {
+      const memberCountResult = await query<{ count: string }>(
+        'SELECT COUNT(*) as count FROM cgf_members WHERE nama_cgf = $1',
+        [group.nama_cgf],
+      );
+      const member_count = parseInt(memberCountResult.rows[0].count, 10);
+
+      const leaderResult = await query<{ nama_jemaat: string }>(
+        `SELECT m.nama_jemaat 
+         FROM cgf_members cm
+         JOIN cnx_jemaat_clean m ON cm.no_jemaat = m.no_jemaat
+         WHERE cm.nama_cgf = $1 AND cm.is_leader = true
+         LIMIT 1`,
+        [group.nama_cgf],
+      );
+      const leader_name = leaderResult.rows[0]?.nama_jemaat || '-';
+
+      enriched.push({
+        cg_id: group.id,
+        nama_cgf: group.nama_cgf,
+        hari: group.hari,
+        lokasi: group.lokasi_1,
+        leader_name,
+        member_count,
+        attendance_rate: 0,
+      });
+    }
+
+    return enriched;
+  },
 };

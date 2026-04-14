@@ -6,6 +6,19 @@ import { CGFModel } from '../models';
 const router = Router();
 
 /**
+ * Get all CGF groups with member counts
+ * GET /groups/with-member-counts
+ */
+router.get('/groups/with-member-counts', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const groups = await CGFModel.getGroupsWithMemberCounts();
+    res.json({ success: true, data: groups });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
  * Get all CGF groups
  * GET /groups
  */
