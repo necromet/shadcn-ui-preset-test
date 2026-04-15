@@ -10,7 +10,7 @@ const GENDERS = ['Laki-laki', 'Perempuan'];
 const DOMISILI_AREAS = ['Jakarta Selatan', 'Jakarta Barat', 'Jakarta Utara', 'Tangerang', 'Bekasi', 'Depok'];
 const CGF_INTEREST = ['Belum Mau Join', 'Mau Join', 'Sudah Join', 'Sudah Tidak Join'];
 const KULIAH_KERJA = ['Kuliah', 'Kerja'];
-const ATTENDANCE_STATUS = ['hadir', 'izin', 'tidak_hadir', 'tamu'];
+const ATTENDANCE_STATUS = ['hadir', 'tidak_hadir'];
 const CGF_NAMES = [
   'CGF Kasih', 'CGF Damai', 'CGF Sukacita', 'CGF Sabar',
   'CGF Kemurahan', 'CGF Kesetiaan', 'CGF Kerendahan Hati', 'CGF Pengendalian Diri'
@@ -353,11 +353,7 @@ function generateAttendanceRecords() {
       for (const member of groupMembers) {
         // Randomly determine attendance status with weighted probability
         const rand = Math.random();
-        let keterangan;
-        if (rand < 0.65) keterangan = 'hadir';
-        else if (rand < 0.78) keterangan = 'izin';
-        else if (rand < 0.92) keterangan = 'tidak_hadir';
-        else keterangan = 'tamu';
+        const keterangan = rand < 0.75 ? 'hadir' : 'tidak_hadir';
 
         records.push({
           id: id++,
@@ -366,23 +362,6 @@ function generateAttendanceRecords() {
           tanggal: meetingDate.toISOString().split('T')[0],
           keterangan,
         });
-      }
-
-      // Occasionally add a guest (tamu) who is not a member
-      if (Math.random() < 0.15) {
-        const nonMembers = members.filter(
-          m => !cgfMembers.some(cm => cm.no_jemaat === m.no_jemaat)
-        );
-        if (nonMembers.length > 0) {
-          const guest = randomItem(nonMembers);
-          records.push({
-            id: id++,
-            no_jemaat: guest.no_jemaat,
-            cg_id: group.cg_id,
-            tanggal: meetingDate.toISOString().split('T')[0],
-            keterangan: 'tamu',
-          });
-        }
       }
     }
   }
@@ -590,8 +569,6 @@ function getAttendanceTrend() {
     const weekAttendance = cgfAttendance.filter(r => r.tanggal >= weekStartStr && r.tanggal <= weekEndStr);
     const hadir = weekAttendance.filter(r => r.keterangan === 'hadir').length;
     const tidakHadir = weekAttendance.filter(r => r.keterangan === 'tidak_hadir').length;
-    const izin = weekAttendance.filter(r => r.keterangan === 'izin').length;
-    const tamu = weekAttendance.filter(r => r.keterangan === 'tamu').length;
 
     weeklyData.push({
       weekLabel: `Minggu ${12 - weekOffset}`,
@@ -599,8 +576,6 @@ function getAttendanceTrend() {
       weekEnd: weekEndStr,
       hadir,
       tidakHadir,
-      izin,
-      tamu,
       total: weekAttendance.length,
     });
   }
@@ -1012,6 +987,121 @@ function getCareVisitData() {
 }
 
 // ============================================================
+// ATTENDANCE API FUNCTIONS
+// ============================================================
+
+export async function getAttendanceCGFList() {
+  const res = await fetch(`${API_BASE}/groups/with-member-counts`);
+  const json = await res.json();
+  return json.data || [];
+}
+
+export async function getAttendanceCGFById(cg_id) {
+  const res = await fetch(`${API_BASE}/groups/${cg_id}`);
+  const json = await res.json();
+  const group = json.data;
+  if (!group) return null;
+
+  const membersRes = await fetch(`${API_BASE}/groups/${cg_id}/members`);
+  const membersJson = await membersRes.json();
+  const member_count = (membersJson.data || []).length;
+
+  const leader = (membersJson.data || []).find(m => m.is_leader);
+
+  return {
+    cg_id: group.id,
+    nama_cgf: group.nama_cgf,
+    hari: group.hari,
+    lokasi: group.lokasi_1,
+    leader_name: leader?.nama_jemaat || '-',
+    member_count,
+  };
+}
+
+export async function getAttendanceMembersWithStatus(cg_id, tanggal) {
+  const res = await fetch(`${API_BASE}/attendance/members/${cg_id}/${tanggal}`);
+  const json = await res.json();
+  return (json.data || []).map(m => ({
+    no_jemaat: m.no_jemaat,
+    nama_jemaat: m.nama_jemaat || 'Unknown',
+    jenis_kelamin: m.jenis_kelamin || 'Laki-laki',
+    is_leader: m.is_leader || false,
+    today_status: m.today_status || null,
+  }));
+}
+
+export async function getAttendanceHistory(filters = {}) {
+  const params = new URLSearchParams();
+  if (filters.cg_id !== undefined && filters.cg_id !== null && filters.cg_id !== '') {
+    params.set('cg_id', String(filters.cg_id));
+  }
+  if (filters.keterangan !== undefined && filters.keterangan !== null && filters.keterangan !== '' && filters.keterangan !== 'all') {
+    params.set('keterangan', filters.keterangan);
+  }
+  if (filters.startDate) params.set('start_date', filters.startDate);
+  if (filters.endDate) params.set('end_date', filters.endDate);
+  params.set('page', String(filters.page || 1));
+  params.set('limit', String(filters.limit || 50));
+
+  const query = params.toString();
+  const res = await fetch(`${API_BASE}/attendance?${query}`);
+  const json = await res.json();
+  const records = json.data || [];
+  const meta = json.meta || {};
+
+  return {
+    data: records.map(r => ({
+      ...r,
+      nama_jemaat: r.nama_jemaat ?? 'Unknown',
+      nama_cgf: r.nama_cgf ?? 'Unknown',
+    })),
+    pagination: { page: meta.page || 1, limit: meta.limit || 50, total: meta.total || 0 },
+  };
+}
+
+export async function getAttendanceStatsCGF(cg_id) {
+  const res = await fetch(`${API_BASE}/attendance/stats/cgf/${cg_id}`);
+  const json = await res.json();
+  return json.data ?? null;
+}
+
+export async function getAttendanceStatsMember(no_jemaat) {
+  const res = await fetch(`${API_BASE}/attendance/stats/member/${no_jemaat}`);
+  const json = await res.json();
+  return json.data ?? null;
+}
+
+export async function saveAttendance(cg_id, tanggal, attendances) {
+  const res = await fetch(`${API_BASE}/attendance/bulk`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      cg_id: String(cg_id),
+      tanggal,
+      records: attendances.map(a => ({ no_jemaat: a.no_jemaat, keterangan: a.keterangan })),
+    }),
+  });
+  const json = await res.json();
+
+  if (!json.success) {
+    return {
+      success: false,
+      error: json.error?.message || 'UNKNOWN_ERROR',
+      message: json.error?.message || 'An error occurred',
+    };
+  }
+
+  const hadir = attendances.filter(a => a.keterangan === 'hadir').length;
+  const tidak_hadir = attendances.filter(a => a.keterangan === 'tidak_hadir').length;
+
+  return {
+    success: true,
+    data: { cg_id, tanggal, total_marked: attendances.length, hadir, tidak_hadir },
+    message: json.message || 'Attendance recorded successfully',
+  };
+}
+
+// ============================================================
 // EXPORTS (commented out - using direct exports from functions)
 // ============================================================
 
@@ -1073,4 +1163,5 @@ export {
   // getMemberEngagementScore,
   // getAverageEngagementScore,
   getCareVisitData,
+  // Attendance API functions (already exported via export function)
 };

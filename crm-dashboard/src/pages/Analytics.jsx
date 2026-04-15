@@ -36,7 +36,7 @@ function CustomTooltip({ active, payload, label }) {
   )
 }
 
-function AgeDistributionChart() {
+export function AgeDistributionChart() {
   const distribution = getAgeDistribution()
   const data = Object.entries(distribution).map(([age, count]) => ({
     age,
@@ -66,7 +66,7 @@ function AgeDistributionChart() {
   )
 }
 
-function DomisiliDistributionChart() {
+export function DomisiliDistributionChart() {
   const distribution = getDomisiliDistribution()
   const data = Object.entries(distribution).map(([area, count]) => ({
     area: area.replace("Jakarta ", "JKT "),
@@ -96,7 +96,7 @@ function DomisiliDistributionChart() {
   )
 }
 
-function CGFInterestFunnelChart() {
+export function CGFInterestFunnelChart() {
   const funnel = getCGFInterestFunnel()
   const data = [
     { name: "Tertarik", count: funnel.tertarik },
@@ -131,7 +131,7 @@ function CGFInterestFunnelChart() {
   )
 }
 
-function KuliahKerjaPieChart() {
+export function KuliahKerjaPieChart() {
   const ratio = getKuliahKerjaRatio()
   const data = [
     { name: "Kuliah", value: ratio.kuliah },
@@ -171,7 +171,7 @@ function KuliahKerjaPieChart() {
   )
 }
 
-function AttendanceTrendChart() {
+export function AttendanceTrendChart() {
   const trend = getAttendanceTrend()
   const data = trend.map(w => ({
     week: w.weekLabel,
@@ -210,7 +210,7 @@ function AttendanceTrendChart() {
   )
 }
 
-function CGFSizeComparisonChart() {
+export function CGFSizeComparisonChart() {
   const sizes = getCGFSizes()
   if (!sizes || !Array.isArray(sizes)) {
       return <div>Loading or No Data Available...</div>;

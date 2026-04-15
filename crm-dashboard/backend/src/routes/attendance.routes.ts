@@ -6,7 +6,70 @@ import { AttendanceModel } from '../models';
 const router = Router();
 
 /**
- * Get all attendance records
+ * Get CGF attendance list with member counts and attendance rates
+ * GET /attendance/cgf-list
+ */
+router.get('/attendance/cgf-list', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const list = await AttendanceModel.getCGFAttendanceList();
+    res.json({ success: true, data: list });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * Get CGF attendance stats
+ * GET /attendance/stats/cgf/:cgId
+ */
+router.get('/attendance/stats/cgf/:cgId', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { cgId } = req.params;
+    const stats = await AttendanceModel.getCGFAttendanceStats(cgId);
+    if (!stats) {
+      res.status(404).json({ success: false, error: { code: 404, message: 'CGF group not found' } });
+      return;
+    }
+    res.json({ success: true, data: stats });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * Get member attendance stats
+ * GET /attendance/stats/member/:noJemaat
+ */
+router.get('/attendance/stats/member/:noJemaat', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const noJemaat = parseInt(req.params.noJemaat, 10);
+    const stats = await AttendanceModel.getMemberAttendanceStats(noJemaat);
+    if (!stats) {
+      res.status(404).json({ success: false, error: { code: 404, message: 'Member not found' } });
+      return;
+    }
+    res.json({ success: true, data: stats });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * Get members with attendance status for a CGF on a specific date
+ * GET /attendance/members/:cgId/:tanggal
+ */
+router.get('/attendance/members/:cgId/:tanggal', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { cgId, tanggal } = req.params;
+    const members = await AttendanceModel.getMembersWithStatus(cgId, tanggal);
+    res.json({ success: true, data: members });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * Get all attendance records (enriched with member and CGF names)
  * GET /attendance
  */
 router.get('/attendance', async (req: Request, res: Response, next: NextFunction) => {
@@ -21,7 +84,7 @@ router.get('/attendance', async (req: Request, res: Response, next: NextFunction
     if (req.query.start_date) filters.start_date = req.query.start_date;
     if (req.query.end_date) filters.end_date = req.query.end_date;
 
-    const result = await AttendanceModel.getAll(page, limit, filters);
+    const result = await AttendanceModel.getEnrichedAll(page, limit, filters);
 
     res.json({
       success: true,

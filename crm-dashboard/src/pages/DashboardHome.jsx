@@ -5,6 +5,8 @@ import {
   TrendingUp,
   ArrowUpRight,
   ArrowDownRight,
+  BarChart3,
+  PieChart as PieChartIcon,
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import {
@@ -40,6 +42,14 @@ import { EventAttendanceTrends } from "../components/dashboard/EventAttendanceTr
 import { MemberEngagementScore } from "../components/dashboard/MemberEngagementScore.jsx"
 import { MultiSkillAnalysis } from "../components/dashboard/MultiSkillAnalysis.jsx"
 import { CareVisitTracker } from "../components/dashboard/CareVisitTracker.jsx"
+import {
+  AgeDistributionChart,
+  DomisiliDistributionChart,
+  CGFInterestFunnelChart,
+  KuliahKerjaPieChart,
+  AttendanceTrendChart,
+  CGFSizeComparisonChart,
+} from "./Analytics.jsx"
 
 const kpiConfig = [
   {
@@ -309,6 +319,7 @@ export function DashboardHome() {
           {/* <TabsTrigger value="engagement">Engagement</TabsTrigger> */}
           {/* <TabsTrigger value="pastoral">Pastoral</TabsTrigger> */}
           <TabsTrigger value="cg-health">CG Health</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
         <TabsContent value="overview" className="flex flex-col gap-6">
           <KPISection />
@@ -317,6 +328,16 @@ export function DashboardHome() {
             <CGFSizeBarChart />
           </div>
           <MemberStatusOverview />
+        </TabsContent>
+        <TabsContent value="analytics" className="flex flex-col gap-6">
+          <div className="grid gap-6 grid-cols-1 xl:grid-cols-2">
+            <AgeDistributionChart />
+            <DomisiliDistributionChart />
+            <CGFInterestFunnelChart />
+            <KuliahKerjaPieChart />
+            <AttendanceTrendChart />
+            <CGFSizeComparisonChart />
+          </div>
         </TabsContent>
         <TabsContent value="ministry" className="flex flex-col gap-6">
           <MinistryParticipation />

@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roll Call</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0b0d10;
+    --surface: #13161c;
+    --surface2: #1c2028;
+    --border: #252a33;
+    --present: #00e5a0;
+    --absent: #ff4d6d;
+    --late: #ffb830;
+    --text: #e8eaf0;
+    --muted: #5a6170;
+    --accent: #00e5a0;
+  }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 80px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Ambient background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -200px; left: 50%;
+    transform: translateX(-50%);
+    width: 800px; height: 400px;
+    background: radial-gradient(ellipse, rgba(0,229,160,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* HEADER */
+  header {
+    padding: 36px 40px 20px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-left h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .header-left h1 span {
+    color: var(--present);
+  }
+
+  .header-left p {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-top: 6px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .session-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    text-align: right;
+    line-height: 1.7;
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: flex;
+    gap: 0;
+    margin: 24px 40px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .stat {
+    flex: 1;
+    padding: 18px 20px;
+    border-right: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+  .stat:last-child { border-right: none; }
+
+  .stat-num {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+  }
+
+  .stat.present .stat-num { color: var(--present); }
+  .stat.absent .stat-num { color: var(--absent); }
+  .stat.late .stat-num { color: var(--late); }
+  .stat.total .stat-num { color: var(--text); }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    margin: 0 40px 28px;
+  }
+
+  .progress-track {
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 99px;
+    overflow: hidden;
+    display: flex;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .pf-present { background: var(--present); }
+  .pf-late { background: var(--late); }
+  .pf-absent { background: var(--absent); }
+
+  .progress-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--muted);
+    margin-top: 8px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* CONTROLS */
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 40px 24px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border-radius: 99px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 500; }
+
+  .spacer { flex: 1; }
+
+  .mark-all-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border-radius: 99px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .mark-all-btn:hover { background: var(--surface2); border-color: var(--text); }
+
+  /* GRID */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 14px;
+    padding: 0 40px;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+    padding: 20px 14px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.15s ease, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.25s;
+    pointer-events: none;
+  }
+
+  .card:hover { transform: translateY(-3px); }
+  .card:active { transform: scale(0.95); }
+
+  /* States */
+  .card.present {
+    border-color: var(--present);
+    background: rgba(0,229,160,0.06);
+    box-shadow: 0 0 24px rgba(0,229,160,0.12), inset 0 1px 0 rgba(0,229,160,0.15);
+  }
+
+  .card.absent {
+    border-color: var(--absent);
+    background: rgba(255,77,109,0.06);
+    box-shadow: 0 0 24px rgba(255,77,109,0.12), inset 0 1px 0 rgba(255,77,109,0.15);
+  }
+
+  .card.late {
+    border-color: var(--late);
+    background: rgba(255,184,48,0.06);
+    box-shadow: 0 0 24px rgba(255,184,48,0.12), inset 0 1px 0 rgba(255,184,48,0.15);
+  }
+
+  /* AVATAR */
+  .avatar-wrap {
+    position: relative;
+    width: 60px; height: 60px;
+  }
+
+  .avatar {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    background: var(--surface2);
+    border: 2px solid var(--border);
+    transition: border-color 0.25s, box-shadow 0.25s;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card.present .avatar {
+    border-color: var(--present);
+    box-shadow: 0 0 0 4px rgba(0,229,160,0.15);
+  }
+
+  .card.absent .avatar {
+    border-color: var(--absent);
+    box-shadow: 0 0 0 4px rgba(255,77,109,0.15);
+  }
+
+  .card.late .avatar {
+    border-color: var(--late);
+    box-shadow: 0 0 0 4px rgba(255,184,48,0.15);
+  }
+
+  /* Pulse ring for present */
+  .avatar-wrap::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px solid var(--present);
+    opacity: 0;
+    animation: none;
+    z-index: 0;
+  }
+
+  .card.present .avatar-wrap::before {
+    opacity: 1;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.12); opacity: 0; }
+  }
+
+  /* STATUS DOT */
+  .status-dot {
+    position: absolute;
+    bottom: 2px; right: 2px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--surface);
+    background: var(--border);
+    transition: background 0.25s;
+    z-index: 2;
+  }
+
+  .card.present .status-dot { background: var(--present); }
+  .card.absent .status-dot { background: var(--absent); }
+  .card.late .status-dot { background: var(--late); }
+
+  /* NAME */
+  .name {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.3;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  /* STATUS LABEL */
+  .status-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    transition: color 0.25s;
+  }
+
+  .card.present .status-label { color: var(--present); }
+  .card.absent .status-label { color: var(--absent); }
+  .card.late .status-label { color: var(--late); }
+
+  /* RIGHT-CLICK MENU / STATE CYCLE indicator */
+  .cycle-hint {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.52rem;
+    color: var(--muted);
+    opacity: 0;
+    transition: opacity 0.2s;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .card:hover .cycle-hint { opacity: 1; }
+
+  /* CONTEXT MENU */
+  .ctx-menu {
+    position: fixed;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 6px;
+    z-index: 1000;
+    min-width: 150px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    display: none;
+    animation: menuIn 0.15s ease;
+  }
+
+  @keyframes menuIn {
+    from { opacity: 0; transform: scale(0.92) translateY(-4px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .ctx-menu.show { display: block; }
+
+  .ctx-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: background 0.15s;
+  }
+
+  .ctx-item:hover { background: var(--border); }
+  .ctx-item .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .ctx-item.p .dot { background: var(--present); }
+  .ctx-item.a .dot { background: var(--absent); }
+  .ctx-item.l .dot { background: var(--late); }
+  .ctx-item.u .dot { background: var(--muted); }
+
+  /* FOOTER */
+  .footer {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(11,13,16,0.92);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    padding: 16px 40px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    z-index: 100;
+  }
+
+  .footer-info {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    flex: 1;
+  }
+
+  .export-btn {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    background: var(--present);
+    color: #000;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .export-btn:hover { background: #00ffb3; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,229,160,0.3); }
+  .export-btn:active { transform: translateY(0); }
+
+  /* Ripple animation on card click */
+  @keyframes ripple {
+    from { transform: scale(0); opacity: 0.4; }
+    to { transform: scale(2.5); opacity: 0; }
+  }
+
+  .ripple {
+    position: absolute;
+    border-radius: 50%;
+    width: 60px; height: 60px;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    pointer-events: none;
+    animation: ripple 0.5s ease-out forwards;
+  }
+
+  /* hidden cards when filtering */
+  .card.hidden {
+    display: none;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    top: 24px; right: 24px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text);
+    z-index: 9999;
+    animation: toastIn 0.3s ease;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  }
+
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    header, .stats-bar, .progress-wrap, .controls, .grid, .footer {
+      margin-left: 16px; margin-right: 16px;
+      padding-left: 0; padding-right: 0;
+    }
+    header { padding: 24px 16px 16px; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); gap: 10px; }
+    .footer { padding: 14px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>Roll <span>Call</span></h1>
+    <p id="date-display">Loading...</p>
+  </div>
+  <div class="session-badge" id="session-info">
+    Session / —<br>
+    <span id="completion-pct">0% marked</span>
+  </div>
+</header>
+
+<div class="stats-bar">
+  <div class="stat present">
+    <div class="stat-num" id="count-present">0</div>
+    <div class="stat-label">Present</div>
+  </div>
+  <div class="stat absent">
+    <div class="stat-num" id="count-absent">0</div>
+    <div class="stat-label">Absent</div>
+  </div>
+  <div class="stat late">
+    <div class="stat-num" id="count-late">0</div>
+    <div class="stat-label">Late</div>
+  </div>
+  <div class="stat total">
+    <div class="stat-num" id="count-total">0</div>
+    <div class="stat-label">Total</div>
+  </div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-track">
+    <div class="progress-fill pf-present" id="bar-present" style="width:0%"></div>
+    <div class="progress-fill pf-late" id="bar-late" style="width:0%"></div>
+    <div class="progress-fill pf-absent" id="bar-absent" style="width:0%"></div>
+  </div>
+  <div class="progress-label">
+    <span>Attendance overview</span>
+    <span id="bar-label">—</span>
+  </div>
+</div>
+
+<div class="controls">
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="present">Present</button>
+  <button class="filter-btn" data-filter="absent">Absent</button>
+  <button class="filter-btn" data-filter="late">Late</button>
+  <button class="filter-btn" data-filter="unmarked">Unmarked</button>
+  <div class="spacer"></div>
+  <button class="mark-all-btn" id="mark-all-present">Mark All Present</button>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="footer">
+  <div class="footer-info">
+    Tap → cycle status &nbsp;·&nbsp; Right-click → set directly
+  </div>
+  <button class="export-btn" id="export-btn">Export CSV</button>
+</div>
+
+<!-- Context Menu -->
+<div class="ctx-menu" id="ctx-menu">
+  <div class="ctx-item p" data-status="present"><div class="dot"></div> Present</div>
+  <div class="ctx-item l" data-status="late"><div class="dot"></div> Late</div>
+  <div class="ctx-item a" data-status="absent"><div class="dot"></div> Absent</div>
+  <div class="ctx-item u" data-status="unmarked"><div class="dot"></div> Unmarked</div>
+</div>
+
+<script>
+  // ── Sample roster (edit freely) ──────────────────────────────────────────
+  const roster = [
+    { name: "Alex Rivera",    emoji: "🦊" },
+    { name: "Jordan Kim",     emoji: "🐺" },
+    { name: "Sam Torres",     emoji: "🦁" },
+    { name: "Casey Lee",      emoji: "🐻" },
+    { name: "Morgan Chen",    emoji: "🦋" },
+    { name: "Taylor Park",    emoji: "🐬" },
+    { name: "Drew Nguyen",    emoji: "🦅" },
+    { name: "Blake Osei",     emoji: "🐉" },
+    { name: "Riley Hassan",   emoji: "🦚" },
+    { name: "Quinn Patel",    emoji: "🐙" },
+    { name: "Avery Rossi",    emoji: "🦜" },
+    { name: "Reese Yamamoto", emoji: "🐋" },
+    { name: "Sage Adeyemi",   emoji: "🌙" },
+    { name: "River Walsh",    emoji: "🦩" },
+    { name: "Finley Nakamura",emoji: "🐯" },
+    { name: "Emery Costa",    emoji: "🦄" },
+  ];
+
+  const CYCLE = ["unmarked","present","late","absent"];
+  const states = {};
+  roster.forEach(s => states[s.name] = "unmarked");
+
+  let activeFilter = "all";
+  let ctxTarget = null;
+
+  // ── Render ────────────────────────────────────────────────────────────────
+  const grid = document.getElementById("grid");
+
+  function buildGrid() {
+    grid.innerHTML = "";
+    roster.forEach(student => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.dataset.name = student.name;
+      card.innerHTML = `
+        <div class="avatar-wrap">
+          <div class="avatar">${student.emoji}</div>
+          <div class="status-dot"></div>
+        </div>
+        <div class="name">${student.name}</div>
+        <div class="status-label">—</div>
+        <div class="cycle-hint">tap to cycle</div>
+      `;
+
+      card.addEventListener("click", (e) => {
+        cycleState(student.name, card);
+        addRipple(card, e);
+      });
+
+      card.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        ctxTarget = student.name;
+        showCtxMenu(e.clientX, e.clientY);
+      });
+
+      grid.appendChild(card);
+      applyState(student.name, card);
+    });
+  }
+
+  function applyState(name, card) {
+    const s = states[name];
+    card.className = `card ${s === "unmarked" ? "" : s}`.trim();
+    card.querySelector(".status-label").textContent =
+      s === "unmarked" ? "—" : s.charAt(0).toUpperCase() + s.slice(1);
+    applyFilter(card);
+  }
+
+  function cycleState(name, card) {
+    const cur = CYCLE.indexOf(states[name]);
+    states[name] = CYCLE[(cur + 1) % CYCLE.length];
+    applyState(name, card);
+    updateStats();
+  }
+
+  function setStateDirect(name, status) {
+    states[name] = status;
+    const card = grid.querySelector(`[data-name="${name}"]`);
+    if (card) { applyState(name, card); updateStats(); }
+  }
+
+  function addRipple(card, e) {
+    const r = document.createElement("div");
+    r.className = "ripple";
+    const s = states[card.dataset.name];
+    r.style.background = s === "present" ? "rgba(0,229,160,0.3)"
+                        : s === "absent"  ? "rgba(255,77,109,0.3)"
+                        : s === "late"    ? "rgba(255,184,48,0.3)"
+                        : "rgba(255,255,255,0.15)";
+    card.appendChild(r);
+    setTimeout(() => r.remove(), 600);
+  }
+
+  // ── Stats ─────────────────────────────────────────────────────────────────
+  function updateStats() {
+    const total = roster.length;
+    let p = 0, a = 0, l = 0, u = 0;
+    Object.values(states).forEach(s => {
+      if (s === "present") p++;
+      else if (s === "absent") a++;
+      else if (s === "late") l++;
+      else u++;
+    });
+
+    document.getElementById("count-present").textContent = p;
+    document.getElementById("count-absent").textContent  = a;
+    document.getElementById("count-late").textContent    = l;
+    document.getElementById("count-total").textContent   = total;
+
+    const marked = total - u;
+    const pct = total ? Math.round(marked / total * 100) : 0;
+    document.getElementById("completion-pct").textContent = `${pct}% marked`;
+
+    document.getElementById("bar-present").style.width = `${p/total*100}%`;
+    document.getElementById("bar-late").style.width    = `${l/total*100}%`;
+    document.getElementById("bar-absent").style.width  = `${a/total*100}%`;
+
+    document.getElementById("bar-label").textContent =
+      u > 0 ? `${u} unmarked` : "All marked ✓";
+  }
+
+  // ── Filter ────────────────────────────────────────────────────────────────
+  function applyFilter(card) {
+    const s = states[card.dataset.name];
+    const show =
+      activeFilter === "all" ||
+      activeFilter === s ||
+      (activeFilter === "unmarked" && s === "unmarked");
+    card.classList.toggle("hidden", !show);
+  }
+
+  function reapplyAllFilters() {
+    grid.querySelectorAll(".card").forEach(c => applyFilter(c));
+  }
+
+  document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      activeFilter = btn.dataset.filter;
+      reapplyAllFilters();
+    });
+  });
+
+  // ── Mark All ──────────────────────────────────────────────────────────────
+  document.getElementById("mark-all-present").addEventListener("click", () => {
+    roster.forEach(s => { states[s.name] = "present"; });
+    grid.querySelectorAll(".card").forEach(card => {
+      applyState(card.dataset.name, card);
+    });
+    updateStats();
+    showToast("All marked present ✓");
+  });
+
+  // ── Context Menu ──────────────────────────────────────────────────────────
+  const ctxMenu = document.getElementById("ctx-menu");
+
+  function showCtxMenu(x, y) {
+    ctxMenu.style.left = `${Math.min(x, window.innerWidth - 170)}px`;
+    ctxMenu.style.top  = `${Math.min(y, window.innerHeight - 180)}px`;
+    ctxMenu.classList.add("show");
+  }
+
+  ctxMenu.querySelectorAll(".ctx-item").forEach(item => {
+    item.addEventListener("click", () => {
+      if (ctxTarget) setStateDirect(ctxTarget, item.dataset.status);
+      ctxMenu.classList.remove("show");
+    });
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!ctxMenu.contains(e.target)) ctxMenu.classList.remove("show");
+  });
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") ctxMenu.classList.remove("show");
+  });
+
+  // ── Export ────────────────────────────────────────────────────────────────
+  document.getElementById("export-btn").addEventListener("click", () => {
+    const date = new Date().toLocaleDateString();
+    let csv = "Name,Status,Date\n";
+    roster.forEach(s => {
+      csv += `"${s.name}","${states[s.name]}","${date}"\n`;
+    });
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url  = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = `attendance-${date.replace(/\//g,"-")}.csv`;
+    a.click(); URL.revokeObjectURL(url);
+    showToast("CSV exported!");
+  });
+
+  // ── Toast ──────────────────────────────────────────────────────────────────
+  function showToast(msg) {
+    const t = document.createElement("div");
+    t.className = "toast";
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(() => {
+      t.style.transition = "opacity 0.3s";
+      t.style.opacity = "0";
+      setTimeout(() => t.remove(), 350);
+    }, 2000);
+  }
+
+  // ── Date ──────────────────────────────────────────────────────────────────
+  const now = new Date();
+  document.getElementById("date-display").textContent =
+    now.toLocaleDateString("en-US", { weekday:"long", year:"numeric", month:"long", day:"numeric" });
+  document.getElementById("session-info").innerHTML =
+    `Session · ${now.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit"})}<br><span id="completion-pct">0% marked</span>`;
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  buildGrid();
+  updateStats();
+  document.getElementById("count-total").textContent = roster.length;
+</script>
+</body>
+</html>
