@@ -115,9 +115,10 @@ export const CGFModel = {
 
   async getMembersByGroup(cgId: string): Promise<CGFMember[]> {
     const result = await query<CGFMember>(
-      `SELECT cm.no_jemaat, cm.nama_cgf, cm.is_leader
+      `SELECT cm.no_jemaat, cm.nama_jemaat, cjc.jenis_kelamin, cm.nama_cgf, cm.is_leader
        FROM cgf_members cm
        JOIN cgf_info ci ON cm.nama_cgf = ci.nama_cgf
+      JOIN cnx_jemaat_clean cjc on cm.no_jemaat = cjc.no_jemaat
        WHERE ci.id = $1
        ORDER BY cm.is_leader DESC, cm.no_jemaat ASC`,
       [cgId],

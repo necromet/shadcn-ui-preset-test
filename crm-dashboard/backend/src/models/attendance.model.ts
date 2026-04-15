@@ -314,15 +314,21 @@ export const AttendanceModel = {
   async getMembersWithStatus(cgId: string, tanggal: string): Promise<AttendanceEnriched[]> {
     const result = await query<AttendanceEnriched>(
       `SELECT cm.no_jemaat, m.nama_jemaat, m.jenis_kelamin,
-              cm.is_leader,
-              g.id as cg_id,
-              g.nama_cgf,
-              CASE WHEN a.keterangan IS NOT NULL THEN a.keterangan ELSE null END as today_status
-       FROM cgf_members cm
-       JOIN cgf_info g ON cm.nama_cgf = g.nama_cgf
-       LEFT JOIN cnx_jemaat_clean m ON cm.no_jemaat = m.no_jemaat
-       LEFT JOIN cgf_attendance a ON cm.no_jemaat = a.no_jemaat AND a.cg_id = g.nama_cgf AND a.tanggal = $1
-       WHERE g.id = $2`,
+        cm.is_leader,
+        g.id as cg_id,
+        g.nama_cgf,
+        NULL as today_status
+      FROM cgf_members cm
+      JOIN cgf_info g ON cm.nama_cgf = g.nama_cgf
+      LEFT JOIN cnx_jemaat_clean m ON cm.no_jemaat = m.no_jemaat
+      WHERE g.id = $2
+      AND NOT EXISTS (
+        SELECT 1
+        FROM cgf_attendance a
+        WHERE a.no_jemaat = cm.no_jemaat
+          AND a.cg_id = g.id
+          AND a.tanggal = $1
+      )`,
       [tanggal, cgId],
     );
     return result.rows;
