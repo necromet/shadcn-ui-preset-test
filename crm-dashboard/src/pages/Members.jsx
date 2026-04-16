@@ -1,19 +1,22 @@
-import { useState, useMemo, useEffect } from "react"
-import { Search, Plus, Pencil, Trash2, ChevronLeft, ChevronRight, X, UserPlus } from "lucide-react"
+import { useState, useMemo, useEffect, useCallback } from "react"
+import { Search, Plus, Pencil, Trash2, ChevronLeft, ChevronRight, X, UserPlus, CalendarDays, MessageCircle, CircleArrowOutUpRightIcon, ArrowUpRightFromSquareIcon, Loader2 } from "lucide-react"
+import { toast } from "sonner"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card.jsx"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table.jsx"
 import { Button } from "../components/ui/button.jsx"
 import { Badge } from "../components/ui/badge.jsx"
-import { getMembers, getCGFGroups } from "../data/mock.js"
+import { SelectPopover } from "../components/ui/select-popover.jsx"
+import { DatePickerPopover } from "../components/ui/date-picker-popover.jsx"
+import { invalidateCache, fetchMembersFromAPI, fetchCGFFromAPI, getNextNoJemaat } from "../data/mock.js"
 import { MemberAvatar } from "../components/ui/member-avatar.jsx"
 import { EmptyState } from "../components/ui/empty-state.jsx"
+import { createMember, updateMember, deleteMember, ApiError } from "../services/members.api.js"
 
 const PAGE_SIZE = 10
 
 const EMPTY_FORM = {
-  no_jemaat: "",
   nama_jemaat: "",
-  jenis_kelamin: "Laki-Laki",
+  jenis_kelamin: "Laki-laki",
   tanggal_lahir: "",
   kuliah_kerja: "Kerja",
   no_handphone: "",
@@ -21,19 +24,72 @@ const EMPTY_FORM = {
   nama_cgf: "",
   kategori_domisili: "",
   alamat_domisili: "",
+  status_aktif: "",
+  status_keterangan: "",
+}
+
+/**
+ * Parse tanggal_lahir from database (which is stored as timestamp with timezone)
+ * The database stores dates at 17:00:00 UTC, which is 00:00 in UTC+7 (midnight).
+ * We need to extract the correct date part accounting for this.
+ * @param {string} dateStr - Date string from database like "1990-05-14T17:00:00.000Z"
+ * @returns {string} - Date string in YYYY-MM-DD format
+ */
+function parseTanggalLahir(dateStr) {
+  if (!dateStr) return "";
+  // Extract YYYY-MM-DD from the string directly
+  const datePart = dateStr.includes("T") ? dateStr.split("T")[0] : dateStr;
+  // Parse as UTC+7 by adding 7 hours offset
+  const [year, month, day] = datePart.split("-").map(Number);
+  // Create date at noon UTC, then subtract 7 hours to get UTC+7 midnight
+  // This ensures we get the correct date in UTC+7 timezone
+  const utcDate = new Date(Date.UTC(year, month - 1, day, 17, 0, 0, 0));
+  const localDate = new Date(utcDate.getTime() - 7 * 60 * 60 * 1000);
+  const localYear = localDate.getUTCFullYear();
+  const localMonth = String(localDate.getUTCMonth() + 1).padStart(2, "0");
+  const localDay = String(localDate.getUTCDate()).padStart(2, "0");
+  return `${localYear}-${localMonth}-${localDay}`;
+}
+
+function toWhatsAppNumber(phone) {
+  if (!phone) return ""
+  return phone.startsWith("0") ? "62" + phone.slice(1) : phone
 }
 
 export function Members() {
   const [members, setMembers] = useState([])
-  const cgfGroups = useMemo(() => getCGFGroups(), [])
+  const [cgfGroups, setCgfGroups] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const nextNoJemaat = useMemo(() => getNextNoJemaat(members), [members])
+
+  const fetchMembers = useCallback(async () => {
+    setIsLoading(true)
+    try {
+      const membersData = await fetchMembersFromAPI()
+      setMembers(membersData)
+    } catch (error) {
+      toast.error("Failed to load members", {
+        description: error.message
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  const fetchCGFGroups = useCallback(async () => {
+    try {
+      const groupsData = await fetchCGFFromAPI()
+      setCgfGroups(groupsData)
+    } catch (error) {
+      console.error("Failed to load CGF groups:", error)
+    }
+  }, [])
 
   useEffect(() => {
-    async function fetchMembers() {
-      const membersData = await getMembers()
-      setMembers(membersData)
-    }
     fetchMembers()
-  }, [])
+    fetchCGFGroups()
+  }, [fetchMembers, fetchCGFGroups])
   const [searchQuery, setSearchQuery] = useState("")
   const [filters, setFilters] = useState({ gender: "", cgfStatus: "", domisili: "" })
   const [currentPage, setCurrentPage] = useState(1)
@@ -45,7 +101,7 @@ export function Members() {
   const [formData, setFormData] = useState(EMPTY_FORM)
 
   const domisiliOptions = useMemo(() => {
-    const set = new Set(members.map((m) => m.kategori_domisili))
+    const set = new Set(members.map((m) => m.kategori_domisili).filter(Boolean))
     return [...set].sort()
   }, [members])
 
@@ -90,23 +146,24 @@ export function Members() {
   }
 
   function openAddDialog() {
-    setFormData({ ...EMPTY_FORM })
+    setFormData({ ...EMPTY_FORM, jenis_kelamin: "Laki-laki" })
     setShowAddDialog(true)
   }
 
   function openEditDialog(member) {
     setSelectedMember(member)
     setFormData({
-      no_jemaat: member.no_jemaat,
       nama_jemaat: member.nama_jemaat,
-      jenis_kelamin: member.jenis_kelamin,
-      tanggal_lahir: member.tanggal_lahir,
-      kuliah_kerja: member.kuliah_kerja,
-      no_handphone: member.no_handphone,
-      ketertarikan_cgf: member.ketertarikan_cgf,
+      jenis_kelamin: member.jenis_kelamin || "Laki-laki",
+      tanggal_lahir: parseTanggalLahir(member.tanggal_lahir),
+      kuliah_kerja: member.kuliah_kerja || "Kerja",
+      no_handphone: member.no_handphone || "",
+      ketertarikan_cgf: member.ketertarikan_cgf || "Belum Mau Join",
       nama_cgf: member.nama_cgf || "",
-      kategori_domisili: member.kategori_domisili,
-      alamat_domisili: member.alamat_domisili,
+      kategori_domisili: member.kategori_domisili || "",
+      alamat_domisili: member.alamat_domisili || "",
+      status_aktif: member.status_aktif || "",
+      status_keterangan: member.status_keterangan || "",
     })
     setShowEditDialog(true)
   }
@@ -120,35 +177,124 @@ export function Members() {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
-  function handleAddMember(e) {
+  async function handleAddMember(e) {
     e.preventDefault()
-    const newMember = {
-      ...formData,
-      no_jemaat: Number(formData.no_jemaat),
-      tahun_lahir: formData.tanggal_lahir ? Number(formData.tanggal_lahir.slice(0, 4)) : 0,
-      bulan_lahir: formData.tanggal_lahir ? Number(formData.tanggal_lahir.slice(5, 7)) : 0,
+    setIsSubmitting(true)
+    
+    try {
+      const tanggalLahir = formData.tanggal_lahir;
+      const memberData = {
+        no_jemaat: nextNoJemaat,
+        nama_jemaat: formData.nama_jemaat,
+        jenis_kelamin: formData.jenis_kelamin,
+        tanggal_lahir: tanggalLahir,
+        tahun_lahir: tanggalLahir ? parseInt(tanggalLahir.slice(0, 4), 10) : undefined,
+        bulan_lahir: tanggalLahir ? parseInt(tanggalLahir.slice(5, 7), 10) : undefined,
+        kuliah_kerja: formData.kuliah_kerja || undefined,
+        no_handphone: formData.no_handphone || undefined,
+        ketertarikan_cgf: formData.ketertarikan_cgf || undefined,
+        nama_cgf: formData.nama_cgf || undefined,
+        kategori_domisili: formData.kategori_domisili || undefined,
+        alamat_domisili: formData.alamat_domisili || undefined,
+        status_aktif: formData.status_aktif || undefined,
+        status_keterangan: formData.status_keterangan || undefined,
+      }
+
+      await createMember(memberData)
+      
+      // Invalidate cache and refresh data
+      invalidateCache()
+      await fetchMembers()
+      
+      setShowAddDialog(false)
+      toast.success("Member added successfully", {
+        description: `${formData.nama_jemaat} has been added as member #${nextNoJemaat}.`
+      })
+    } catch (error) {
+      if (error instanceof ApiError) {
+        toast.error("Failed to add member", {
+          description: error.message
+        })
+      } else {
+        toast.error("An unexpected error occurred")
+      }
+    } finally {
+      setIsSubmitting(false)
     }
-    setMembers((prev) => [...prev, newMember])
-    setShowAddDialog(false)
   }
 
-  function handleEditMember(e) {
+  async function handleEditMember(e) {
     e.preventDefault()
-    const updated = {
-      ...formData,
-      no_jemaat: Number(formData.no_jemaat),
-      tahun_lahir: formData.tanggal_lahir ? Number(formData.tanggal_lahir.slice(0, 4)) : 0,
-      bulan_lahir: formData.tanggal_lahir ? Number(formData.tanggal_lahir.slice(5, 7)) : 0,
+    setIsSubmitting(true)
+    
+    try {
+      const tanggalLahir = formData.tanggal_lahir;
+      const memberData = {
+        nama_jemaat: formData.nama_jemaat,
+        jenis_kelamin: formData.jenis_kelamin,
+        tanggal_lahir: tanggalLahir,
+        tahun_lahir: tanggalLahir ? parseInt(tanggalLahir.slice(0, 4), 10) : undefined,
+        bulan_lahir: tanggalLahir ? parseInt(tanggalLahir.slice(5, 7), 10) : undefined,
+        kuliah_kerja: formData.kuliah_kerja || undefined,
+        no_handphone: formData.no_handphone || undefined,
+        ketertarikan_cgf: formData.ketertarikan_cgf || undefined,
+        nama_cgf: formData.nama_cgf || undefined,
+        kategori_domisili: formData.kategori_domisili || undefined,
+        alamat_domisili: formData.alamat_domisili || undefined,
+        status_aktif: formData.status_aktif || undefined,
+        status_keterangan: formData.status_keterangan || undefined,
+      }
+
+      await updateMember(selectedMember.no_jemaat, memberData)
+      
+      // Invalidate cache and refresh data
+      invalidateCache()
+      await fetchMembers()
+      
+      setShowEditDialog(false)
+      setSelectedMember(null)
+      toast.success("Member updated successfully", {
+        description: `${formData.nama_jemaat}'s information has been updated.`
+      })
+    } catch (error) {
+      if (error instanceof ApiError) {
+        toast.error("Failed to update member", {
+          description: error.message
+        })
+      } else {
+        toast.error("An unexpected error occurred")
+      }
+    } finally {
+      setIsSubmitting(false)
     }
-    setMembers((prev) => prev.map((m) => (m.no_jemaat === selectedMember.no_jemaat ? updated : m)))
-    setShowEditDialog(false)
-    setSelectedMember(null)
   }
 
-  function handleDeleteMember() {
-    setMembers((prev) => prev.filter((m) => m.no_jemaat !== selectedMember.no_jemaat))
-    setShowDeleteDialog(false)
-    setSelectedMember(null)
+  async function handleDeleteMember() {
+    setIsSubmitting(true)
+    
+    try {
+      await deleteMember(selectedMember.no_jemaat)
+      
+      // Invalidate cache and refresh data
+      invalidateCache()
+      await fetchMembers()
+      
+      setShowDeleteDialog(false)
+      setSelectedMember(null)
+      toast.success("Member deleted successfully", {
+        description: `${selectedMember.nama_jemaat} has been removed from the system.`
+      })
+    } catch (error) {
+      if (error instanceof ApiError) {
+        toast.error("Failed to delete member", {
+          description: error.message
+        })
+      } else {
+        toast.error("An unexpected error occurred")
+      }
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   function getCgfStatusBadge(status) {
@@ -159,6 +305,8 @@ export function Members() {
   }
 
   function renderMemberForm(onSubmit, title) {
+    const isEditMode = showEditDialog
+    
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
         <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl bg-card p-6 shadow-lg">
@@ -179,13 +327,21 @@ export function Members() {
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium">No. Jemaat</label>
-                <input
-                  type="number"
-                  required
-                  value={formData.no_jemaat}
-                  onChange={(e) => handleFormChange("no_jemaat", e.target.value)}
-                  className="h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
-                />
+                {isEditMode ? (
+                  <input
+                    type="number"
+                    value={selectedMember?.no_jemaat || ""}
+                    disabled
+                    className="h-9 rounded-md border bg-muted px-3 text-sm text-muted-foreground"
+                  />
+                ) : (
+                  <input
+                    type="number"
+                    value={nextNoJemaat}
+                    disabled
+                    className="h-9 rounded-md border bg-muted px-3 text-sm text-muted-foreground"
+                  />
+                )}
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium">Nama</label>
@@ -201,37 +357,36 @@ export function Members() {
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium">Gender</label>
-                <select
+                <SelectPopover
                   value={formData.jenis_kelamin}
-                  onChange={(e) => handleFormChange("jenis_kelamin", e.target.value)}
-                  className="h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
-                >
-                  <option value="Laki-Laki">Laki-laki</option>
-                  <option value="Perempuan">Perempuan</option>
-                </select>
+                  onValueChange={(v) => handleFormChange("jenis_kelamin", v)}
+                  options={[
+                    { value: "Laki-laki", label: "Laki-laki" },
+                    { value: "Perempuan", label: "Perempuan" },
+                  ]}
+                  placeholder="Pilih gender"
+                />
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium">Tanggal Lahir</label>
-                <input
-                  type="date"
-                  required
-                  value={formData.tanggal_lahir}
-                  onChange={(e) => handleFormChange("tanggal_lahir", e.target.value)}
-                  className="h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
+                <DatePickerPopover
+                  date={formData.tanggal_lahir}
+                  onDateChange={(d) => handleFormChange("tanggal_lahir", d)}
                 />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium">Kuliah / Kerja</label>
-                <select
+                <SelectPopover
                   value={formData.kuliah_kerja}
-                  onChange={(e) => handleFormChange("kuliah_kerja", e.target.value)}
-                  className="h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
-                >
-                  <option value="Kerja">Kerja</option>
-                  <option value="Kuliah">Kuliah</option>
-                </select>
+                  onValueChange={(v) => handleFormChange("kuliah_kerja", v)}
+                  options={[
+                    { value: "Kerja", label: "Kerja" },
+                    { value: "Kuliah", label: "Kuliah" },
+                  ]}
+                  placeholder="Pilih..."
+                />
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium">No. Handphone</label>
@@ -247,41 +402,38 @@ export function Members() {
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium">CGF Status</label>
-                <select
+                <SelectPopover
                   value={formData.ketertarikan_cgf}
-                  onChange={(e) => handleFormChange("ketertarikan_cgf", e.target.value)}
-                  className="h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
-                >
-                <option value="Belum Mau Join">Belum Mau Join</option>
-                <option value="Mau Join">Mau Join</option>
-                <option value="Sudah Join">Sudah Join</option>
-                <option value="Sudah Tidak Join">Sudah Tidak Join</option>
-                </select>
+                  onValueChange={(v) => handleFormChange("ketertarikan_cgf", v)}
+                  options={[
+                    { value: "Belum Mau Join", label: "Belum Mau Join" },
+                    { value: "Mau Join", label: "Mau Join" },
+                    { value: "Sudah Join", label: "Sudah Join" },
+                    { value: "Sudah Tidak Join", label: "Sudah Tidak Join" },
+                  ]}
+                  placeholder="Pilih status"
+                />
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium">Nama CGF</label>
-                <select
+                <SelectPopover
                   value={formData.nama_cgf}
-                  onChange={(e) => handleFormChange("nama_cgf", e.target.value)}
-                  className="h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
-                >
-                  <option value="">-</option>
-                  {cgfGroups.map((g) => (
-                    <option key={g.cg_id} value={g.nama_cgf}>
-                      {g.nama_cgf}
-                    </option>
-                  ))}
-                </select>
+                  onValueChange={(v) => handleFormChange("nama_cgf", v)}
+                  options={[
+                    { value: "", label: "-" },
+                    ...cgfGroups.map((g) => ({ value: g.nama_cgf, label: g.nama_cgf })),
+                  ]}
+                  placeholder="Pilih CGF"
+                />
               </div>
             </div>
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-medium">Kategori Domisili</label>
-              <input
-                type="text"
-                required
+              <SelectPopover
                 value={formData.kategori_domisili}
-                onChange={(e) => handleFormChange("kategori_domisili", e.target.value)}
-                className="h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
+                onValueChange={(v) => handleFormChange("kategori_domisili", v)}
+                options={domisiliOptions.map((d) => ({ value: d, label: d }))}
+                placeholder="Pilih domisili"
               />
             </div>
             <div className="flex flex-col gap-1.5">
@@ -292,6 +444,33 @@ export function Members() {
                 onChange={(e) => handleFormChange("alamat_domisili", e.target.value)}
                 className="h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
               />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium">Status Aktif</label>
+                <SelectPopover
+                  value={formData.status_aktif}
+                  onValueChange={(v) => handleFormChange("status_aktif", v)}
+                  options={[
+                    { value: "", label: "-" },
+                    { value: "Active", label: "Active" },
+                    { value: "Inactive", label: "Inactive" },
+                    { value: "Sabbatical", label: "Sabbatical" },
+                    { value: "Moved", label: "Moved" },
+                    { value: "No Information", label: "No Information" },
+                  ]}
+                  placeholder="Pilih status"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium">Status Keterangan</label>
+                <input
+                  type="text"
+                  value={formData.status_keterangan}
+                  onChange={(e) => handleFormChange("status_keterangan", e.target.value)}
+                  className="h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
+                />
+              </div>
             </div>
             <div className="flex justify-end gap-2 pt-2">
               <Button
@@ -304,7 +483,16 @@ export function Members() {
               >
                 Cancel
               </Button>
-              <Button type="submit">{showEditDialog ? "Save Changes" : "Add Member"}</Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    {showEditDialog ? "Saving..." : "Adding..."}
+                  </>
+                ) : (
+                  showEditDialog ? "Save Changes" : "Add Member"
+                )}
+              </Button>
             </div>
           </form>
         </div>
@@ -342,47 +530,46 @@ export function Members() {
               />
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <select
+              <SelectPopover
                 value={filters.gender}
-                onChange={(e) => {
-                  setFilters((prev) => ({ ...prev, gender: e.target.value }))
+                onValueChange={(v) => {
+                  setFilters((prev) => ({ ...prev, gender: v }))
                   setCurrentPage(1)
                 }}
-                className="h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
-              >
-                <option value="">All Gender</option>
-                <option value="Laki-Laki">Laki-laki</option>
-                <option value="Perempuan">Perempuan</option>
-              </select>
-              <select
+                options={[
+                  { value: "", label: "All Gender" },
+                  { value: "Laki-Laki", label: "Laki-laki" },
+                  { value: "Perempuan", label: "Perempuan" },
+                ]}
+                placeholder="All Gender"
+              />
+              <SelectPopover
                 value={filters.cgfStatus}
-                onChange={(e) => {
-                  setFilters((prev) => ({ ...prev, cgfStatus: e.target.value }))
+                onValueChange={(v) => {
+                  setFilters((prev) => ({ ...prev, cgfStatus: v }))
                   setCurrentPage(1)
                 }}
-                className="h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
-              >
-                <option value="">All CGF Status</option>
-                <option value="Sudah Join">Sudah Join</option>
-                <option value="Belum Mau Join">Belum Mau Join</option>
-                <option value="Mau Join">Mau Join</option>
-                <option value="Sudah Tidak Join">Sudah Tidak Join</option>
-              </select>
-              <select
+                options={[
+                  { value: "", label: "All CGF Status" },
+                  { value: "Sudah Join", label: "Sudah Join" },
+                  { value: "Belum Mau Join", label: "Belum Mau Join" },
+                  { value: "Mau Join", label: "Mau Join" },
+                  { value: "Sudah Tidak Join", label: "Sudah Tidak Join" },
+                ]}
+                placeholder="All CGF Status"
+              />
+              <SelectPopover
                 value={filters.domisili}
-                onChange={(e) => {
-                  setFilters((prev) => ({ ...prev, domisili: e.target.value }))
+                onValueChange={(v) => {
+                  setFilters((prev) => ({ ...prev, domisili: v }))
                   setCurrentPage(1)
                 }}
-                className="h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
-              >
-                <option value="">All Domisili</option>
-                {domisiliOptions.map((d) => (
-                  <option key={d} value={d}>
-                    {d}
-                  </option>
-                ))}
-              </select>
+                options={[
+                  { value: "", label: "All Domisili" },
+                  ...domisiliOptions.map((d) => ({ value: d, label: d })),
+                ]}
+                placeholder="All Domisili"
+              />
               {(searchQuery || filters.gender || filters.cgfStatus || filters.domisili) && (
                 <Button variant="ghost" size="sm" onClick={resetFilters}>
                   <X className="h-3 w-3 mr-1" />
@@ -401,13 +588,23 @@ export function Members() {
                   <TableHead>Phone</TableHead>
                   <TableHead>CGF Status</TableHead>
                   <TableHead>Domisili</TableHead>
+                  <TableHead>Alamat Domisili</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {paginatedMembers.length === 0 ? (
+                {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={6}>
+                    <TableCell colSpan={7}>
+                      <div className="flex items-center justify-center py-12">
+                        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                        <span className="ml-3 text-muted-foreground">Loading members...</span>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : paginatedMembers.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={7}>
                       <EmptyState
                         title="No members found"
                         description="Start by adding your first church member to the system, or adjust your search filters."
@@ -432,9 +629,24 @@ export function Members() {
                         </div>
                       </TableCell>
                       <TableCell>{member.jenis_kelamin}</TableCell>
-                      <TableCell>{member.no_handphone}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2 ">
+                          <span>{member.no_handphone}</span>
+                          {member.no_handphone && (
+                            <a
+                              href={`https://wa.me/${toWhatsAppNumber(member.no_handphone)}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-green-600 hover:text-green-700 transition-colors"
+                            >
+                              <ArrowUpRightFromSquareIcon className="h-4 w-4" />
+                            </a>
+                          )}
+                        </div>
+                      </TableCell>
                       <TableCell>{getCgfStatusBadge(member.ketertarikan_cgf)}</TableCell>
                       <TableCell>{member.kategori_domisili}</TableCell>
+                      <TableCell className="max-w-[100px] truncate">{member.alamat_domisili}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
                           <Button
@@ -511,9 +723,18 @@ export function Members() {
               <Button variant="outline" onClick={() => setShowDeleteDialog(false)}>
                 Cancel
               </Button>
-              <Button variant="destructive" onClick={handleDeleteMember}>
-                <Trash2 className="h-4 w-4" />
-                Delete
+              <Button variant="destructive" onClick={handleDeleteMember} disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Deleting...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="h-4 w-4" />
+                    Delete
+                  </>
+                )}
               </Button>
             </div>
           </div>

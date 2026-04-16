@@ -371,22 +371,34 @@ function generateAttendanceRecords() {
 
 const cgfAttendance = generateAttendanceRecords();
 
-// ============================================================
-// HELPER FUNCTIONS
-// ============================================================
+export async function fetchMembersFromAPI() {
+  const response = await fetch(`${API_BASE}/members?limit=1000`);
+  const json = await response.json();
+  return json.data || [];
+}
+
+export async function fetchCGFFromAPI() {
+  const response = await fetch(`${API_BASE}/groups?limit=100`);
+  const json = await response.json();
+  return json.data || [];
+}
+
+export function getNextNoJemaat(members) {
+  if (!members || members.length === 0) return 1;
+  const maxNo = Math.max(...members.map(m => m.no_jemaat));
+  return maxNo + 1;
+}
 
 async function getMembers() {
   if (membersCache) return membersCache;
-  membersCache = fetch(`${API_BASE}/members?limit=1000`)
-    .then(res => res.json())
+  membersCache = getCached(`${API_BASE}/members?limit=1000`)
     .then(json => json.data || []);
   return membersCache;
 }
 
 async function getMemberById(no_jemaat) {
-  const res = await fetch(`${API_BASE}/members/${no_jemaat}`);
-  const json = await res.json();
-  return json.data ?? null;
+  return getCached(`${API_BASE}/members/${no_jemaat}`)
+    .then(json => json.data ?? null);
 }
 
 async function getEvents(filters = {}) {
@@ -397,15 +409,13 @@ async function getEvents(filters = {}) {
   if (filters.start_date) params.set('start_date', filters.start_date);
   if (filters.end_date) params.set('end_date', filters.end_date);
   const query = params.toString();
-  const res = await fetch(`${API_BASE}/events${query ? `?${query}` : ''}`);
-  const json = await res.json();
-  return json.data || [];
+  return getCached(`${API_BASE}/events${query ? `?${query}` : ''}`)
+    .then(json => json.data || []);
 }
 
 async function getEventById(eventId) {
-  const res = await fetch(`${API_BASE}/events/${eventId}`);
-  const json = await res.json();
-  return json.data ?? null;
+  return getCached(`${API_BASE}/events/${eventId}`)
+    .then(json => json.data ?? null);
 }
 
 // async function getUpcomingEvents(days = 7) {
@@ -473,6 +483,49 @@ function getPelayananInfoById(pelayanan_id) {
   return pelayananInfo.find(p => p.pelayanan_id === pelayanan_id) || null;
 }
 
+// ============================================================
+// API CALL CACHING SYSTEM
+// Prevents duplicate requests when multiple components call the same API
+// ============================================================
+
+const promiseCache = {};
+const dataCache = {};
+
+function cachedFetch(url) {
+  if (promiseCache[url]) return promiseCache[url];
+  const promise = fetch(url)
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    })
+    .then(json => {
+      dataCache[url] = json;
+      promiseCache[url] = null;
+      return json;
+    })
+    .catch(err => {
+      promiseCache[url] = null;
+      throw err;
+    });
+  promiseCache[url] = promise;
+  return promise;
+}
+
+function getCached(url) {
+  if (dataCache[url]) return Promise.resolve(dataCache[url]);
+  return cachedFetch(url);
+}
+
+function invalidateCache(url) {
+  if (url) {
+    delete dataCache[url];
+    delete promiseCache[url];
+  } else {
+    Object.keys(dataCache).forEach(k => delete dataCache[k]);
+    Object.keys(promiseCache).forEach(k => delete promiseCache[k]);
+  }
+}
+
 // Cache for API calls to prevent redundant requests
 let pelayanCache = null;
 let statusHistoryCache = null;
@@ -480,34 +533,31 @@ let membersCache = null;
 
 export async function getPelayan() {
   if (pelayanCache) return pelayanCache;
-  pelayanCache = fetch(`${API_BASE}/ministry/pelayan?limit=1000`)
-    .then(res => res.json())
+  pelayanCache = getCached(`${API_BASE}/ministry/pelayan?limit=1000`)
     .then(json => json.data || []);
   return pelayanCache;
 }
 
 export async function getPelayanById(no_jemaat) {
-  const res = await fetch(`${API_BASE}/ministry/pelayan/${no_jemaat}`);
-  const json = await res.json();
-  return json.data ?? null;
+  return getCached(`${API_BASE}/ministry/pelayan/${no_jemaat}`)
+    .then(json => json.data ?? null);
 }
 
 export async function getStatusHistory() {
   if (statusHistoryCache) return statusHistoryCache;
-  statusHistoryCache = fetch(`${API_BASE}/status/status-history?limit=1000`)
-    .then(res => res.json())
+  statusHistoryCache = getCached(`${API_BASE}/status/status-history?limit=1000`)
     .then(json => json.data || []);
   return statusHistoryCache;
 }
 
 export async function getDashboardKPIs() {
-  const res = await fetch(`${API_BASE}/analytics/dashboard`)
-  return (await res.json()).data ?? {};
+  return getCached(`${API_BASE}/analytics/dashboard`)
+    .then(json => json.data ?? {});
 }
 
 export async function getGenderDistribution() {
-  const res = await fetch(`${API_BASE}/analytics/members/distribution`)
-  return (await res.json()).data ?? [];
+  return getCached(`${API_BASE}/analytics/members/distribution`)
+    .then(json => json.data ?? []);
 }
 
 async function getAgeDistribution() {
@@ -549,8 +599,8 @@ async function getDomisiliDistribution() {
 // }
 
 export async function getCGFSizes() {
-  const res = await fetch(`${API_BASE}/analytics/cgf/sizes`)
-  return (await res.json()).data ?? [];
+  return getCached(`${API_BASE}/analytics/cgf/sizes`)
+    .then(json => json.data ?? []);
 }
 
 function getAttendanceTrend() {
@@ -670,6 +720,7 @@ export async function getMinistryParticipation() {
     { key: 'is_cforce', name: 'CForce' },
     { key: 'is_cg_leader', name: 'CG Leader' },
     { key: 'is_community_pic', name: 'Community PIC' },
+    { key: 'is_others', name: 'Others' },
   ];
 
   return ministryFields.map(m => {
@@ -859,16 +910,15 @@ export async function getWorshipTeamComposition() {
 }
 
 export async function fetchEventAttendanceTrends() {
-  const res = await fetch(`${API_BASE}/analytics/events/attendance-trend`)
-  const json = await res.json()
-  return json.data || []
+  return getCached(`${API_BASE}/analytics/events/attendance-trend`)
+    .then(json => json.data || []);
 }
 
 export async function getMultiSkillDistribution() {
   const pelayanData = await getPelayan();
   const distribution = {};
   pelayanData.forEach(p => {
-    const count = [p.is_wl, p.is_singer, p.is_pianis, p.is_saxophone, p.is_filler, p.is_bass_gitar, p.is_drum, p.is_mulmed, p.is_sound, p.is_caringteam, p.is_connexion_crew, p.is_supporting_crew, p.is_cforce, p.is_cg_leader, p.is_community_pic].filter(Boolean).length;
+    const count = [p.is_wl, p.is_singer, p.is_pianis, p.is_saxophone, p.is_filler, p.is_bass_gitar, p.is_drum, p.is_mulmed, p.is_sound, p.is_caringteam, p.is_connexion_crew, p.is_supporting_crew, p.is_cforce, p.is_cg_leader, p.is_community_pic, p.is_others].filter(Boolean).length;
     const key = count.toString();
     distribution[key] = (distribution[key] || 0) + 1;
   });
@@ -943,7 +993,7 @@ export async function getMemberEngagementScore(no_jemaat) {
 
   let versatilityScore = 0;
   if (memberPelayan) {
-    const ministryCount = [memberPelayan.is_wl, memberPelayan.is_singer, memberPelayan.is_pianis, memberPelayan.is_saxophone, memberPelayan.is_filler, memberPelayan.is_bass_gitar, memberPelayan.is_drum, memberPelayan.is_mulmed, memberPelayan.is_sound, memberPelayan.is_caringteam, memberPelayan.is_connexion_crew, memberPelayan.is_supporting_crew, memberPelayan.is_cforce, memberPelayan.is_cg_leader, memberPelayan.is_community_pic].filter(Boolean).length;
+    const ministryCount = [memberPelayan.is_wl, memberPelayan.is_singer, memberPelayan.is_pianis, memberPelayan.is_saxophone, memberPelayan.is_filler, memberPelayan.is_bass_gitar, memberPelayan.is_drum, memberPelayan.is_mulmed, memberPelayan.is_sound, memberPelayan.is_caringteam, memberPelayan.is_connexion_crew, memberPelayan.is_supporting_crew, memberPelayan.is_cforce, memberPelayan.is_cg_leader, memberPelayan.is_community_pic, memberPelayan.is_others].filter(Boolean).length;
     versatilityScore = Math.min(ministryCount / 4, 1) * 10;
   }
 
@@ -991,21 +1041,19 @@ function getCareVisitData() {
 // ============================================================
 
 export async function getAttendanceCGFList() {
-  const res = await fetch(`${API_BASE}/groups/with-member-counts`);
-  const json = await res.json();
-  return json.data || [];
+  return getCached(`${API_BASE}/groups/with-member-counts`)
+    .then(json => json.data || []);
 }
 
 export async function getAttendanceCGFById(cg_id) {
-  const res = await fetch(`${API_BASE}/groups/${cg_id}`);
-  const json = await res.json();
-  const group = json.data;
+  const [groupJson, membersJson] = await Promise.all([
+    getCached(`${API_BASE}/groups/${cg_id}`),
+    getCached(`${API_BASE}/groups/${cg_id}/members`)
+  ]);
+  const group = groupJson.data;
   if (!group) return null;
 
-  const membersRes = await fetch(`${API_BASE}/groups/${cg_id}/members`);
-  const membersJson = await membersRes.json();
   const member_count = (membersJson.data || []).length;
-
   const leader = (membersJson.data || []).find(m => m.is_leader);
 
   return {
@@ -1019,15 +1067,14 @@ export async function getAttendanceCGFById(cg_id) {
 }
 
 export async function getAttendanceMembersWithStatus(cg_id, tanggal) {
-  const res = await fetch(`${API_BASE}/attendance/members/${cg_id}/${tanggal}`);
-  const json = await res.json();
-  return (json.data || []).map(m => ({
-    no_jemaat: m.no_jemaat,
-    nama_jemaat: m.nama_jemaat || 'Unknown',
-    jenis_kelamin: m.jenis_kelamin || 'Laki-laki',
-    is_leader: m.is_leader || false,
-    today_status: m.today_status || null,
-  }));
+  return getCached(`${API_BASE}/attendance/members/${cg_id}/${tanggal}`)
+    .then(json => (json.data || []).map(m => ({
+      no_jemaat: m.no_jemaat,
+      nama_jemaat: m.nama_jemaat || 'Unknown',
+      jenis_kelamin: m.jenis_kelamin || 'Laki-laki',
+      is_leader: m.is_leader || false,
+      today_status: m.today_status || null,
+    })));
 }
 
 export async function getAttendanceHistory(filters = {}) {
@@ -1044,31 +1091,29 @@ export async function getAttendanceHistory(filters = {}) {
   params.set('limit', String(filters.limit || 50));
 
   const query = params.toString();
-  const res = await fetch(`${API_BASE}/attendance?${query}`);
-  const json = await res.json();
-  const records = json.data || [];
-  const meta = json.meta || {};
-
-  return {
-    data: records.map(r => ({
-      ...r,
-      nama_jemaat: r.nama_jemaat ?? 'Unknown',
-      nama_cgf: r.nama_cgf ?? 'Unknown',
-    })),
-    pagination: { page: meta.page || 1, limit: meta.limit || 50, total: meta.total || 0 },
-  };
+  return getCached(`${API_BASE}/attendance?${query}`)
+    .then(json => {
+      const records = json.data || [];
+      const meta = json.meta || {};
+      return {
+        data: records.map(r => ({
+          ...r,
+          nama_jemaat: r.nama_jemaat ?? 'Unknown',
+          nama_cgf: r.nama_cgf ?? 'Unknown',
+        })),
+        pagination: { page: meta.page || 1, limit: meta.limit || 50, total: meta.total || 0 },
+      };
+    });
 }
 
 export async function getAttendanceStatsCGF(cg_id) {
-  const res = await fetch(`${API_BASE}/attendance/stats/cgf/${cg_id}`);
-  const json = await res.json();
-  return json.data ?? null;
+  return getCached(`${API_BASE}/attendance/stats/cgf/${cg_id}`)
+    .then(json => json.data ?? null);
 }
 
 export async function getAttendanceStatsMember(no_jemaat) {
-  const res = await fetch(`${API_BASE}/attendance/stats/member/${no_jemaat}`);
-  const json = await res.json();
-  return json.data ?? null;
+  return getCached(`${API_BASE}/attendance/stats/member/${no_jemaat}`)
+    .then(json => json.data ?? null);
 }
 
 export async function saveAttendance(cg_id, tanggal, attendances) {
@@ -1106,7 +1151,7 @@ export async function saveAttendance(cg_id, tanggal, attendances) {
 // ============================================================
 
 export {
-//   // Raw data
+  // Raw data
   members,
   cgfGroups,
   cgfMembers,
@@ -1116,16 +1161,19 @@ export {
   cnx_jemaat_status_history,
   event_history,
   event_participation,
-//
-//   // Constants
+
+  // Constants
   GENDERS,
   DOMISILI_AREAS,
   CGF_INTEREST,
   KULIAH_KERJA,
   ATTENDANCE_STATUS,
   CGF_NAMES,
-//
-//   // Helper functions
+
+  // Cache management
+  invalidateCache,
+
+  // Helper functions
   getMembers,
   getMemberById,
   getEvents,
@@ -1136,32 +1184,11 @@ export {
   getAttendance,
   getPelayananInfo,
   getPelayananInfoById,
-  // getPelayan,
-  // getPelayananById,
-  // getDashboardKPIs,
-  // getGenderDistribution,
   getAgeDistribution,
   getDomisiliDistribution,
-  // getCGFSizes,
   getAttendanceTrend,
   getCGFInterestFunnel,
   getKuliahKerjaRatio,
   getBirthdayMembers,
-  // getStatusDistribution, // now exported directly from function definition
-  // getStatusTrend,
-  // getMinistryParticipation,
-  // getTotalServingMembers,
-  // getServingPercentage,
-  // getRecentStatusChanges,
-  // getAtRiskMembers,
-  // getServiceFrequencyDistribution,
-  // getUpcomingEvents,
-  // getWorshipTeamComposition,
-  // getEventAttendanceTrend,
-  // getMultiSkillDistribution,
-  // getCGHealthData,
-  // getMemberEngagementScore,
-  // getAverageEngagementScore,
   getCareVisitData,
-  // Attendance API functions (already exported via export function)
 };

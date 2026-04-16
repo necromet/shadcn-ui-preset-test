@@ -55,6 +55,7 @@ WHERE p.is_wl = 1 OR p.is_singer = 1 OR p.is_pianis = 1
       OR p.is_caringteam = 1 OR p.is_connexion_crew = 1
       OR p.is_supporting_crew = 1 OR p.is_cforce = 1
       OR p.is_cg_leader = 1 OR p.is_community_pic = 1
+      OR p.is_others = 1
 ```
 
 ---

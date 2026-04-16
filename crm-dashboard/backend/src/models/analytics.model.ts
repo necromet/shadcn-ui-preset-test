@@ -287,6 +287,7 @@ export const AnalyticsModel = {
       'is_wl', 'is_singer', 'is_pianis', 'is_saxophone', 'is_filler',
       'is_bass_gitar', 'is_drum', 'is_mulmed', 'is_sound', 'is_caringteam',
       'is_connexion_crew', 'is_supporting_crew', 'is_cforce', 'is_cg_leader', 'is_community_pic',
+      'is_others'
     ];
 
     const caseClauses = roles.map((role) => `COUNT(*) FILTER (WHERE ${role}) as ${role}`);

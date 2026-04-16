@@ -762,6 +762,7 @@ paths:
                     is_cforce: false
                     is_cg_leader: true
                     is_community_pic: false
+                    is_others: false
                     total_pelayanan: 3
                 pagination:
                   page: 1
@@ -2346,6 +2347,9 @@ components:
         is_community_pic:
           type: boolean
           example: false
+        is_others:
+          type: boolean
+          example: false
         total_pelayanan:
           type: integer
           description: Total number of ministry roles
@@ -2441,6 +2445,8 @@ components:
           type: boolean
         is_community_pic:
           type: boolean
+        is_others:
+          type: boolean
 
     PelayanPartialUpdate:
       type: object
@@ -2476,6 +2482,8 @@ components:
         is_cg_leader:
           type: boolean
         is_community_pic:
+          type: boolean
+        is_others:
           type: boolean
 
     PelayanResponse:

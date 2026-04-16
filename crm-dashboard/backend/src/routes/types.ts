@@ -245,6 +245,7 @@ export interface Pelayan {
   is_cforce?: boolean;
   is_cg_leader?: boolean;
   is_community_pic?: boolean;
+  is_others?: boolean;
   total_pelayanan?: number;
 }
 
@@ -266,6 +267,7 @@ export interface PelayanCreate {
   is_cforce?: boolean;
   is_cg_leader?: boolean;
   is_community_pic?: boolean;
+  is_others?: boolean;
 }
 
 export interface PelayanUpdate {
@@ -285,6 +287,7 @@ export interface PelayanUpdate {
   is_cforce?: boolean;
   is_cg_leader?: boolean;
   is_community_pic?: boolean;
+  is_others?: boolean;
 }
 
 export interface PelayanPartialUpdate {
@@ -304,6 +307,7 @@ export interface PelayanPartialUpdate {
   is_cforce?: boolean;
   is_cg_leader?: boolean;
   is_community_pic?: boolean;
+  is_others?: boolean;
 }
 
 export interface PelayanResponse {

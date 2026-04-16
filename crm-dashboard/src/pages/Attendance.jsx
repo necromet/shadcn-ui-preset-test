@@ -8,6 +8,7 @@ import { Progress } from "../components/ui/progress.jsx";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.jsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select.jsx";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../components/ui/dialog.jsx";
+import { DatePickerPopover } from "../components/ui/date-picker-popover.jsx";
 import { Skeleton } from "../components/ui/skeleton.jsx";
 import { MemberAvatar } from "../components/ui/member-avatar.jsx";
 import {
@@ -383,15 +384,10 @@ function MarkAttendanceView({ cgId, date, onDateChange, onBack, onSubmitted }) {
           </div>
         </div>
         <div className="text-right text-xs text-muted-foreground leading-relaxed">
-          <div className="flex items-center gap-2 justify-end">
-            <input
-              type="date"
-              className="flex h-8 rounded-md border border-input bg-transparent px-2 py-1 text-xs shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-              value={date}
-              onChange={(e) => onDateChange(e.target.value)}
-              max={todayStr}
-            />
-          </div>
+          <DatePickerPopover
+            date={date}
+            onDateChange={onDateChange}
+          />
           {existingRecords && (
             <span className="inline-block mt-1 text-[oklch(0.75_0.15_85)] tracking-wider">sudah dicatat</span>
           )}

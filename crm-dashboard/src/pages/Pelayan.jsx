@@ -1,12 +1,22 @@
-import { useState, useMemo, useEffect } from "react"
-import { Search, Plus, Pencil, Trash2, ChevronLeft, ChevronRight, X } from "lucide-react"
+import { useState, useMemo, useEffect, useRef } from "react"
+import { Search, Plus, Pencil, Trash2, ChevronLeft, ChevronRight, X, Check, ChevronDown } from "lucide-react"
+import { toast } from "sonner"
 import { Card, CardContent } from "../components/ui/card.jsx"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table.jsx"
 import { Button } from "../components/ui/button.jsx"
 import { Badge } from "../components/ui/badge.jsx"
 import { MemberAvatar } from "../components/ui/member-avatar.jsx"
 import { EmptyState } from "../components/ui/empty-state.jsx"
-import { getPelayan } from "../data/mock.js"
+import { Popover, PopoverContent, PopoverTrigger } from "../components/ui/popover.jsx"
+import { getMembers } from "../services/members.api.js"
+import {
+  getPelayanList,
+  createPelayan,
+  updatePelayan,
+  patchPelayan,
+  deletePelayan,
+  ApiError,
+} from "../services/pelayan.api.js"
 
 const PAGE_SIZE = 10
 
@@ -49,7 +59,7 @@ const ROLE_BADGE_LABELS = {
 }
 
 const EMPTY_FORM = {
-  no_jemaat: "",
+  no_jemaat: null,
   nama_jemaat: "",
   is_wl: false,
   is_singer: false,
@@ -72,14 +82,19 @@ const EMPTY_FORM = {
 
 export function Pelayan() {
   const [pelayanList, setPelayanList] = useState([])
+  const [allMembers, setAllMembers] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    getPelayan()
-      .then((data) => setPelayanList(data))
-      .catch((err) => console.error('Failed to fetch pelayan:', err))
+    Promise.all([getPelayanList({ limit: 1000 }), getMembers({ limit: 1000 })])
+      .then(([pelayanData, membersData]) => {
+        setPelayanList(pelayanData.data || [])
+        setAllMembers(membersData.data || membersData || [])
+      })
+      .catch((err) => console.error('Failed to fetch data:', err))
       .finally(() => setLoading(false))
   }, [])
+
   const [searchQuery, setSearchQuery] = useState("")
   const [roleFilter, setRoleFilter] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
@@ -89,6 +104,15 @@ export function Pelayan() {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [selectedPelayan, setSelectedPelayan] = useState(null)
   const [formData, setFormData] = useState(EMPTY_FORM)
+
+  const availableMembers = useMemo(() => {
+    const existingNoJemaat = new Set(pelayanList.map((p) => p.no_jemaat))
+    return allMembers.filter((m) => !existingNoJemaat.has(m.no_jemaat))
+  }, [allMembers, pelayanList])
+
+  const calculatedTotalPelayanan = useMemo(() => {
+    return MINISTRY_ROLES.filter((role) => formData[role.key]).length
+  }, [formData])
 
   const filteredPelayan = useMemo(() => {
     let result = pelayanList
@@ -131,22 +155,22 @@ export function Pelayan() {
     setFormData({
       no_jemaat: p.no_jemaat,
       nama_jemaat: p.nama_jemaat,
-      is_wl: p.is_wl,
-      is_singer: p.is_singer,
-      is_pianis: p.is_pianis,
-      is_saxophone: p.is_saxophone,
-      is_filler: p.is_filler,
-      is_bass_gitar: p.is_bass_gitar,
-      is_drum: p.is_drum,
-      is_mulmed: p.is_mulmed,
-      is_sound: p.is_sound,
-      is_caringteam: p.is_caringteam,
-      is_connexion_crew: p.is_connexion_crew,
-      is_supporting_crew: p.is_supporting_crew,
-      is_cforce: p.is_cforce,
-      is_cg_leader: p.is_cg_leader,
-      is_community_pic: p.is_community_pic,
-      is_others: p.is_others || false,
+      is_wl: !!p.is_wl,
+      is_singer: !!p.is_singer,
+      is_pianis: !!p.is_pianis,
+      is_saxophone: !!p.is_saxophone,
+      is_filler: !!p.is_filler,
+      is_bass_gitar: !!p.is_bass_gitar,
+      is_drum: !!p.is_drum,
+      is_mulmed: !!p.is_mulmed,
+      is_sound: !!p.is_sound,
+      is_caringteam: !!p.is_caringteam,
+      is_connexion_crew: !!p.is_connexion_crew,
+      is_supporting_crew: !!p.is_supporting_crew,
+      is_cforce: !!p.is_cforce,
+      is_cg_leader: !!p.is_cg_leader,
+      is_community_pic: !!p.is_community_pic,
+      is_others: !!p.is_others,
       total_pelayanan: p.total_pelayanan,
     })
     setShowEditDialog(true)
@@ -157,44 +181,208 @@ export function Pelayan() {
     setShowDeleteDialog(true)
   }
 
-  function handleFormChange(field, value) {
-    setFormData((prev) => ({ ...prev, [field]: value }))
+  function handleFormChange(field, value, namaValue) {
+    if (namaValue !== undefined) {
+      setFormData((prev) => ({ ...prev, [field]: value, nama_jemaat: namaValue }))
+    } else {
+      setFormData((prev) => ({ ...prev, [field]: value }))
+    }
   }
 
-  function handleAddPelayan(e) {
+  async function handleAddPelayan(e) {
     e.preventDefault()
     const newPelayan = {
       ...formData,
       no_jemaat: Number(formData.no_jemaat),
-      total_pelayanan: Number(formData.total_pelayanan),
+      total_pelayanan: calculatedTotalPelayanan,
     }
-    setPelayanList((prev) => [...prev, newPelayan])
-    setShowAddDialog(false)
+    try {
+      const response = await createPelayan(newPelayan, allMembers)
+      if (response?.success) {
+        setPelayanList((prev) => [...prev, response.data])
+        setAllMembers((prev) => prev.filter((m) => m.no_jemaat !== formData.no_jemaat))
+        setShowAddDialog(false)
+        toast.success("Pelayan added successfully", {
+          description: `${formData.nama_jemaat} has been added as a pelayan.`
+        })
+      }
+    } catch (err) {
+      if (err instanceof ApiError) {
+        toast.error("Failed to add pelayan", {
+          description: err.message
+        })
+      } else {
+        toast.error("An unexpected error occurred")
+      }
+    }
   }
 
-  function handleEditPelayan(e) {
+  async function handleEditPelayan(e) {
     e.preventDefault()
     const updated = {
       ...formData,
       no_jemaat: Number(formData.no_jemaat),
-      total_pelayanan: Number(formData.total_pelayanan),
+      total_pelayanan: calculatedTotalPelayanan,
     }
-    setPelayanList((prev) => prev.map((p) => (p.no_jemaat === selectedPelayan.no_jemaat ? updated : p)))
-    setShowEditDialog(false)
-    setSelectedPelayan(null)
+    try {
+      console.log('Updating pelayan:', selectedPelayan.no_jemaat, updated)
+      const response = await updatePelayan(selectedPelayan.no_jemaat, updated, allMembers)
+      if (response?.success) {
+        setPelayanList((prev) => prev.map((p) => (p.no_jemaat === selectedPelayan.no_jemaat ? response.data : p)))
+        setShowEditDialog(false)
+        setSelectedPelayan(null)
+        toast.success("Pelayan updated successfully", {
+          description: `${formData.nama_jemaat}'s roles have been updated.`
+        })
+      }
+    } catch (err) {
+      console.error('Update error:', err)
+      if (err instanceof ApiError) {
+        const desc = err.details 
+          ? err.details.map(d => `${d.field}: ${d.message}`).join(', ')
+          : err.message
+        toast.error("Failed to update pelayan", {
+          description: desc
+        })
+      } else {
+        toast.error("An unexpected error occurred")
+      }
+    }
   }
 
-  function handleDeletePelayan() {
-    setPelayanList((prev) => prev.filter((p) => p.no_jemaat !== selectedPelayan.no_jemaat))
-    setShowDeleteDialog(false)
-    setSelectedPelayan(null)
+  async function handleDeletePelayan() {
+    try {
+      await deletePelayan(selectedPelayan.no_jemaat)
+      setPelayanList((prev) => prev.filter((p) => p.no_jemaat !== selectedPelayan.no_jemaat))
+      setShowDeleteDialog(false)
+      setSelectedPelayan(null)
+      toast.success("Pelayan deleted successfully", {
+        description: `${selectedPelayan?.nama_jemaat} has been removed from pelayan.`
+      })
+    } catch (err) {
+      if (err instanceof ApiError) {
+        toast.error("Failed to delete pelayan", {
+          description: err.message
+        })
+      } else {
+        toast.error("An unexpected error occurred")
+      }
+    }
   }
 
   function getActiveRoles(p) {
     return MINISTRY_ROLES.filter((r) => p[r.key])
   }
 
+  function MemberSelectPopover({ value, onValueChange, options, placeholder, disabled }) {
+    const [open, setOpen] = useState(false)
+    const [search, setSearch] = useState("")
+    const inputRef = useRef(null)
+
+    const filteredOptions = useMemo(() => {
+      if (!search.trim()) return options
+      const q = search.toLowerCase()
+      return options.filter(
+        (opt) =>
+          opt.label.toLowerCase().includes(q) ||
+          String(opt.no_jemaat).includes(q)
+      )
+    }, [options, search])
+
+    const selectedOption = options.find((opt) => opt.no_jemaat === value)
+
+    const handleSelect = (opt) => {
+      onValueChange(opt.no_jemaat, opt.nama_jemaat)
+      setOpen(false)
+      setSearch("")
+    }
+
+    useEffect(() => {
+      if (open && inputRef.current) {
+        inputRef.current.focus()
+      }
+    }, [open])
+
+    return (
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            disabled={disabled}
+            className="w-full justify-start text-left font-normal h-9 px-3"
+          >
+            {selectedOption ? (
+              <span className="truncate">{selectedOption.label}</span>
+            ) : (
+              <span className="text-muted-foreground truncate">{placeholder || "Select member..."}</span>
+            )}
+            <ChevronDown className="h-4 w-4 ml-auto shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[320px] p-0" align="start">
+          <div className="flex flex-col">
+            <div className="flex items-center border-b px-3">
+              <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <input
+                ref={inputRef}
+                type="text"
+                placeholder="Search by name or no. jemaat..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="flex-1 h-9 px-2 text-sm outline-none placeholder:text-muted-foreground"
+              />
+              {search && (
+                <button
+                  type="button"
+                  onClick={() => setSearch("")}
+                  className="p-0.5 hover:bg-muted rounded"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              )}
+            </div>
+            <div className="max-h-[240px] overflow-y-auto">
+              {filteredOptions.length === 0 ? (
+                <div className="py-6 text-center text-sm text-muted-foreground">
+                  No members found
+                </div>
+              ) : (
+                filteredOptions.map((opt) => (
+                  <button
+                    key={opt.no_jemaat}
+                    type="button"
+                    onClick={() => handleSelect(opt)}
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-muted transition-colors"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <MemberAvatar name={opt.label} size="sm" />
+                        <div className="truncate">
+                          <p className="font-medium truncate">{opt.label}</p>
+                          <p className="text-xs text-muted-foreground">#{opt.no_jemaat}</p>
+                        </div>
+                      </div>
+                      {value === opt.no_jemaat && (
+                        <Check className="h-4 w-4 text-primary shrink-0" />
+                      )}
+                    </div>
+                  </button>
+                ))
+              )}
+            </div>
+          </div>
+        </PopoverContent>
+      </Popover>
+    )
+  }
+
   function renderPelayanForm(onSubmit, title) {
+    const memberOptions = showEditDialog && selectedPelayan
+      ? availableMembers.concat([{ no_jemaat: selectedPelayan.no_jemaat, nama_jemaat: selectedPelayan.nama_jemaat, label: selectedPelayan.nama_jemaat }])
+      : availableMembers.map((m) => ({ no_jemaat: m.no_jemaat, nama_jemaat: m.nama_jemaat, label: m.nama_jemaat }))
+
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
         <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl bg-card p-6 shadow-lg">
@@ -215,34 +403,26 @@ export function Pelayan() {
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium">No. Jemaat</label>
-                <input
-                  type="number"
-                  required
-                  value={formData.no_jemaat}
-                  onChange={(e) => handleFormChange("no_jemaat", e.target.value)}
-                  className="h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
-                />
+                <div className="h-9 rounded-md border bg-muted px-3 text-sm flex items-center text-muted-foreground">
+                  {formData.no_jemaat ? `#${formData.no_jemaat}` : "-"}
+                </div>
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium">Nama</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.nama_jemaat}
-                  onChange={(e) => handleFormChange("nama_jemaat", e.target.value)}
-                  className="h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
+                <MemberSelectPopover
+                  value={formData.no_jemaat}
+                  onValueChange={(noJemaat, namaJemaat) => handleFormChange("no_jemaat", noJemaat, namaJemaat)}
+                  options={memberOptions}
+                  placeholder="Select member..."
+                  disabled={showEditDialog}
                 />
               </div>
             </div>
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-medium">Total Pelayanan</label>
-              <input
-                type="number"
-                required
-                value={formData.total_pelayanan}
-                onChange={(e) => handleFormChange("total_pelayanan", e.target.value)}
-                className="h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
-              />
+              <div className="h-9 rounded-md border bg-muted px-3 text-sm flex items-center">
+                {calculatedTotalPelayanan}
+              </div>
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-sm font-medium">Ministry Roles</label>
@@ -271,7 +451,7 @@ export function Pelayan() {
               >
                 Cancel
               </Button>
-              <Button type="submit">{showEditDialog ? "Save Changes" : "Add Pelayan"}</Button>
+              <Button type="submit" disabled={!formData.no_jemaat}>{showEditDialog ? "Save Changes" : "Add Pelayan"}</Button>
             </div>
           </form>
         </div>
@@ -292,7 +472,7 @@ export function Pelayan() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold">Pelayan</h1>
-          <p className="text-sm text-muted-foreground">Manage ministry servants and their service roles</p>
+          <p className="text-sm text-muted-foreground">Manage ministry and their service roles</p>
         </div>
         <Button onClick={openAddDialog}>
           <Plus className="h-4 w-4" />

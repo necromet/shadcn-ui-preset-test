@@ -124,40 +124,115 @@ export const MembersModel = {
     return result.rows[0] || null;
   },
 
-  async create(data: MemberCreateData): Promise<Member> {
-    const columns = Object.keys(data);
-    const values = Object.values(data);
-    const placeholders = columns.map((_, i) => `$${i + 1}`);
+  /**
+   * Sync cgf_members table based on member's nama_cgf value.
+   * If nama_cgf is null/empty/'Belum CGF', set no_jemaat = NULL in cgf_members (keep row for history).
+   * Otherwise, upsert into cgf_members with member data.
+   */
+  async syncCgfMembers(
+    no_jemaat: number,
+    nama_jemaat: string,
+    nama_cgf: string | null | undefined,
+    no_handphone: string | null | undefined,
+    txQuery?: typeof query,
+  ): Promise<void> {
+    const queryFn = txQuery || query;
+    
+    // Determine if member belongs to a CGF
+    const validCgf = nama_cgf && nama_cgf.trim() !== '' && nama_cgf !== 'Belum CGF';
+    
+    if (!validCgf) {
+      // Unlink from cgf_members (set no_jemaat = NULL) if row exists
+      await queryFn(
+        'UPDATE cgf_members SET no_jemaat = NULL WHERE no_jemaat = $1',
+        [no_jemaat],
+      );
+      return;
+    }
 
-    const result = await query<Member>(
-      `INSERT INTO cnx_jemaat_clean (${columns.join(', ')}) VALUES (${placeholders.join(', ')}) RETURNING *`,
-      values,
+    // Upsert into cgf_members
+    // The member was just inserted/updated in cnx_jemaat_clean within the same transaction,
+    // so it should be visible here due to transaction isolation
+    await queryFn(
+      `INSERT INTO cgf_members (no_jemaat, nama_jemaat, nama_cgf, no_handphone, is_leader)
+       VALUES ($1, $2, $3, $4, false)
+       ON CONFLICT (no_jemaat) DO UPDATE SET
+         nama_jemaat = EXCLUDED.nama_jemaat,
+         nama_cgf = EXCLUDED.nama_cgf,
+         no_handphone = EXCLUDED.no_handphone`,
+      [no_jemaat, nama_jemaat, nama_cgf, no_handphone],
     );
-    return result.rows[0];
+  },
+
+  async create(data: MemberCreateData): Promise<Member> {
+    return transaction(async (txQuery) => {
+      const columns = Object.keys(data);
+      const values = Object.values(data);
+      const placeholders = columns.map((_, i) => `$${i + 1}`);
+
+      const result = await txQuery<Member>(
+        `INSERT INTO cnx_jemaat_clean (${columns.join(', ')}) VALUES (${placeholders.join(', ')}) RETURNING *`,
+        values,
+      );
+      const member = result.rows[0];
+      
+      // Sync cgf_members table
+      await this.syncCgfMembers(
+        member.no_jemaat,
+        member.nama_jemaat,
+        member.nama_cgf,
+        member.no_handphone,
+        txQuery,
+      );
+      
+      return member;
+    });
   },
 
   async update(no_jemaat: number, data: MemberUpdateData): Promise<Member | null> {
-    const columns = Object.keys(data);
-    if (columns.length === 0) {
-      return this.getById(no_jemaat);
-    }
+    return transaction(async (txQuery) => {
+      const columns = Object.keys(data);
+      if (columns.length === 0) {
+        return this.getById(no_jemaat);
+      }
 
-    const values = Object.values(data);
-    const setClauses = columns.map((col, i) => `${col} = $${i + 1}`);
+      const values = Object.values(data);
+      const setClauses = columns.map((col, i) => `${col} = $${i + 1}`);
 
-    const result = await query<Member>(
-      `UPDATE cnx_jemaat_clean SET ${setClauses.join(', ')} WHERE no_jemaat = $${columns.length + 1} RETURNING *`,
-      [...values, no_jemaat],
-    );
-    return result.rows[0] || null;
+      const result = await txQuery<Member>(
+        `UPDATE cnx_jemaat_clean SET ${setClauses.join(', ')} WHERE no_jemaat = $${columns.length + 1} RETURNING *`,
+        [...values, no_jemaat],
+      );
+      const member = result.rows[0];
+      if (!member) {
+        return null;
+      }
+
+      // Sync cgf_members table
+      await this.syncCgfMembers(
+        member.no_jemaat,
+        member.nama_jemaat,
+        member.nama_cgf,
+        member.no_handphone,
+        txQuery,
+      );
+
+      return member;
+    });
   },
 
   async delete(no_jemaat: number): Promise<boolean> {
-    const result = await query(
-      'DELETE FROM cnx_jemaat_clean WHERE no_jemaat = $1',
-      [no_jemaat],
-    );
-    return (result.rowCount ?? 0) > 0;
+    return transaction(async (txQuery) => {
+      await txQuery(
+        'UPDATE cgf_members SET no_jemaat = NULL WHERE no_jemaat = $1',
+        [no_jemaat],
+      );
+      const result = await txQuery(
+        'DELETE FROM cnx_jemaat_clean WHERE no_jemaat = $1',
+        [no_jemaat],
+      );
+      return (result.rowCount ?? 0) > 0;
+    });
   },
 
   async search(searchQuery: string): Promise<Member[]> {
@@ -207,4 +282,5 @@ export const MembersModel = {
     );
     return result.rows;
   },
+
 };

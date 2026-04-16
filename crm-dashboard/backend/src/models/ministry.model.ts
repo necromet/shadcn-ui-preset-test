@@ -1,4 +1,4 @@
-import { query } from '../config/database';
+import { query, transaction } from '../config/database';
 
 export interface MinistryType {
   pelayanan_id: string;
@@ -32,6 +32,7 @@ export interface Pelayan {
   is_cforce: boolean;
   is_cg_leader: boolean;
   is_community_pic: boolean;
+  is_others?: boolean;
   total_pelayanan: number;
 }
 
@@ -53,6 +54,7 @@ export interface PelayanCreateData {
   is_cforce?: boolean;
   is_cg_leader?: boolean;
   is_community_pic?: boolean;
+  is_others?: boolean;
 }
 
 export interface PelayanUpdateData {
@@ -72,6 +74,7 @@ export interface PelayanUpdateData {
   is_cforce?: boolean;
   is_cg_leader?: boolean;
   is_community_pic?: boolean;
+  is_others?: boolean;
 }
 
 export interface PaginatedResult<T> {
@@ -86,12 +89,31 @@ const BOOLEAN_ROLE_COLUMNS = [
   'is_wl', 'is_singer', 'is_pianis', 'is_saxophone', 'is_filler',
   'is_bass_gitar', 'is_drum', 'is_mulmed', 'is_sound', 'is_caringteam',
   'is_connexion_crew', 'is_supporting_crew', 'is_cforce', 'is_cg_leader', 'is_community_pic',
+  'is_others'
 ];
 
 function computeTotalPelayanan(data: PelayanCreateData | PelayanUpdateData): number {
   return BOOLEAN_ROLE_COLUMNS.reduce((count, col) => {
     return count + ((data as Record<string, unknown>)[col] ? 1 : 0);
   }, 0);
+}
+
+function toSmallint(value: unknown): number {
+  if (value === true || value === 1 || value === '1') return 1;
+  if (value === false || value === 0 || value === '0') return 0;
+  return 0;
+}
+
+function convertBooleanRolesToSmallint(data: Record<string, unknown>): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(data)) {
+    if (BOOLEAN_ROLE_COLUMNS.includes(key)) {
+      result[key] = toSmallint(value);
+    } else {
+      result[key] = value;
+    }
+  }
+  return result;
 }
 
 export const MinistryModel = {
@@ -183,8 +205,9 @@ export const MinistryModel = {
 
   async createPelayan(data: PelayanCreateData): Promise<Pelayan> {
     const totalPelayanan = computeTotalPelayanan(data);
-    const columns = [...Object.keys(data), 'total_pelayanan'];
-    const values = [...Object.values(data), totalPelayanan];
+    const converted = convertBooleanRolesToSmallint(data as unknown as Record<string, unknown>);
+    const columns = [...Object.keys(converted), 'total_pelayanan'];
+    const values = [...Object.values(converted), totalPelayanan];
     const placeholders = columns.map((_, i) => `$${i + 1}`);
 
     const result = await query<Pelayan>(
@@ -203,17 +226,38 @@ export const MinistryModel = {
     const existing = await this.getPelayanById(noJemaat);
     if (!existing) return null;
 
-    const merged = { ...existing, ...data };
-    const totalPelayanan = computeTotalPelayanan(merged as PelayanCreateData);
+    const converted = convertBooleanRolesToSmallint(data as unknown as Record<string, unknown>);
+    const convertedColumns = Object.keys(converted);
+    const convertedValues = Object.values(converted);
 
-    const values = Object.values(data);
-    const setClauses = columns.map((col, i) => `${col} = $${i + 1}`);
-    setClauses.push(`total_pelayanan = $${columns.length + 1}`);
+    const merged = { ...existing, ...converted };
+    const totalPelayanan = computeTotalPelayanan(merged as unknown as PelayanCreateData);
 
-    const result = await query<Pelayan>(
-      `UPDATE pelayan SET ${setClauses.join(', ')} WHERE no_jemaat = $${columns.length + 2} RETURNING *`,
-      [...values, totalPelayanan, noJemaat],
-    );
+    const setClauses = convertedColumns.map((col, i) => `${col} = $${i + 1}`);
+    setClauses.push(`total_pelayanan = $${convertedColumns.length + 1}`);
+
+    // Check if is_cforce is being set to true
+    const isCforceChanged = 'is_cforce' in data;
+    const isCforceTrue = converted.is_cforce === 1;
+
+    // Use transaction to update both pelayan and cgf_members atomically
+    const result = await transaction(async (txQuery) => {
+      const pelayanResult = await txQuery<Pelayan>(
+        `UPDATE pelayan SET ${setClauses.join(', ')} WHERE no_jemaat = $${convertedColumns.length + 2} RETURNING *`,
+        [...convertedValues, totalPelayanan, noJemaat],
+      );
+
+      // If is_cforce is set to true, update cgf_members.is_leader to true
+      if (isCforceChanged && isCforceTrue) {
+        await txQuery(
+          `UPDATE cgf_members SET is_leader = 1 WHERE no_jemaat = $1`,
+          [noJemaat],
+        );
+      }
+
+      return pelayanResult;
+    });
+
     return result.rows[0] || null;
   },
 

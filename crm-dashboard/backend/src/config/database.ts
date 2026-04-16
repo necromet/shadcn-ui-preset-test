@@ -70,6 +70,8 @@ export async function transaction<T>(
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
+    // Defer foreign key constraint checks until commit time
+    await client.query('SET CONSTRAINTS ALL DEFERRED');
     const result = await callback((text, params) => client.query(text, params));
     await client.query('COMMIT');
     return result;

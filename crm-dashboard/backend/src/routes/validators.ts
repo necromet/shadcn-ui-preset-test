@@ -47,6 +47,7 @@ export const MemberSchema = z.object({
 export type Member = z.infer<typeof MemberSchema>;
 
 export const MemberCreateSchema = z.object({
+  no_jemaat: z.number().int(),
   nama_jemaat: z.string().min(2),
   jenis_kelamin: z.enum(['Laki-laki', 'Perempuan']),
   tanggal_lahir: z.string(),
@@ -274,6 +275,7 @@ export const PelayanSchema = z.object({
   is_cforce: z.boolean().optional(),
   is_cg_leader: z.boolean().optional(),
   is_community_pic: z.boolean().optional(),
+  is_others: z.boolean().optional(),
   total_pelayanan: z.number().int().optional(),
 });
 export type Pelayan = z.infer<typeof PelayanSchema>;
@@ -296,6 +298,7 @@ export const PelayanCreateSchema = z.object({
   is_cforce: z.boolean().optional(),
   is_cg_leader: z.boolean().optional(),
   is_community_pic: z.boolean().optional(),
+  is_others: z.boolean().optional(),
 });
 export type PelayanCreate = z.infer<typeof PelayanCreateSchema>;
 
@@ -316,6 +319,7 @@ export const PelayanUpdateSchema = z.object({
   is_cforce: z.boolean().optional(),
   is_cg_leader: z.boolean().optional(),
   is_community_pic: z.boolean().optional(),
+  is_others: z.boolean().optional(),
 });
 export type PelayanUpdate = z.infer<typeof PelayanUpdateSchema>;
 
@@ -336,6 +340,7 @@ export const PelayanPartialUpdateSchema = z.object({
   is_cforce: z.boolean().optional(),
   is_cg_leader: z.boolean().optional(),
   is_community_pic: z.boolean().optional(),
+  is_others: z.boolean().optional(),
 });
 export type PelayanPartialUpdate = z.infer<typeof PelayanPartialUpdateSchema>;
 
