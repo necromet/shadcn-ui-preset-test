@@ -275,7 +275,7 @@ export const AttendanceModel = {
       `SELECT a.id, a.no_jemaat, a.cg_id, TO_CHAR(a.tanggal, 'YYYY-MM-DD') as tanggal, a.keterangan,
               m.nama_jemaat, m.jenis_kelamin,
               g.nama_cgf,
-              COALESCE(cm.is_leader, false) as is_leader
+              COALESCE(cm.is_leader, 0) as is_leader
        FROM cgf_attendance a
        LEFT JOIN cnx_jemaat_clean m ON a.no_jemaat = m.no_jemaat
        LEFT JOIN cgf_info g ON a.cg_id = g.id
@@ -300,7 +300,7 @@ export const AttendanceModel = {
       `SELECT a.id, a.no_jemaat, a.cg_id, TO_CHAR(a.tanggal, 'YYYY-MM-DD') as tanggal, a.keterangan,
               m.nama_jemaat, m.jenis_kelamin,
               g.nama_cgf,
-              COALESCE(cm.is_leader, false) as is_leader
+              COALESCE(cm.is_leader, 0) as is_leader
        FROM cgf_attendance a
        LEFT JOIN cnx_jemaat_clean m ON a.no_jemaat = m.no_jemaat
        LEFT JOIN cgf_info g ON a.cg_id = g.id
