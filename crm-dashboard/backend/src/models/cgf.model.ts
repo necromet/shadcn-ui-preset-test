@@ -196,7 +196,7 @@ export const CGFModel = {
         `SELECT m.nama_jemaat 
          FROM cgf_members cm
          JOIN cnx_jemaat_clean m ON cm.no_jemaat = m.no_jemaat
-         WHERE cm.nama_cgf = $1 AND cm.is_leader = true
+         WHERE cm.nama_cgf = $1 AND cm.is_leader = 1
          LIMIT 1`,
         [group.nama_cgf],
       );

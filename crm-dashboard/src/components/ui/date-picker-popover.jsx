@@ -10,9 +10,7 @@ import { CalendarDays } from "lucide-react";
  */
 function parseLocalDate(dateStr) {
   if (!dateStr) return undefined;
-  // If already has time component, extract just the date part
   const dateOnly = dateStr.includes("T") ? dateStr.split("T")[0] : dateStr;
-  // Parse as local time by appending time at midnight
   const [year, month, day] = dateOnly.split("-").map(Number);
   if (isNaN(year) || isNaN(month) || isNaN(day)) return undefined;
   return new Date(year, month - 1, day);

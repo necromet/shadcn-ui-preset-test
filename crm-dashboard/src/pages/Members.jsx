@@ -44,7 +44,7 @@ function parseTanggalLahir(dateStr) {
   // Create date at noon UTC, then subtract 7 hours to get UTC+7 midnight
   // This ensures we get the correct date in UTC+7 timezone
   const utcDate = new Date(Date.UTC(year, month - 1, day, 17, 0, 0, 0));
-  const localDate = new Date(utcDate.getTime() - 7 * 60 * 60 * 1000);
+  const localDate = new Date(utcDate.getTime() + 7 * 60 * 60 * 1000);
   const localYear = localDate.getUTCFullYear();
   const localMonth = String(localDate.getUTCMonth() + 1).padStart(2, "0");
   const localDay = String(localDate.getUTCDate()).padStart(2, "0");
