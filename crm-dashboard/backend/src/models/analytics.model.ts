@@ -77,7 +77,7 @@ export const AnalyticsModel = {
       SELECT
         (SELECT COUNT(*) FROM cnx_jemaat_clean) as total_members,
         (SELECT COUNT(*) FROM cgf_info) as total_cgf_groups,
-        (SELECT COUNT(DISTINCT no_jemaat) FROM pelayan) as total_ministry_members,
+        (SELECT COUNT(DISTINCT no_jemaat) FROM pelayan_pelayanan WHERE is_active = TRUE) as total_ministry_members,
         (SELECT COUNT(nama_cgf) from cnx_jemaat_clean where nama_cgf = 'Belum CGF') as members_without_cgf
     `);
     return result.rows[0];
@@ -283,24 +283,20 @@ export const AnalyticsModel = {
   },
 
   async getMinistryParticipation(): Promise<MinistryParticipationItem[]> {
-    const roles = [
-      'is_wl', 'is_singer', 'is_pianis', 'is_saxophone', 'is_filler',
-      'is_bass_gitar', 'is_drum', 'is_mulmed', 'is_sound', 'is_caringteam',
-      'is_connexion_crew', 'is_supporting_crew', 'is_cforce', 'is_cg_leader', 'is_community_pic',
-      'is_others'
-    ];
-
-    const caseClauses = roles.map((role) => `COUNT(*) FILTER (WHERE ${role}) as ${role}`);
-    const result = await query<Record<string, string>>(`
-      SELECT ${caseClauses.join(', ')}
-      FROM pelayan
+    // Use junction table (pelayan_pelayanan) for accurate counts
+    const result = await query<{ role: string; count: string }>(`
+      SELECT pi.nama_pelayanan as role, COUNT(*) as count
+      FROM pelayan_pelayanan pp
+      JOIN pelayanan_info pi ON pp.pelayanan_id = pi.pelayanan_id
+      WHERE pp.is_active = TRUE
+      GROUP BY pi.nama_pelayanan
+      ORDER BY count DESC
     `);
 
-    const row = result.rows[0];
-    return roles.map((role) => ({
-      role: role.replace('is_', '').replace(/_/g, ' '),
-      count: parseInt(row[role] || '0', 10),
-    })).filter((r) => r.count > 0).sort((a, b) => b.count - a.count);
+    return result.rows.map((r) => ({
+      role: r.role,
+      count: parseInt(r.count, 10),
+    }));
   },
 
   async getAtRiskMembers(): Promise<AtRiskMember[]> {

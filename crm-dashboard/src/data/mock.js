@@ -77,22 +77,22 @@ const members = [
 // ============================================================
 
 const pelayananInfo = [
-  { pelayanan_id: 'P001', nama_pelayanan: 'Worship Leader' },
-  { pelayanan_id: 'P002', nama_pelayanan: 'Singer' },
-  { pelayanan_id: 'P003', nama_pelayanan: 'Pianist' },
-  { pelayanan_id: 'P004', nama_pelayanan: 'Saxophone' },
-  { pelayanan_id: 'P005', nama_pelayanan: 'Filler Musician' },
-  { pelayanan_id: 'P006', nama_pelayanan: 'Bass Guitarist' },
-  { pelayanan_id: 'P007', nama_pelayanan: 'Drummer' },
-  { pelayanan_id: 'P008', nama_pelayanan: 'Multimedia' },
-  { pelayanan_id: 'P009', nama_pelayanan: 'Sound Engineer' },
-  { pelayanan_id: 'P010', nama_pelayanan: 'Caring Team' },
-  { pelayanan_id: 'P011', nama_pelayanan: 'Connexion Crew' },
-  { pelayanan_id: 'P012', nama_pelayanan: 'Supporting Crew' },
-  { pelayanan_id: 'P013', nama_pelayanan: 'CForce' },
-  { pelayanan_id: 'P014', nama_pelayanan: 'CG Leader' },
-  { pelayanan_id: 'P015', nama_pelayanan: 'Community PIC' },
-  { pelayanan_id: 'P016', nama_pelayanan: 'Others' },
+  { pelayanan_id: '70001', nama_pelayanan: 'Worship Leader' },
+  { pelayanan_id: '70002', nama_pelayanan: 'Singer' },
+  { pelayanan_id: '70004', nama_pelayanan: 'Saxophone' },
+  { pelayanan_id: '70008', nama_pelayanan: 'Multimedia' },
+  { pelayanan_id: '70010', nama_pelayanan: 'Caring Team' },
+  { pelayanan_id: '70011', nama_pelayanan: 'Connexion Crew' },
+  { pelayanan_id: '70012', nama_pelayanan: 'Supporting Crew' },
+  { pelayanan_id: '70015', nama_pelayanan: 'Community PIC' },
+  { pelayanan_id: '70003', nama_pelayanan: 'Pianist' },
+  { pelayanan_id: '70005', nama_pelayanan: 'Filler Musician' },
+  { pelayanan_id: '70006', nama_pelayanan: 'Bass Guitarist' },
+  { pelayanan_id: '70007', nama_pelayanan: 'Drummer' },
+  { pelayanan_id: '70009', nama_pelayanan: 'Sound Engineer' },
+  { pelayanan_id: '70013', nama_pelayanan: 'CForce' },
+  { pelayanan_id: '70014', nama_pelayanan: 'CG Leader' },
+  { pelayanan_id: '70016', nama_pelayanan: 'Others' },
 ];
 
 // ============================================================
@@ -483,6 +483,12 @@ function getPelayananInfoById(pelayanan_id) {
   return pelayananInfo.find(p => p.pelayanan_id === pelayanan_id) || null;
 }
 
+export async function fetchPelayananInfoFromAPI() {
+  const response = await fetch(`${API_BASE}/ministry/pelayanan/info`);
+  const json = await response.json();
+  return json.data || [];
+}
+
 // ============================================================
 // API CALL CACHING SYSTEM
 // Prevents duplicate requests when multiple components call the same API
@@ -702,6 +708,22 @@ export async function getStatusTrend() {
 }
 
 export async function getMinistryParticipation() {
+  // Use junction table stats from the API
+  const API_BASE = import.meta.env.VITE_API_URL;
+  try {
+    const res = await fetch(`${API_BASE}/ministry/pelayanan/stats`);
+    const json = await res.json();
+    if (json.success && json.data) {
+      return json.data.map(item => ({
+        ministry: item.nama_pelayanan,
+        count: parseInt(item.active_count, 10),
+      })).filter(item => item.count > 0);
+    }
+  } catch {
+    // Fallback to old approach if stats endpoint fails
+  }
+
+  // Fallback: use boolean columns from pelayan data
   const pelayanData = await getPelayan();
   const totalServing = pelayanData.length;
   const ministryFields = [

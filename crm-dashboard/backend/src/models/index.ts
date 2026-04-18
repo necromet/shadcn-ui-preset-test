@@ -8,7 +8,7 @@ export { AttendanceModel } from './attendance.model';
 export type { Attendance, AttendanceCreateData, AttendanceUpdateData, AttendanceFilters, BulkAttendanceRecord } from './attendance.model';
 
 export { MinistryModel } from './ministry.model';
-export type { MinistryType, MinistryTypeCreateData, MinistryTypeUpdateData, Pelayan, PelayanCreateData, PelayanUpdateData } from './ministry.model';
+export type { MinistryType, MinistryTypeCreateData, MinistryTypeUpdateData, Pelayan, PelayanCreateData, PelayanUpdateData, PelayanPelayanan, PelayananForPelayan, PelayanForPelayanan, PelayananCount, BulkAssignmentResult } from './ministry.model';
 
 export { StatusModel } from './status.model';
 export type { StatusHistory, StatusHistoryCreateData, StatusHistoryUpdateData } from './status.model';

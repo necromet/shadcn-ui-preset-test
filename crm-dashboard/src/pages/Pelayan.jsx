@@ -12,88 +12,45 @@ import { getMembers } from "../services/members.api.js"
 import {
   getPelayanList,
   createPelayan,
-  updatePelayan,
-  patchPelayan,
   deletePelayan,
+  bulkUpdatePelayanan,
+  getPelayananForPelayan,
   ApiError,
 } from "../services/pelayan.api.js"
+import { fetchPelayananInfoFromAPI } from "../data/mock.js"
 
 const PAGE_SIZE = 10
-
-const MINISTRY_ROLES = [
-  { key: 'is_wl', label: 'Worship Leader' },
-  { key: 'is_singer', label: 'Singer' },
-  { key: 'is_pianis', label: 'Pianist' },
-  { key: 'is_saxophone', label: 'Saxophone' },
-  { key: 'is_filler', label: 'Filler' },
-  { key: 'is_bass_gitar', label: 'Bass Guitar' },
-  { key: 'is_drum', label: 'Drummer' },
-  { key: 'is_mulmed', label: 'Multimedia' },
-  { key: 'is_sound', label: 'Sound' },
-  { key: 'is_caringteam', label: 'Caring Team' },
-  { key: 'is_connexion_crew', label: 'CNX Crew' },
-  { key: 'is_supporting_crew', label: 'Supporting' },
-  { key: 'is_cforce', label: 'CForce' },
-  { key: 'is_cg_leader', label: 'CG Leader' },
-  { key: 'is_community_pic', label: 'Community PIC' },
-  { key: 'is_others', label: 'Others' },
-]
-
-const ROLE_BADGE_LABELS = {
-  is_wl: 'WL',
-  is_singer: 'Singer',
-  is_pianis: 'Pianist',
-  is_saxophone: 'Sax',
-  is_filler: 'Filler',
-  is_bass_gitar: 'Bass',
-  is_drum: 'Drum',
-  is_mulmed: 'Mulmed',
-  is_sound: 'Sound',
-  is_caringteam: 'Caring',
-  is_connexion_crew: 'CNX Crew',
-  is_supporting_crew: 'Support',
-  is_cforce: 'CForce',
-  is_cg_leader: 'CG Leader',
-  is_community_pic: 'PIC',
-  is_others: 'Others',
-}
 
 const EMPTY_FORM = {
   no_jemaat: null,
   nama_jemaat: "",
-  is_wl: false,
-  is_singer: false,
-  is_pianis: false,
-  is_saxophone: false,
-  is_filler: false,
-  is_bass_gitar: false,
-  is_drum: false,
-  is_mulmed: false,
-  is_sound: false,
-  is_caringteam: false,
-  is_connexion_crew: false,
-  is_supporting_crew: false,
-  is_cforce: false,
-  is_cg_leader: false,
-  is_community_pic: false,
-  is_others: false,
-  total_pelayanan: 0,
+  selectedPelayananIds: [],
 }
 
 export function Pelayan() {
   const [pelayanList, setPelayanList] = useState([])
   const [allMembers, setAllMembers] = useState([])
   const [loading, setLoading] = useState(true)
+  const [ministryRoles, setMinistryRoles] = useState([])
 
   useEffect(() => {
-    Promise.all([getPelayanList({ limit: 1000 }), getMembers({ limit: 1000 })])
-      .then(([pelayanData, membersData]) => {
+    Promise.all([getPelayanList({ limit: 1000 }), getMembers({ limit: 1000 }), fetchPelayananInfoFromAPI()])
+      .then(([pelayanData, membersData, pelayananData]) => {
         setPelayanList(pelayanData.data || [])
         setAllMembers(membersData.data || membersData || [])
+        setMinistryRoles(pelayananData.map(p => ({
+          key: `pel_${p.pelayanan_id}`,
+          label: p.nama_pelayanan,
+          pelayananId: p.pelayanan_id,
+        })))
       })
       .catch((err) => console.error('Failed to fetch data:', err))
       .finally(() => setLoading(false))
   }, [])
+
+  const roleBadgeLabels = useMemo(() => {
+    return Object.fromEntries(ministryRoles.map(r => [r.key, r.label]))
+  }, [ministryRoles])
 
   const [searchQuery, setSearchQuery] = useState("")
   const [roleFilter, setRoleFilter] = useState("")
@@ -109,10 +66,6 @@ export function Pelayan() {
     const existingNoJemaat = new Set(pelayanList.map((p) => p.no_jemaat))
     return allMembers.filter((m) => !existingNoJemaat.has(m.no_jemaat))
   }, [allMembers, pelayanList])
-
-  const calculatedTotalPelayanan = useMemo(() => {
-    return MINISTRY_ROLES.filter((role) => formData[role.key]).length
-  }, [formData])
 
   const filteredPelayan = useMemo(() => {
     let result = pelayanList
@@ -150,29 +103,29 @@ export function Pelayan() {
     setShowAddDialog(true)
   }
 
-  function openEditDialog(p) {
+  async function openEditDialog(p) {
     setSelectedPelayan(p)
-    setFormData({
-      no_jemaat: p.no_jemaat,
-      nama_jemaat: p.nama_jemaat,
-      is_wl: !!p.is_wl,
-      is_singer: !!p.is_singer,
-      is_pianis: !!p.is_pianis,
-      is_saxophone: !!p.is_saxophone,
-      is_filler: !!p.is_filler,
-      is_bass_gitar: !!p.is_bass_gitar,
-      is_drum: !!p.is_drum,
-      is_mulmed: !!p.is_mulmed,
-      is_sound: !!p.is_sound,
-      is_caringteam: !!p.is_caringteam,
-      is_connexion_crew: !!p.is_connexion_crew,
-      is_supporting_crew: !!p.is_supporting_crew,
-      is_cforce: !!p.is_cforce,
-      is_cg_leader: !!p.is_cg_leader,
-      is_community_pic: !!p.is_community_pic,
-      is_others: !!p.is_others,
-      total_pelayanan: p.total_pelayanan,
-    })
+    try {
+      const pelayananList = await getPelayananForPelayan(p.no_jemaat)
+      const activeIds = pelayananList
+        .filter(pp => pp.is_active)
+        .map(pp => pp.pelayanan_id)
+      setFormData({
+        no_jemaat: p.no_jemaat,
+        nama_jemaat: p.nama_jemaat,
+        selectedPelayananIds: activeIds,
+      })
+    } catch {
+      // Fallback: derive from boolean columns if junction table fails
+      const activeIds = ministryRoles
+        .filter(r => p[r.key])
+        .map(r => r.pelayananId)
+      setFormData({
+        no_jemaat: p.no_jemaat,
+        nama_jemaat: p.nama_jemaat,
+        selectedPelayananIds: activeIds,
+      })
+    }
     setShowEditDialog(true)
   }
 
@@ -189,13 +142,32 @@ export function Pelayan() {
     }
   }
 
+  function togglePelayanan(pelayananId) {
+    setFormData((prev) => {
+      const ids = prev.selectedPelayananIds || []
+      if (ids.includes(pelayananId)) {
+        return { ...prev, selectedPelayananIds: ids.filter(id => id !== pelayananId) }
+      }
+      return { ...prev, selectedPelayananIds: [...ids, pelayananId] }
+    })
+  }
+
   async function handleAddPelayan(e) {
     e.preventDefault()
+    const selectedIds = formData.selectedPelayananIds || []
+
+    // Build boolean flags from selected pelayanan IDs (for backward compat with backend)
+    const booleanFlags = {}
+    ministryRoles.forEach(r => {
+      booleanFlags[r.key] = selectedIds.includes(r.pelayananId)
+    })
+
     const newPelayan = {
-      ...formData,
       no_jemaat: Number(formData.no_jemaat),
-      total_pelayanan: calculatedTotalPelayanan,
+      nama_jemaat: formData.nama_jemaat,
+      ...booleanFlags,
     }
+
     try {
       const response = await createPelayan(newPelayan, allMembers)
       if (response?.success) {
@@ -219,30 +191,36 @@ export function Pelayan() {
 
   async function handleEditPelayan(e) {
     e.preventDefault()
-    const updated = {
-      ...formData,
-      no_jemaat: Number(formData.no_jemaat),
-      total_pelayanan: calculatedTotalPelayanan,
-    }
+    const noJemaat = Number(formData.no_jemaat)
+    const selectedIds = formData.selectedPelayananIds || []
+    const allPelayananIds = ministryRoles.map(r => r.pelayananId)
+
+    const toAssign = selectedIds
+    const toRemove = allPelayananIds.filter(id => !selectedIds.includes(id))
+
     try {
-      console.log('Updating pelayan:', selectedPelayan.no_jemaat, updated)
-      const response = await updatePelayan(selectedPelayan.no_jemaat, updated, allMembers)
-      if (response?.success) {
-        setPelayanList((prev) => prev.map((p) => (p.no_jemaat === selectedPelayan.no_jemaat ? response.data : p)))
-        setShowEditDialog(false)
-        setSelectedPelayan(null)
-        toast.success("Pelayan updated successfully", {
-          description: `${formData.nama_jemaat}'s roles have been updated.`
-        })
+      await bulkUpdatePelayanan(noJemaat, { assign: toAssign, remove: toRemove })
+
+      // Update local state - refresh pelayan list to get updated total_pelayanan
+      const updatedPelayan = {
+        ...selectedPelayan,
+        total_pelayanan: selectedIds.length,
       }
+      ministryRoles.forEach(r => {
+        updatedPelayan[r.key] = selectedIds.includes(r.pelayananId)
+      })
+
+      setPelayanList((prev) => prev.map((p) => (p.no_jemaat === noJemaat ? updatedPelayan : p)))
+      setShowEditDialog(false)
+      setSelectedPelayan(null)
+      toast.success("Pelayan updated successfully", {
+        description: `${formData.nama_jemaat}'s roles have been updated.`
+      })
     } catch (err) {
       console.error('Update error:', err)
       if (err instanceof ApiError) {
-        const desc = err.details 
-          ? err.details.map(d => `${d.field}: ${d.message}`).join(', ')
-          : err.message
         toast.error("Failed to update pelayan", {
-          description: desc
+          description: err.message
         })
       } else {
         toast.error("An unexpected error occurred")
@@ -271,7 +249,7 @@ export function Pelayan() {
   }
 
   function getActiveRoles(p) {
-    return MINISTRY_ROLES.filter((r) => p[r.key])
+    return ministryRoles.filter((r) => p[r.key])
   }
 
   function MemberSelectPopover({ value, onValueChange, options, placeholder, disabled }) {
@@ -383,6 +361,8 @@ export function Pelayan() {
       ? availableMembers.concat([{ no_jemaat: selectedPelayan.no_jemaat, nama_jemaat: selectedPelayan.nama_jemaat, label: selectedPelayan.nama_jemaat }])
       : availableMembers.map((m) => ({ no_jemaat: m.no_jemaat, nama_jemaat: m.nama_jemaat, label: m.nama_jemaat }))
 
+    const selectedIds = formData.selectedPelayananIds || []
+
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
         <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl bg-card p-6 shadow-lg">
@@ -421,18 +401,18 @@ export function Pelayan() {
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-medium">Total Pelayanan</label>
               <div className="h-9 rounded-md border bg-muted px-3 text-sm flex items-center">
-                {calculatedTotalPelayanan}
+                {selectedIds.length}
               </div>
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-sm font-medium">Ministry Roles</label>
               <div className="grid grid-cols-2 gap-2">
-                {MINISTRY_ROLES.map((role) => (
-                  <label key={role.key} className="flex items-center gap-2 text-sm">
+                {ministryRoles.map((role) => (
+                  <label key={role.pelayananId} className="flex items-center gap-2 text-sm">
                     <input
                       type="checkbox"
-                      checked={formData[role.key]}
-                      onChange={(e) => handleFormChange(role.key, e.target.checked)}
+                      checked={selectedIds.includes(role.pelayananId)}
+                      onChange={() => togglePelayanan(role.pelayananId)}
                       className="h-4 w-4 rounded border"
                     />
                     {role.label}
@@ -506,7 +486,7 @@ export function Pelayan() {
                 className="h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
               >
                 <option value="">All Roles</option>
-                {MINISTRY_ROLES.map((role) => (
+                {ministryRoles.map((role) => (
                   <option key={role.key} value={role.key}>
                     {role.label}
                   </option>
@@ -564,7 +544,7 @@ export function Pelayan() {
                           ) : (
                             getActiveRoles(p).map((role) => (
                               <Badge key={role.key} variant="secondary" className="text-xs">
-                                {ROLE_BADGE_LABELS[role.key]}
+                                {role.label}
                               </Badge>
                             ))
                           )}

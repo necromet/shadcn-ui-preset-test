@@ -54,12 +54,10 @@ async function apiRequest(endpoint, options = {}) {
   }
 }
 
+// --- Pelayan CRUD (backward compatible) ---
+
 /**
  * GET /ministry/pelayan - Fetch all pelayan with pagination
- * @param {Object} params - Query parameters
- * @param {number} params.page - Page number (default: 1)
- * @param {number} params.limit - Items per page (default: 1000)
- * @returns {Promise<{data: Array, meta: Object}>}
  */
 export async function getPelayanList(params = {}) {
   const searchParams = new URLSearchParams();
@@ -76,38 +74,12 @@ export async function getPelayanList(params = {}) {
 
 /**
  * GET /ministry/pelayan/:no_jemaat - Fetch single pelayan by no_jemaat
- * @param {number} noJemaat - Member ID
- * @returns {Promise<Object|null>}
  */
 export async function getPelayanById(noJemaat) {
   const response = await apiRequest(`/ministry/pelayan/${noJemaat}`);
   return response?.data ?? null;
 }
 
-/**
- * POST /ministry/pelayan - Create a new pelayan
- * @param {Object} pelayanData - Pelayan data to create
- * @param {number} pelayanData.no_jemaat - Member ID (required)
- * @param {string} pelayanData.nama_jemaat - Member name (required)
- * @param {boolean} pelayanData.is_wl - Worship Leader
- * @param {boolean} pelayanData.is_singer - Singer
- * @param {boolean} pelayanData.is_pianis - Pianist
- * @param {boolean} pelayanData.is_saxophone - Saxophone
- * @param {boolean} pelayanData.is_filler - Filler Musician
- * @param {boolean} pelayanData.is_bass_gitar - Bass Guitarist
- * @param {boolean} pelayanData.is_drum - Drummer
- * @param {boolean} pelayanData.is_mulmed - Multimedia
- * @param {boolean} pelayanData.is_sound - Sound Engineer
- * @param {boolean} pelayanData.is_caringteam - Caring Team
- * @param {boolean} pelayanData.is_connexion_crew - Connexion Crew
- * @param {boolean} pelayanData.is_supporting_crew - Supporting Crew
- * @param {boolean} pelayanData.is_cforce - CForce
- * @param {boolean} pelayanData.is_cg_leader - CG Leader
- * @param {boolean} pelayanData.is_community_pic - Community PIC
- * @param {boolean} pelayanData.is_others - Others
- * @param {Array} allMembers - All members array to lookup nama_jemaat
- * @returns {Promise<{data: Object}>}
- */
 const PELAYAN_FIELDS = [
   'no_jemaat', 'nama_jemaat',
   'is_wl', 'is_singer', 'is_pianis', 'is_saxophone', 'is_filler',
@@ -126,6 +98,9 @@ function pickPelayanFields(obj) {
   return result;
 }
 
+/**
+ * POST /ministry/pelayan - Create a new pelayan (dual-writes to junction table)
+ */
 export async function createPelayan(pelayanData, allMembers = []) {
   let data = pickPelayanFields(pelayanData);
   data.no_jemaat = Number(data.no_jemaat);
@@ -137,18 +112,19 @@ export async function createPelayan(pelayanData, allMembers = []) {
     }
   }
 
-  console.log('createPelayan - sending data:', data);
   return apiRequest('/ministry/pelayan', {
     method: 'POST',
     body: JSON.stringify(data),
   });
 }
 
+/**
+ * PUT /ministry/pelayan/:no_jemaat - Update a pelayan (dual-writes to junction table)
+ */
 export async function updatePelayan(noJemaat, pelayanData, allMembers = []) {
   let data = pickPelayanFields(pelayanData);
   data.no_jemaat = Number(noJemaat);
 
-  // Ensure nama_jemaat is always present for PUT validation
   if (!data.nama_jemaat || data.nama_jemaat.trim() === '') {
     if (allMembers.length > 0) {
       const member = allMembers.find(m => m.no_jemaat === data.no_jemaat);
@@ -163,7 +139,6 @@ export async function updatePelayan(noJemaat, pelayanData, allMembers = []) {
     }
   }
 
-  console.log('updatePelayan - sending data:', data);
   return apiRequest(`/ministry/pelayan/${noJemaat}`, {
     method: 'PUT',
     body: JSON.stringify(data),
@@ -172,9 +147,6 @@ export async function updatePelayan(noJemaat, pelayanData, allMembers = []) {
 
 /**
  * PATCH /ministry/pelayan/:no_jemaat - Partially update a pelayan
- * @param {number} noJemaat - Member ID
- * @param {Object} pelayanData - Partial pelayan data
- * @returns {Promise<{data: Object}>}
  */
 export async function patchPelayan(noJemaat, pelayanData) {
   const data = pickPelayanFields(pelayanData);
@@ -187,8 +159,6 @@ export async function patchPelayan(noJemaat, pelayanData) {
 
 /**
  * DELETE /ministry/pelayan/:no_jemaat - Delete a pelayan
- * @param {number} noJemaat - Member ID
- * @returns {Promise<void>}
  */
 export async function deletePelayan(noJemaat) {
   return apiRequest(`/ministry/pelayan/${noJemaat}`, {
@@ -196,12 +166,91 @@ export async function deletePelayan(noJemaat) {
   });
 }
 
+// --- Junction Table Endpoints ---
+
+/**
+ * GET /ministry/pelayan/:no_jemaat/pelayanan - Get all pelayanan for a pelayan
+ * Returns full list of ministry types with is_active status
+ */
+export async function getPelayananForPelayan(noJemaat) {
+  const response = await apiRequest(`/ministry/pelayan/${noJemaat}/pelayanan`);
+  return response?.data ?? [];
+}
+
+/**
+ * POST /ministry/pelayan/:no_jemaat/pelayanan - Assign pelayanan to pelayan
+ * @param {number} noJemaat - Member ID
+ * @param {string} pelayananId - Pelayanan ID to assign
+ */
+export async function assignPelayanan(noJemaat, pelayananId) {
+  const response = await apiRequest(`/ministry/pelayan/${noJemaat}/pelayanan`, {
+    method: 'POST',
+    body: JSON.stringify({ pelayanan_id: pelayananId }),
+  });
+  return response?.data ?? null;
+}
+
+/**
+ * DELETE /ministry/pelayan/:no_jemaat/pelayanan/:pelayananId - Remove pelayanan from pelayan
+ */
+export async function removePelayanan(noJemaat, pelayananId) {
+  return apiRequest(`/ministry/pelayan/${noJemaat}/pelayanan/${pelayananId}`, {
+    method: 'DELETE',
+  });
+}
+
+/**
+ * PATCH /ministry/pelayan/:no_jemaat/pelayanan - Bulk update pelayanan assignments
+ * @param {number} noJemaat - Member ID
+ * @param {string[]} assign - Array of pelayanan IDs to assign
+ * @param {string[]} remove - Array of pelayanan IDs to remove
+ */
+export async function bulkUpdatePelayanan(noJemaat, { assign = [], remove: removeIds = [] } = {}) {
+  const response = await apiRequest(`/ministry/pelayan/${noJemaat}/pelayanan`, {
+    method: 'PATCH',
+    body: JSON.stringify({ assign, remove: removeIds }),
+  });
+  return response?.data ?? null;
+}
+
+/**
+ * GET /ministry/pelayanan/stats - Get pelayanan assignment counts
+ */
+export async function getPelayananStats() {
+  const response = await apiRequest('/ministry/pelayanan/stats');
+  return response?.data ?? [];
+}
+
+/**
+ * GET /ministry/pelayanan/:pelayananId/pelayan - Get all pelayan for a pelayanan
+ */
+export async function getPelayanForPelayanan(pelayananId, params = {}) {
+  const searchParams = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      searchParams.set(key, String(value));
+    }
+  });
+
+  const query = searchParams.toString();
+  const response = await apiRequest(`/ministry/pelayanan/${pelayananId}/pelayan${query ? `?${query}` : ''}`);
+  return response?.data ?? { data: [], meta: {} };
+}
+
 export default {
+  // CRUD
   getPelayanList,
   getPelayanById,
   createPelayan,
   updatePelayan,
   patchPelayan,
   deletePelayan,
+  // Junction table
+  getPelayananForPelayan,
+  assignPelayanan,
+  removePelayanan,
+  bulkUpdatePelayanan,
+  getPelayananStats,
+  getPelayanForPelayanan,
   ApiError,
 };

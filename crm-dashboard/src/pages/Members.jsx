@@ -538,7 +538,7 @@ export function Members() {
                 }}
                 options={[
                   { value: "", label: "All Gender" },
-                  { value: "Laki-Laki", label: "Laki-laki" },
+                  { value: "Laki-laki", label: "Laki-laki" },
                   { value: "Perempuan", label: "Perempuan" },
                 ]}
                 placeholder="All Gender"

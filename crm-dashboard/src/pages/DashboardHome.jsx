@@ -176,7 +176,7 @@ function GenderPieChart() {
   if (error) return <div className="text-center p-8 text-red-500">Failed to load gender distribution</div>;
 
   const data = genders.map(item => ({
-    name: item.label === "Laki-Laki" ? "Male" : "Female",
+    name: item.label === "Laki-laki" ? "Male" : "Female",
     value: item.value
   }));
   const COLORS = ["var(--chart-1)", "var(--chart-2)"]
