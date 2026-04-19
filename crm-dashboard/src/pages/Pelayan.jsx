@@ -21,6 +21,26 @@ import { fetchPelayananInfoFromAPI } from "../data/mock.js"
 
 const PAGE_SIZE = 10
 
+// Maps pelayanan_id to the boolean column name in the pelayan table
+const PELAYANAN_ID_TO_COL = {
+  '70001': 'is_wl',
+  '70002': 'is_singer',
+  '70003': 'is_pianis',
+  '70004': 'is_saxophone',
+  '70005': 'is_filler',
+  '70006': 'is_bass_gitar',
+  '70007': 'is_drum',
+  '70008': 'is_mulmed',
+  '70009': 'is_sound',
+  '70010': 'is_caringteam',
+  '70011': 'is_connexion_crew',
+  '70012': 'is_supporting_crew',
+  '70013': 'is_cforce',
+  '70014': 'is_cg_leader',
+  '70015': 'is_community_pic',
+  '70016': 'is_others',
+}
+
 const EMPTY_FORM = {
   no_jemaat: null,
   nama_jemaat: "",
@@ -39,7 +59,7 @@ export function Pelayan() {
         setPelayanList(pelayanData.data || [])
         setAllMembers(membersData.data || membersData || [])
         setMinistryRoles(pelayananData.map(p => ({
-          key: `pel_${p.pelayanan_id}`,
+          key: PELAYANAN_ID_TO_COL[p.pelayanan_id] || `pel_${p.pelayanan_id}`,
           label: p.nama_pelayanan,
           pelayananId: p.pelayanan_id,
         })))
