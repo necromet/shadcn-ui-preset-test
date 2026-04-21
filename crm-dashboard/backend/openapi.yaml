@@ -734,7 +734,7 @@ paths:
           description: Filter by specific ministry role
           schema:
             type: string
-            enum: [is_wl, is_singer, is_pianis, is_saxophone, is_filler, is_bass_gitar, is_drum, is_mulmed, is_sound, is_caringteam, is_connexion_crew, is_supporting_crew, is_cforce, is_cg_leader, is_community_pic]
+            enum: [is_worship_leader, is_singer, is_pianist, is_saxophone, is_filler, is_bass_guitarist, is_drummer, is_multimedia, is_sound, is_caringteam, is_connexion_crew, is_supporting_crew, is_cforce, is_cg_leader, is_community_pic]
       responses:
         '200':
           description: Successful response
@@ -747,14 +747,14 @@ paths:
                 data:
                   - no_jemaat: 1
                     nama_jemaat: "John Doe"
-                    is_wl: true
+                    is_worship_leader: true
                     is_singer: true
-                    is_pianis: false
+                    is_pianist: false
                     is_saxophone: false
                     is_filler: false
-                    is_bass_gitar: false
-                    is_drum: false
-                    is_mulmed: false
+                    is_bass_guitarist: false
+                    is_drummer: false
+                    is_multimedia: false
                     is_sound: false
                     is_caringteam: false
                     is_connexion_crew: false
@@ -2302,13 +2302,13 @@ components:
         nama_jemaat:
           type: string
           example: "John Doe"
-        is_wl:
+        is_worship_leader:
           type: boolean
           example: false
         is_singer:
           type: boolean
           example: true
-        is_pianis:
+        is_pianist:
           type: boolean
           example: false
         is_saxophone:
@@ -2317,13 +2317,13 @@ components:
         is_filler:
           type: boolean
           example: false
-        is_bass_gitar:
+        is_bass_guitarist:
           type: boolean
           example: false
-        is_drum:
+        is_drummer:
           type: boolean
           example: false
-        is_mulmed:
+        is_multimedia:
           type: boolean
           example: false
         is_sound:
@@ -2363,13 +2363,13 @@ components:
           type: integer
         nama_jemaat:
           type: string
-        is_wl:
+        is_worship_leader:
           type: boolean
           default: false
         is_singer:
           type: boolean
           default: false
-        is_pianis:
+        is_pianist:
           type: boolean
           default: false
         is_saxophone:
@@ -2378,13 +2378,13 @@ components:
         is_filler:
           type: boolean
           default: false
-        is_bass_gitar:
+        is_bass_guitarist:
           type: boolean
           default: false
-        is_drum:
+        is_drummer:
           type: boolean
           default: false
-        is_mulmed:
+        is_multimedia:
           type: boolean
           default: false
         is_sound:
@@ -2415,21 +2415,21 @@ components:
       properties:
         nama_jemaat:
           type: string
-        is_wl:
+        is_worship_leader:
           type: boolean
         is_singer:
           type: boolean
-        is_pianis:
+        is_pianist:
           type: boolean
         is_saxophone:
           type: boolean
         is_filler:
           type: boolean
-        is_bass_gitar:
+        is_bass_guitarist:
           type: boolean
-        is_drum:
+        is_drummer:
           type: boolean
-        is_mulmed:
+        is_multimedia:
           type: boolean
         is_sound:
           type: boolean
@@ -2453,21 +2453,21 @@ components:
       properties:
         nama_jemaat:
           type: string
-        is_wl:
+        is_worship_leader:
           type: boolean
         is_singer:
           type: boolean
-        is_pianis:
+        is_pianist:
           type: boolean
         is_saxophone:
           type: boolean
         is_filler:
           type: boolean
-        is_bass_gitar:
+        is_bass_guitarist:
           type: boolean
-        is_drum:
+        is_drummer:
           type: boolean
-        is_mulmed:
+        is_multimedia:
           type: boolean
         is_sound:
           type: boolean

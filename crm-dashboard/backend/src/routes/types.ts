@@ -230,14 +230,14 @@ export interface MinistryListResponse {
 export interface Pelayan {
   no_jemaat?: number;
   nama_jemaat?: string;
-  is_wl?: boolean;
+  is_worship_leader?: boolean;
   is_singer?: boolean;
-  is_pianis?: boolean;
+  is_pianist?: boolean;
   is_saxophone?: boolean;
   is_filler?: boolean;
-  is_bass_gitar?: boolean;
-  is_drum?: boolean;
-  is_mulmed?: boolean;
+  is_bass_guitarist?: boolean;
+  is_drummer?: boolean;
+  is_multimedia?: boolean;
   is_sound?: boolean;
   is_caringteam?: boolean;
   is_connexion_crew?: boolean;
@@ -252,14 +252,14 @@ export interface Pelayan {
 export interface PelayanCreate {
   no_jemaat: number;
   nama_jemaat: string;
-  is_wl?: boolean;
+  is_worship_leader?: boolean;
   is_singer?: boolean;
-  is_pianis?: boolean;
+  is_pianist?: boolean;
   is_saxophone?: boolean;
   is_filler?: boolean;
-  is_bass_gitar?: boolean;
-  is_drum?: boolean;
-  is_mulmed?: boolean;
+  is_bass_guitarist?: boolean;
+  is_drummer?: boolean;
+  is_multimedia?: boolean;
   is_sound?: boolean;
   is_caringteam?: boolean;
   is_connexion_crew?: boolean;
@@ -272,14 +272,14 @@ export interface PelayanCreate {
 
 export interface PelayanUpdate {
   nama_jemaat: string;
-  is_wl?: boolean;
+  is_worship_leader?: boolean;
   is_singer?: boolean;
-  is_pianis?: boolean;
+  is_pianist?: boolean;
   is_saxophone?: boolean;
   is_filler?: boolean;
-  is_bass_gitar?: boolean;
-  is_drum?: boolean;
-  is_mulmed?: boolean;
+  is_bass_guitarist?: boolean;
+  is_drummer?: boolean;
+  is_multimedia?: boolean;
   is_sound?: boolean;
   is_caringteam?: boolean;
   is_connexion_crew?: boolean;
@@ -292,14 +292,14 @@ export interface PelayanUpdate {
 
 export interface PelayanPartialUpdate {
   nama_jemaat?: string;
-  is_wl?: boolean;
+  is_worship_leader?: boolean;
   is_singer?: boolean;
-  is_pianis?: boolean;
+  is_pianist?: boolean;
   is_saxophone?: boolean;
   is_filler?: boolean;
-  is_bass_gitar?: boolean;
-  is_drum?: boolean;
-  is_mulmed?: boolean;
+  is_bass_guitarist?: boolean;
+  is_drummer?: boolean;
+  is_multimedia?: boolean;
   is_sound?: boolean;
   is_caringteam?: boolean;
   is_connexion_crew?: boolean;

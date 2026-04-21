@@ -82,8 +82,8 @@ export async function getPelayanById(noJemaat) {
 
 const PELAYAN_FIELDS = [
   'no_jemaat', 'nama_jemaat',
-  'is_wl', 'is_singer', 'is_pianis', 'is_saxophone', 'is_filler',
-  'is_bass_gitar', 'is_drum', 'is_mulmed', 'is_sound', 'is_caringteam',
+  'is_worship_leader', 'is_singer', 'is_pianist', 'is_saxophone', 'is_filler',
+  'is_bass_guitarist', 'is_drummer', 'is_multimedia', 'is_sound', 'is_caringteam',
   'is_connexion_crew', 'is_supporting_crew', 'is_cforce', 'is_cg_leader', 'is_community_pic',
   'is_others'
 ];
@@ -218,6 +218,14 @@ export async function bulkUpdatePelayanan(noJemaat, { assign = [], remove: remov
  */
 export async function getPelayananStats() {
   const response = await apiRequest('/ministry/pelayanan/stats');
+  return response?.data ?? [];
+}
+
+/**
+ * GET /ministry/pelayanan/info - Get all pelayanan info from database
+ */
+export async function getPelayananInfo() {
+  const response = await apiRequest('/ministry/pelayanan/info');
   return response?.data ?? [];
 }
 

@@ -49,9 +49,9 @@ SELECT
       WHERE no_jemaat = p.no_jemaat
     ))) AS serving_percentage
 FROM pelayan p
-WHERE p.is_wl = 1 OR p.is_singer = 1 OR p.is_pianis = 1
-      OR p.is_saxophone = 1 OR p.is_filler = 1 OR p.is_bass_gitar = 1
-      OR p.is_drum = 1 OR p.is_mulmed = 1 OR p.is_sound = 1
+WHERE p.is_worship_leader = 1 OR p.is_singer = 1 OR p.is_pianist = 1
+      OR p.is_saxophone = 1 OR p.is_filler = 1 OR p.is_bass_guitarist = 1
+      OR p.is_drummer = 1 OR p.is_multimedia = 1 OR p.is_sound = 1
       OR p.is_caringteam = 1 OR p.is_connexion_crew = 1
       OR p.is_supporting_crew = 1 OR p.is_cforce = 1
       OR p.is_cg_leader = 1 OR p.is_community_pic = 1
@@ -67,14 +67,14 @@ WHERE p.is_wl = 1 OR p.is_singer = 1 OR p.is_pianis = 1
 - **Data Source:** `pelayan` table (individual boolean service flags)
 - **Visualization:** Horizontal bar chart
 - **Metrics Displayed:**
-  - Worship Leaders (`is_wl`)
+  - Worship Leaders (`is_worship_leader`)
   - Singers (`is_singer`)
-  - Pianists/Keyboardists (`is_pianis`)
+  - Pianists/Keyboardists (`is_pianist`)
   - Saxophone Players (`is_saxophone`)
   - Filler Musicians (`is_filler`)
-  - Bass Guitarists (`is_bass_gitar`)
-  - Drummers (`is_drum`)
-  - Multimedia/Tech Team (`is_mulmed`)
+  - Bass Guitarists (`is_bass_guitarist`)
+  - Drummers (`is_drummer`)
+  - Multimedia/Tech Team (`is_multimedia`)
   - Sound Engineers (`is_sound`)
   - Care Team (`is_caringteam`)
   - Connexion Crew (`is_connexion_crew`)
@@ -99,20 +99,20 @@ WHERE p.is_wl = 1 OR p.is_singer = 1 OR p.is_pianis = 1
 ```sql
 SELECT
   (CASE
-      WHEN (is_wl + is_singer + is_pianis + is_saxophone + is_filler +
-            is_bass_gitar + is_drum + is_mulmed + is_sound +
+      WHEN (is_worship_leader + is_singer + is_pianist + is_saxophone + is_filler +
+            is_bass_guitarist + is_drummer + is_multimedia + is_sound +
             is_caringteam + is_connexion_crew + is_supporting_crew +
             is_cforce + is_cg_leader + is_community_pic) = 0 THEN 0
-      WHEN (is_wl + is_singer + is_pianis + is_saxophone + is_filler +
-            is_bass_gitar + is_drum + is_mulmed + is_sound +
+      WHEN (is_worship_leader + is_singer + is_pianist + is_saxophone + is_filler +
+            is_bass_guitarist + is_drummer + is_multimedia + is_sound +
             is_caringteam + is_connexion_crew + is_supporting_crew +
             is_cforce + is_cg_leader + is_community_pic) = 1 THEN 1
-      WHEN (is_wl + is_singer + is_pianis + is_saxophone + is_filler +
-            is_bass_gitar + is_drum + is_mulmed + is_sound +
+      WHEN (is_worship_leader + is_singer + is_pianist + is_saxophone + is_filler +
+            is_bass_guitarist + is_drummer + is_multimedia + is_sound +
             is_caringteam + is_connexion_crew + is_supporting_crew +
             is_cforce + is_cg_leader + is_community_pic) = 2 THEN 2
-      WHEN (is_wl + is_singer + is_pianis + is_saxophone + is_filler +
-            is_bass_gitar + is_drum + is_mulmed + is_sound +
+      WHEN (is_worship_leader + is_singer + is_pianist + is_saxophone + is_filler +
+            is_bass_guitarist + is_drummer + is_multimedia + is_sound +
             is_caringteam + is_connexion_crew + is_supporting_crew +
             is_cforce + is_cg_leader + is_community_pic) = 3 THEN 3
       ELSE 4
@@ -293,20 +293,20 @@ SELECT
   p.nama_jemaat,
   MIN(csh.changed_at) AS start_date,
   GROUP_CONCAT(
-    CASE WHEN p.is_wl = 1 THEN 'Worship Leader' END,
+    CASE WHEN p.is_worship_leader = 1 THEN 'Worship Leader' END,
     CASE WHEN p.is_singer = 1 THEN 'Singer' END,
     -- ... other ministries
     SEPARATOR ', '
   ) AS ministries
 FROM pelayan p
 JOIN cnx_jemaat_status_history csh ON p.no_jemaat = csh.no_jemaat
-WHERE (p.is_wl = 1 OR p.is_singer = 1 OR /* ... all service flags */)
+WHERE (p.is_worship_leader = 1 OR p.is_singer = 1 OR /* ... all service flags */)
   AND csh.status = 'Active'
   AND csh.changed_at >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
   AND NOT EXISTS (
     SELECT 1 FROM pelayan p2
     WHERE p2.no_jemaat = p.no_jemaat
-      AND (p2.is_wl = 1 OR p2.is_singer = 1 OR /* ... all service flags */)
+      AND (p2.is_worship_leader = 1 OR p2.is_singer = 1 OR /* ... all service flags */)
       AND p2.no_jemaat IN (
         SELECT no_jemaat FROM cnx_jemaat_status_history
         WHERE changed_at < csh.changed_at
@@ -617,11 +617,11 @@ GROUP BY csh.status
 ```sql
 SELECT
     'Worship Leader' AS ministry,
-    SUM(CASE WHEN is_wl = 1 THEN 1 ELSE 0 END) AS count,
-    ROUND(SUM(CASE WHEN is_wl = 1 THEN 1 ELSE 0 END) * 100.0 /
-          NULLIF(SUM(CASE WHEN is_wl = 1 OR is_singer = 1 OR is_pianis = 1 OR
-                       is_saxophone = 1 OR is_filler = 1 OR is_bass_gitar = 1 OR
-                       is_drum = 1 OR is_mulmed = 1 OR is_sound = 1 OR
+    SUM(CASE WHEN is_worship_leader = 1 THEN 1 ELSE 0 END) AS count,
+    ROUND(SUM(CASE WHEN is_worship_leader = 1 THEN 1 ELSE 0 END) * 100.0 /
+          NULLIF(SUM(CASE WHEN is_worship_leader = 1 OR is_singer = 1 OR is_pianist = 1 OR
+                       is_saxophone = 1 OR is_filler = 1 OR is_bass_guitarist = 1 OR
+                       is_drummer = 1 OR is_multimedia = 1 OR is_sound = 1 OR
                        is_caringteam = 1 OR is_connexion_crew = 1 OR
                        is_supporting_crew = 1 OR is_cforce = 1 OR
                        is_cg_leader = 1 OR is_community_pic = 1), 0), 1) AS percentage
@@ -631,9 +631,9 @@ SELECT
     'Singer' AS ministry,
     SUM(CASE WHEN is_singer = 1 THEN 1 ELSE 0 END) AS count,
     ROUND(SUM(CASE WHEN is_singer = 1 THEN 1 ELSE 0 END) * 100.0 /
-          NULLIF(SUM(CASE WHEN is_wl = 1 OR is_singer = 1 OR is_pianis = 1 OR
-                       is_saxophone = 1 OR is_filler = 1 OR is_bass_gitar = 1 OR
-                       is_drum = 1 OR is_mulmed = 1 OR is_sound = 1 OR
+          NULLIF(SUM(CASE WHEN is_worship_leader = 1 OR is_singer = 1 OR is_pianist = 1 OR
+                       is_saxophone = 1 OR is_filler = 1 OR is_bass_guitarist = 1 OR
+                       is_drummer = 1 OR is_multimedia = 1 OR is_sound = 1 OR
                        is_caringteam = 1 OR is_connexion_crew = 1 OR
                        is_supporting_crew = 1 OR is_cforce = 1 OR
                        is_cg_leader = 1 OR is_community_pic = 1), 0), 1) AS percentage
