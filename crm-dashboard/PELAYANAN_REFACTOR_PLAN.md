@@ -42,14 +42,14 @@ FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 ```sql
 -- ONLY RUN THIS WHEN FULLY CONFIRMED STABLE
-ALTER TABLE pelayan DROP COLUMN is_wl;
+ALTER TABLE pelayan DROP COLUMN is_worship_leader;
 ALTER TABLE pelayan DROP COLUMN is_singer;
-ALTER TABLE pelayan DROP COLUMN is_pianis;
+ALTER TABLE pelayan DROP COLUMN is_pianist;
 ALTER TABLE pelayan DROP COLUMN is_saxophone;
 ALTER TABLE pelayan DROP COLUMN is_filler;
-ALTER TABLE pelayan DROP COLUMN is_bass_gitar;
-ALTER TABLE pelayan DROP COLUMN is_drum;
-ALTER TABLE pelayan DROP COLUMN is_mulmed;
+ALTER TABLE pelayan DROP COLUMN is_bass_guitarist;
+ALTER TABLE pelayan DROP COLUMN is_drummer;
+ALTER TABLE pelayan DROP COLUMN is_multimedia;
 ALTER TABLE pelayan DROP COLUMN is_sound;
 ALTER TABLE pelayan DROP COLUMN is_caringteam;
 ALTER TABLE pelayan DROP COLUMN is_connexion_crew;
@@ -88,14 +88,14 @@ BEGIN TRANSACTION;
 INSERT INTO pelayan_pelayanan (no_jemaat, pelayanan_id, is_active)
 SELECT no_jemaat, pelayanan_id, TRUE
 FROM (
-    SELECT no_jemaat, 70001 as pelayanan_id FROM pelayan WHERE is_wl = 1 UNION ALL
+    SELECT no_jemaat, 70001 as pelayanan_id FROM pelayan WHERE is_worship_leader = 1 UNION ALL
     SELECT no_jemaat, 70002 FROM pelayan WHERE is_singer = 1 UNION ALL
-    SELECT no_jemaat, 70003 FROM pelayan WHERE is_pianis = 1 UNION ALL
+    SELECT no_jemaat, 70003 FROM pelayan WHERE is_pianist = 1 UNION ALL
     SELECT no_jemaat, 70004 FROM pelayan WHERE is_saxophone = 1 UNION ALL
     SELECT no_jemaat, 70005 FROM pelayan WHERE is_filler = 1 UNION ALL
-    SELECT no_jemaat, 70006 FROM pelayan WHERE is_bass_gitar = 1 UNION ALL
-    SELECT no_jemaat, 70007 FROM pelayan WHERE is_drum = 1 UNION ALL
-    SELECT no_jemaat, 70008 FROM pelayan WHERE is_mulmed = 1 UNION ALL
+    SELECT no_jemaat, 70006 FROM pelayan WHERE is_bass_guitarist = 1 UNION ALL
+    SELECT no_jemaat, 70007 FROM pelayan WHERE is_drummer = 1 UNION ALL
+    SELECT no_jemaat, 70008 FROM pelayan WHERE is_multimedia = 1 UNION ALL
     SELECT no_jemaat, 70009 FROM pelayan WHERE is_sound = 1 UNION ALL
     SELECT no_jemaat, 70010 FROM pelayan WHERE is_caringteam = 1 UNION ALL
     SELECT no_jemaat, 70011 FROM pelayan WHERE is_connexion_crew = 1 UNION ALL
@@ -120,7 +120,7 @@ COMMIT TRANSACTION;
 
 **Before:**
 ```sql
-SELECT * FROM pelayan WHERE is_wl = 1;
+SELECT * FROM pelayan WHERE is_worship_leader = 1;
 ```
 
 **After:**
@@ -149,7 +149,7 @@ LEFT JOIN pelayan_pelayanan pp ON pi.pelayanan_id = pp.pelayanan_id
 
 **Before:**
 ```sql
-UPDATE pelayan SET is_wl = 1 WHERE no_jemaat = 'J001';
+UPDATE pelayan SET is_worship_leader = 1 WHERE no_jemaat = 'J001';
 ```
 
 **After:**
@@ -164,7 +164,7 @@ SET is_active = TRUE, updated_at = NOW(), updated_by = CURRENT_USER_ID;
 
 **Before:**
 ```sql
-UPDATE pelayan SET is_wl = 0 WHERE no_jemaat = 'J001';
+UPDATE pelayan SET is_worship_leader = 0 WHERE no_jemaat = 'J001';
 ```
 
 **After:**
@@ -241,14 +241,14 @@ WHERE no_jemaat = 'J001' AND pelayanan_id = 70001;
 
 ```sql
 -- Restore boolean columns (use original column types: int2 from pelayan table)
-ALTER TABLE pelayan ADD is_wl int2 DEFAULT 0;
+ALTER TABLE pelayan ADD is_worship_leader int2 DEFAULT 0;
 ALTER TABLE pelayan ADD is_singer int2 DEFAULT 0;
-ALTER TABLE pelayan ADD is_pianis int2 DEFAULT 0;
+ALTER TABLE pelayan ADD is_pianist int2 DEFAULT 0;
 ALTER TABLE pelayan ADD is_saxophone int2 DEFAULT 0;
 ALTER TABLE pelayan ADD is_filler int2 DEFAULT 0;
-ALTER TABLE pelayan ADD is_bass_gitar int2 DEFAULT 0;
-ALTER TABLE pelayan ADD is_drum int2 DEFAULT 0;
-ALTER TABLE pelayan ADD is_mulmed int2 DEFAULT 0;
+ALTER TABLE pelayan ADD is_bass_guitarist int2 DEFAULT 0;
+ALTER TABLE pelayan ADD is_drummer int2 DEFAULT 0;
+ALTER TABLE pelayan ADD is_multimedia int2 DEFAULT 0;
 ALTER TABLE pelayan ADD is_sound int2 DEFAULT 0;
 ALTER TABLE pelayan ADD is_caringteam int2 DEFAULT 0;
 ALTER TABLE pelayan ADD is_connexion_crew int2 DEFAULT 0;
@@ -260,14 +260,14 @@ ALTER TABLE pelayan ADD is_others int2 DEFAULT 0;
 
 -- Restore data from junction table
 UPDATE pelayan p SET 
-    is_wl = EXISTS(SELECT 1 FROM pelayan_pelayanan pp WHERE pp.no_jemaat = p.no_jemaat AND pp.pelayanan_id = 70001 AND pp.is_active = TRUE),
+    is_worship_leader = EXISTS(SELECT 1 FROM pelayan_pelayanan pp WHERE pp.no_jemaat = p.no_jemaat AND pp.pelayanan_id = 70001 AND pp.is_active = TRUE),
     is_singer = EXISTS(SELECT 1 FROM pelayan_pelayanan pp WHERE pp.no_jemaat = p.no_jemaat AND pp.pelayanan_id = 70002 AND pp.is_active = TRUE),
-    is_pianis = EXISTS(SELECT 1 FROM pelayan_pelayanan pp WHERE pp.no_jemaat = p.no_jemaat AND pp.pelayanan_id = 70003 AND pp.is_active = TRUE),
+    is_pianist = EXISTS(SELECT 1 FROM pelayan_pelayanan pp WHERE pp.no_jemaat = p.no_jemaat AND pp.pelayanan_id = 70003 AND pp.is_active = TRUE),
     is_saxophone = EXISTS(SELECT 1 FROM pelayan_pelayanan pp WHERE pp.no_jemaat = p.no_jemaat AND pp.pelayanan_id = 70004 AND pp.is_active = TRUE),
     is_filler = EXISTS(SELECT 1 FROM pelayan_pelayanan pp WHERE pp.no_jemaat = p.no_jemaat AND pp.pelayanan_id = 70005 AND pp.is_active = TRUE),
-    is_bass_gitar = EXISTS(SELECT 1 FROM pelayan_pelayanan pp WHERE pp.no_jemaat = p.no_jemaat AND pp.pelayanan_id = 70006 AND pp.is_active = TRUE),
-    is_drum = EXISTS(SELECT 1 FROM pelayan_pelayanan pp WHERE pp.no_jemaat = p.no_jemaat AND pp.pelayanan_id = 70007 AND pp.is_active = TRUE),
-    is_mulmed = EXISTS(SELECT 1 FROM pelayan_pelayanan pp WHERE pp.no_jemaat = p.no_jemaat AND pp.pelayanan_id = 70008 AND pp.is_active = TRUE),
+    is_bass_guitarist = EXISTS(SELECT 1 FROM pelayan_pelayanan pp WHERE pp.no_jemaat = p.no_jemaat AND pp.pelayanan_id = 70006 AND pp.is_active = TRUE),
+    is_drummer = EXISTS(SELECT 1 FROM pelayan_pelayanan pp WHERE pp.no_jemaat = p.no_jemaat AND pp.pelayanan_id = 70007 AND pp.is_active = TRUE),
+    is_multimedia = EXISTS(SELECT 1 FROM pelayan_pelayanan pp WHERE pp.no_jemaat = p.no_jemaat AND pp.pelayanan_id = 70008 AND pp.is_active = TRUE),
     is_sound = EXISTS(SELECT 1 FROM pelayan_pelayanan pp WHERE pp.no_jemaat = p.no_jemaat AND pp.pelayanan_id = 70009 AND pp.is_active = TRUE),
     is_caringteam = EXISTS(SELECT 1 FROM pelayan_pelayanan pp WHERE pp.no_jemaat = p.no_jemaat AND pp.pelayanan_id = 70010 AND pp.is_active = TRUE),
     is_connexion_crew = EXISTS(SELECT 1 FROM pelayan_pelayanan pp WHERE pp.no_jemaat = p.no_jemaat AND pp.pelayanan_id = 70011 AND pp.is_active = TRUE),

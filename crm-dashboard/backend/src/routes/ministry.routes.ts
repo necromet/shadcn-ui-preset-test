@@ -1,5 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { validate } from './validators';
+import { z } from 'zod';
 import * as schemas from './validators';
 import { MinistryModel } from '../models';
 
@@ -60,6 +61,57 @@ router.post('/ministry/types', validate(schemas.MinistryCreateSchema), async (re
     res.status(201).json({
       success: true,
       data: ministryType,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * Upsert ministry type (create or update)
+ * POST /ministry/types/upsert
+ */
+router.post('/ministry/types/upsert', validate(schemas.MinistryCreateSchema), async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const ministryType = await MinistryModel.upsertMinistryType(req.body);
+
+    res.status(200).json({
+      success: true,
+      data: ministryType,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * Bulk upsert ministry types (create or update multiple)
+ * POST /ministry/types/bulk-upsert
+ */
+router.post('/ministry/types/bulk-upsert', validate(z.array(schemas.MinistryCreateSchema)), async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await MinistryModel.bulkUpsertMinistryTypes(req.body);
+
+    res.status(200).json({
+      success: true,
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * Bulk delete ministry types
+ * DELETE /ministry/types/bulk-delete
+ */
+router.delete('/ministry/types/bulk-delete', validate(z.array(z.string())), async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await MinistryModel.bulkDeleteMinistryTypes(req.body);
+
+    res.status(200).json({
+      success: true,
+      data: result,
     });
   } catch (err) {
     next(err);

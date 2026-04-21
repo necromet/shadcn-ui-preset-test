@@ -92,7 +92,7 @@ async function seedDatabase() {
     // Seed pelayan (ministry members)
     console.log('Seeding pelayan...');
     await client.query(`
-      INSERT INTO pelayan (no_jemaat, nama_jemaat, is_wl, is_singer, is_pianis, is_saxophone, is_filler, is_bass_gitar, is_drum, is_mulmed, is_sound, is_caringteam, is_connexion_crew, is_supporting_crew, is_cforce, is_cg_leader, is_community_pic, is_others, total_pelayanan) VALUES
+      INSERT INTO pelayan (no_jemaat, nama_jemaat, is_worship_leader, is_singer, is_pianist, is_saxophone, is_filler, is_bass_guitarist, is_drummer, is_multimedia, is_sound, is_caringteam, is_connexion_crew, is_supporting_crew, is_cforce, is_cg_leader, is_community_pic, is_others, total_pelayanan) VALUES
       (1001, 'Andreas Wijaya', 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 45),
       (1002, 'Maria Sari', 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18),
       (1003, 'Daniel Setiawan', 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 52),

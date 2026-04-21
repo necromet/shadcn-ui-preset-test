@@ -73,14 +73,14 @@ SELECT p.no_jemaat, pi.pelayanan_id, TRUE
 FROM pelayan p
 CROSS JOIN LATERAL (
     VALUES
-        ('is_wl', 'Worship Leader'),
+        ('is_worship_leader', 'Worship Leader'),
         ('is_singer', 'Singer'),
-        ('is_pianis', 'Pianist'),
+        ('is_pianist', 'Pianist'),
         ('is_saxophone', 'Saxophone'),
-        ('is_filler', 'Filler Musician'),
-        ('is_bass_gitar', 'Bass Guitarist'),
-        ('is_drum', 'Drummer'),
-        ('is_mulmed', 'Multimedia'),
+        ('is_filler', 'Filler'),
+        ('is_bass_guitarist', 'Bass Guitarist'),
+        ('is_drummer', 'Drummer'),
+        ('is_multimedia', 'Multimedia'),
         ('is_sound', 'Sound Engineer'),
         ('is_caringteam', 'Caring Team'),
         ('is_connexion_crew', 'Connexion Crew'),
@@ -92,14 +92,14 @@ CROSS JOIN LATERAL (
 ) AS mappings(col_name, role_name)
 JOIN pelayanan_info pi ON pi.nama_pelayanan = mappings.role_name
 WHERE (CASE mappings.col_name
-    WHEN 'is_wl' THEN p.is_wl
+    WHEN 'is_worship_leader' THEN p.is_worship_leader
     WHEN 'is_singer' THEN p.is_singer
-    WHEN 'is_pianis' THEN p.is_pianis
+    WHEN 'is_pianist' THEN p.is_pianist
     WHEN 'is_saxophone' THEN p.is_saxophone
     WHEN 'is_filler' THEN p.is_filler
-    WHEN 'is_bass_gitar' THEN p.is_bass_gitar
-    WHEN 'is_drum' THEN p.is_drum
-    WHEN 'is_mulmed' THEN p.is_mulmed
+    WHEN 'is_bass_guitarist' THEN p.is_bass_guitarist
+    WHEN 'is_drummer' THEN p.is_drummer
+    WHEN 'is_multimedia' THEN p.is_multimedia
     WHEN 'is_sound' THEN p.is_sound
     WHEN 'is_caringteam' THEN p.is_caringteam
     WHEN 'is_connexion_crew' THEN p.is_connexion_crew

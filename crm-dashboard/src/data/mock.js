@@ -86,7 +86,7 @@ const pelayananInfo = [
   { pelayanan_id: '70012', nama_pelayanan: 'Supporting Crew' },
   { pelayanan_id: '70015', nama_pelayanan: 'Community PIC' },
   { pelayanan_id: '70003', nama_pelayanan: 'Pianist' },
-  { pelayanan_id: '70005', nama_pelayanan: 'Filler Musician' },
+  { pelayanan_id: '70005', nama_pelayanan: 'Filler' },
   { pelayanan_id: '70006', nama_pelayanan: 'Bass Guitarist' },
   { pelayanan_id: '70007', nama_pelayanan: 'Drummer' },
   { pelayanan_id: '70009', nama_pelayanan: 'Sound Engineer' },
@@ -100,29 +100,29 @@ const pelayananInfo = [
 // ============================================================
 
 const pelayan = [
-  { no_jemaat: 1001, nama_jemaat: 'Andreas Wijaya', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: true, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: true, is_community_pic: false, total_pelayanan: 45 },
-  { no_jemaat: 1002, nama_jemaat: 'Maria Sari', is_wl: false, is_singer: true, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 18 },
-  { no_jemaat: 1003, nama_jemaat: 'Daniel Setiawan', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: true, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: true, is_community_pic: false, total_pelayanan: 52 },
-  { no_jemaat: 1004, nama_jemaat: 'Sarah Hartono', is_wl: false, is_singer: false, is_pianis: true, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 22 },
-  { no_jemaat: 1005, nama_jemaat: 'Yohanes Pratama', is_wl: true, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: true, is_cforce: false, is_cg_leader: true, is_community_pic: false, total_pelayanan: 38 },
-  { no_jemaat: 1006, nama_jemaat: 'Esther Lim', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: true, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 15 },
-  { no_jemaat: 1007, nama_jemaat: 'Yakobus Santoso', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: true, is_cg_leader: true, is_community_pic: false, total_pelayanan: 41 },
-  { no_jemaat: 1008, nama_jemaat: 'Ruth Natalia', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: true, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 12 },
-  { no_jemaat: 1009, nama_jemaat: 'Daud Kurniawan', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: true, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: true, is_community_pic: false, total_pelayanan: 48 },
-  { no_jemaat: 1010, nama_jemaat: 'Deborah Susanti', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: true, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 20 },
-  { no_jemaat: 1011, nama_jemaat: 'Paulus Gunawan', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: true, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: true, is_community_pic: false, total_pelayanan: 55 },
-  { no_jemaat: 1012, nama_jemaat: 'Hana Wijayanti', is_wl: false, is_singer: true, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: true, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 24 },
-  { no_jemaat: 1013, nama_jemaat: 'Samuel Tan', is_wl: false, is_singer: false, is_pianis: true, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: true, is_community_pic: false, total_pelayanan: 36 },
-  { no_jemaat: 1014, nama_jemaat: 'Grace Oktavia', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: true, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 10 },
-  { no_jemaat: 1015, nama_jemaat: 'Timothy Halim', is_wl: true, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: true, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: true, is_community_pic: false, total_pelayanan: 60 },
-  { no_jemaat: 1016, nama_jemaat: 'Mikhaela Tampubolon', is_wl: false, is_singer: false, is_pianis: true, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 14 },
-  { no_jemaat: 1017, nama_jemaat: 'Gabriel Saputra', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: true, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: true, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 28 },
-  { no_jemaat: 1018, nama_jemaat: 'Brenda Anggraini', is_wl: false, is_singer: true, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: true, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 30 },
-  { no_jemaat: 1023, nama_jemaat: 'Natan Ridwan', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: true, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 8 },
-  { no_jemaat: 1025, nama_jemaat: 'Imanuel Sihombing', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: true, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 16 },
-  { no_jemaat: 1027, nama_jemaat: 'Naomi Simanjuntak', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: true, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: true, total_pelayanan: 35 },
-  { no_jemaat: 1029, nama_jemaat: 'Priscilla Anggraeni', is_wl: false, is_singer: false, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: true, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 11 },
-  { no_jemaat: 1031, nama_jemaat: 'Sela Marpaung', is_wl: false, is_singer: true, is_pianis: false, is_saxophone: false, is_filler: false, is_bass_gitar: false, is_drum: false, is_mulmed: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 19 },
+  { no_jemaat: 1001, nama_jemaat: 'Andreas Wijaya', is_worship_leader: false, is_singer: false, is_pianist: false, is_saxophone: false, is_filler: false, is_bass_guitarist: false, is_drummer: false, is_multimedia: false, is_sound: false, is_caringteam: true, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: true, is_community_pic: false, total_pelayanan: 45 },
+  { no_jemaat: 1002, nama_jemaat: 'Maria Sari', is_worship_leader: false, is_singer: true, is_pianist: false, is_saxophone: false, is_filler: false, is_bass_guitarist: false, is_drummer: false, is_multimedia: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 18 },
+  { no_jemaat: 1003, nama_jemaat: 'Daniel Setiawan', is_worship_leader: false, is_singer: false, is_pianist: false, is_saxophone: false, is_filler: false, is_bass_guitarist: false, is_drummer: false, is_multimedia: false, is_sound: true, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: true, is_community_pic: false, total_pelayanan: 52 },
+  { no_jemaat: 1004, nama_jemaat: 'Sarah Hartono', is_worship_leader: false, is_singer: false, is_pianist: true, is_saxophone: false, is_filler: false, is_bass_guitarist: false, is_drummer: false, is_multimedia: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 22 },
+  { no_jemaat: 1005, nama_jemaat: 'Yohanes Pratama', is_worship_leader: true, is_singer: false, is_pianist: false, is_saxophone: false, is_filler: false, is_bass_guitarist: false, is_drummer: false, is_multimedia: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: true, is_cforce: false, is_cg_leader: true, is_community_pic: false, total_pelayanan: 38 },
+  { no_jemaat: 1006, nama_jemaat: 'Esther Lim', is_worship_leader: false, is_singer: false, is_pianist: false, is_saxophone: false, is_filler: false, is_bass_guitarist: false, is_drummer: false, is_multimedia: false, is_sound: false, is_caringteam: false, is_connexion_crew: true, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 15 },
+  { no_jemaat: 1007, nama_jemaat: 'Yakobus Santoso', is_worship_leader: false, is_singer: false, is_pianist: false, is_saxophone: false, is_filler: false, is_bass_guitarist: false, is_drummer: false, is_multimedia: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: true, is_cg_leader: true, is_community_pic: false, total_pelayanan: 41 },
+  { no_jemaat: 1008, nama_jemaat: 'Ruth Natalia', is_worship_leader: false, is_singer: false, is_pianist: false, is_saxophone: false, is_filler: false, is_bass_guitarist: false, is_drummer: false, is_multimedia: false, is_sound: false, is_caringteam: true, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 12 },
+  { no_jemaat: 1009, nama_jemaat: 'Daud Kurniawan', is_worship_leader: false, is_singer: false, is_pianist: false, is_saxophone: false, is_filler: false, is_bass_guitarist: false, is_drummer: false, is_multimedia: false, is_sound: true, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: true, is_community_pic: false, total_pelayanan: 48 },
+  { no_jemaat: 1010, nama_jemaat: 'Deborah Susanti', is_worship_leader: false, is_singer: false, is_pianist: false, is_saxophone: false, is_filler: false, is_bass_guitarist: false, is_drummer: false, is_multimedia: true, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 20 },
+  { no_jemaat: 1011, nama_jemaat: 'Paulus Gunawan', is_worship_leader: false, is_singer: false, is_pianist: false, is_saxophone: false, is_filler: false, is_bass_guitarist: true, is_drummer: false, is_multimedia: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: true, is_community_pic: false, total_pelayanan: 55 },
+  { no_jemaat: 1012, nama_jemaat: 'Hana Wijayanti', is_worship_leader: false, is_singer: true, is_pianist: false, is_saxophone: false, is_filler: false, is_bass_guitarist: false, is_drummer: false, is_multimedia: false, is_sound: false, is_caringteam: false, is_connexion_crew: true, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 24 },
+  { no_jemaat: 1013, nama_jemaat: 'Samuel Tan', is_worship_leader: false, is_singer: false, is_pianist: true, is_saxophone: false, is_filler: false, is_bass_guitarist: false, is_drummer: false, is_multimedia: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: true, is_community_pic: false, total_pelayanan: 36 },
+  { no_jemaat: 1014, nama_jemaat: 'Grace Oktavia', is_worship_leader: false, is_singer: false, is_pianist: false, is_saxophone: true, is_filler: false, is_bass_guitarist: false, is_drummer: false, is_multimedia: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 10 },
+  { no_jemaat: 1015, nama_jemaat: 'Timothy Halim', is_worship_leader: true, is_singer: false, is_pianist: false, is_saxophone: false, is_filler: false, is_bass_guitarist: false, is_drummer: false, is_multimedia: true, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: true, is_community_pic: false, total_pelayanan: 60 },
+  { no_jemaat: 1016, nama_jemaat: 'Mikhaela Tampubolon', is_worship_leader: false, is_singer: false, is_pianist: true, is_saxophone: false, is_filler: false, is_bass_guitarist: false, is_drummer: false, is_multimedia: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 14 },
+  { no_jemaat: 1017, nama_jemaat: 'Gabriel Saputra', is_worship_leader: false, is_singer: false, is_pianist: false, is_saxophone: false, is_filler: false, is_bass_guitarist: false, is_drummer: true, is_multimedia: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: true, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 28 },
+  { no_jemaat: 1018, nama_jemaat: 'Brenda Anggraini', is_worship_leader: false, is_singer: true, is_pianist: false, is_saxophone: false, is_filler: false, is_bass_guitarist: false, is_drummer: false, is_multimedia: false, is_sound: false, is_caringteam: true, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 30 },
+  { no_jemaat: 1023, nama_jemaat: 'Natan Ridwan', is_worship_leader: false, is_singer: false, is_pianist: false, is_saxophone: false, is_filler: true, is_bass_guitarist: false, is_drummer: false, is_multimedia: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 8 },
+  { no_jemaat: 1025, nama_jemaat: 'Imanuel Sihombing', is_worship_leader: false, is_singer: false, is_pianist: false, is_saxophone: false, is_filler: false, is_bass_guitarist: false, is_drummer: false, is_multimedia: false, is_sound: true, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 16 },
+  { no_jemaat: 1027, nama_jemaat: 'Naomi Simanjuntak', is_worship_leader: false, is_singer: false, is_pianist: false, is_saxophone: false, is_filler: false, is_bass_guitarist: false, is_drummer: false, is_multimedia: true, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: true, total_pelayanan: 35 },
+  { no_jemaat: 1029, nama_jemaat: 'Priscilla Anggraeni', is_worship_leader: false, is_singer: false, is_pianist: false, is_saxophone: false, is_filler: false, is_bass_guitarist: false, is_drummer: false, is_multimedia: false, is_sound: false, is_caringteam: false, is_connexion_crew: true, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 11 },
+  { no_jemaat: 1031, nama_jemaat: 'Sela Marpaung', is_worship_leader: false, is_singer: true, is_pianist: false, is_saxophone: false, is_filler: false, is_bass_guitarist: false, is_drummer: false, is_multimedia: false, is_sound: false, is_caringteam: false, is_connexion_crew: false, is_supporting_crew: false, is_cforce: false, is_cg_leader: false, is_community_pic: false, total_pelayanan: 19 },
 ];
 
 // ============================================================
@@ -475,12 +475,76 @@ function getAttendance(filters = {}) {
   return result;
 }
 
-function getPelayananInfo() {
-  return [...pelayananInfo];
+export async function getPelayananInfo() {
+  try {
+    const res = await fetch(`${API_BASE}/ministry/pelayanan/info`);
+    const json = await res.json();
+    return json.data || [];
+  } catch {
+    return [...pelayananInfo];
+  }
 }
 
 function getPelayananInfoById(pelayanan_id) {
   return pelayananInfo.find(p => p.pelayanan_id === pelayanan_id) || null;
+}
+
+/**
+ * POST /ministry/types - Create a new pelayanan info
+ */
+export async function createPelayananInfo(data) {
+  const { pelayanan_id, nama_pelayanan } = data;
+
+  if (!pelayanan_id || !nama_pelayanan) {
+    throw new Error('pelayanan_id and nama_pelayanan are required');
+  }
+
+  const res = await fetch(`${API_BASE}/ministry/types`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ pelayanan_id, nama_pelayanan }),
+  });
+  const json = await res.json();
+
+  if (!res.ok || !json.success) {
+    throw new Error(json.error?.message || 'Failed to create pelayanan info');
+  }
+
+  return json;
+}
+
+/**
+ * PUT /ministry/types/:pelayanan_id - Update a pelayanan info
+ */
+export async function updatePelayananInfo(pelayanan_id, data) {
+  const res = await fetch(`${API_BASE}/ministry/types/${pelayanan_id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ nama_pelayanan: data.nama_pelayanan }),
+  });
+  const json = await res.json();
+
+  if (!res.ok || !json.success) {
+    throw new Error(json.error?.message || 'Failed to update pelayanan info');
+  }
+
+  return json;
+}
+
+/**
+ * DELETE /ministry/types/:pelayanan_id - Delete a pelayanan info
+ */
+export async function deletePelayananInfo(pelayanan_id) {
+  const res = await fetch(`${API_BASE}/ministry/types/${pelayanan_id}`, {
+    method: 'DELETE',
+  });
+
+  if (!res.ok) {
+    const json = await res.json().catch(() => ({}));
+    throw new Error(json.error?.message || 'Failed to delete pelayanan info');
+  }
+
+  return { success: true, data: { pelayanan_id } };
 }
 
 export async function fetchPelayananInfoFromAPI() {
@@ -727,14 +791,14 @@ export async function getMinistryParticipation() {
   const pelayanData = await getPelayan();
   const totalServing = pelayanData.length;
   const ministryFields = [
-    { key: 'is_wl', name: 'Worship Leader' },
+    { key: 'is_worship_leader', name: 'Worship Leader' },
     { key: 'is_singer', name: 'Singer' },
-    { key: 'is_pianis', name: 'Pianist' },
+    { key: 'is_pianist', name: 'Pianist' },
     { key: 'is_saxophone', name: 'Saxophone' },
-    { key: 'is_filler', name: 'Filler Musician' },
-    { key: 'is_bass_gitar', name: 'Bass Guitarist' },
-    { key: 'is_drum', name: 'Drummer' },
-    { key: 'is_mulmed', name: 'Multimedia' },
+    { key: 'is_filler', name: 'Filler' },
+    { key: 'is_bass_guitarist', name: 'Bass Guitarist' },
+    { key: 'is_drummer', name: 'Drummer' },
+    { key: 'is_multimedia', name: 'Multimedia' },
     { key: 'is_sound', name: 'Sound Engineer' },
     { key: 'is_caringteam', name: 'Care Team' },
     { key: 'is_connexion_crew', name: 'Connexion Crew' },
@@ -916,16 +980,16 @@ export async function getUpcomingEvents(days = 7) {
 export async function getWorshipTeamComposition() {
   const pelayanData = await getPelayan();
   const vocalists = {
-    total: pelayanData.filter(p => p.is_singer || p.is_wl).length,
+    total: pelayanData.filter(p => p.is_singer || p.is_worship_leader).length,
     singers: pelayanData.filter(p => p.is_singer).length,
-    worshipLeaders: pelayanData.filter(p => p.is_wl).length,
+    worshipLeaders: pelayanData.filter(p => p.is_worship_leader).length,
   };
   const instrumentalists = {
-    total: pelayanData.filter(p => p.is_pianis || p.is_saxophone || p.is_bass_gitar || p.is_drum || p.is_filler).length,
-    pianist: pelayanData.filter(p => p.is_pianis).length,
+    total: pelayanData.filter(p => p.is_pianist || p.is_saxophone || p.is_bass_guitarist || p.is_drummer || p.is_filler).length,
+    pianist: pelayanData.filter(p => p.is_pianist).length,
     saxophone: pelayanData.filter(p => p.is_saxophone).length,
-    bass: pelayanData.filter(p => p.is_bass_gitar).length,
-    drums: pelayanData.filter(p => p.is_drum).length,
+    bass: pelayanData.filter(p => p.is_bass_guitarist).length,
+    drums: pelayanData.filter(p => p.is_drummer).length,
     filler: pelayanData.filter(p => p.is_filler).length,
   };
   return { vocalists, instrumentalists };
@@ -940,7 +1004,7 @@ export async function getMultiSkillDistribution() {
   const pelayanData = await getPelayan();
   const distribution = {};
   pelayanData.forEach(p => {
-    const count = [p.is_wl, p.is_singer, p.is_pianis, p.is_saxophone, p.is_filler, p.is_bass_gitar, p.is_drum, p.is_mulmed, p.is_sound, p.is_caringteam, p.is_connexion_crew, p.is_supporting_crew, p.is_cforce, p.is_cg_leader, p.is_community_pic, p.is_others].filter(Boolean).length;
+    const count = [p.is_worship_leader, p.is_singer, p.is_pianist, p.is_saxophone, p.is_filler, p.is_bass_guitarist, p.is_drummer, p.is_multimedia, p.is_sound, p.is_caringteam, p.is_connexion_crew, p.is_supporting_crew, p.is_cforce, p.is_cg_leader, p.is_community_pic, p.is_others].filter(Boolean).length;
     const key = count.toString();
     distribution[key] = (distribution[key] || 0) + 1;
   });
@@ -1015,7 +1079,7 @@ export async function getMemberEngagementScore(no_jemaat) {
 
   let versatilityScore = 0;
   if (memberPelayan) {
-    const ministryCount = [memberPelayan.is_wl, memberPelayan.is_singer, memberPelayan.is_pianis, memberPelayan.is_saxophone, memberPelayan.is_filler, memberPelayan.is_bass_gitar, memberPelayan.is_drum, memberPelayan.is_mulmed, memberPelayan.is_sound, memberPelayan.is_caringteam, memberPelayan.is_connexion_crew, memberPelayan.is_supporting_crew, memberPelayan.is_cforce, memberPelayan.is_cg_leader, memberPelayan.is_community_pic, memberPelayan.is_others].filter(Boolean).length;
+    const ministryCount = [memberPelayan.is_worship_leader, memberPelayan.is_singer, memberPelayan.is_pianist, memberPelayan.is_saxophone, memberPelayan.is_filler, memberPelayan.is_bass_guitarist, memberPelayan.is_drummer, memberPelayan.is_multimedia, memberPelayan.is_sound, memberPelayan.is_caringteam, memberPelayan.is_connexion_crew, memberPelayan.is_supporting_crew, memberPelayan.is_cforce, memberPelayan.is_cg_leader, memberPelayan.is_community_pic, memberPelayan.is_others].filter(Boolean).length;
     versatilityScore = Math.min(ministryCount / 4, 1) * 10;
   }
 
@@ -1204,7 +1268,6 @@ export {
   getCGFGroupById,
   getCGFMembers,
   getAttendance,
-  getPelayananInfo,
   getPelayananInfoById,
   getAgeDistribution,
   getDomisiliDistribution,

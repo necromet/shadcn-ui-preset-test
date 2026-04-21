@@ -1,10 +1,11 @@
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { Search, Plus, Pencil, Trash2, ChevronLeft, ChevronRight, X } from "lucide-react"
+import { toast } from "sonner"
 import { Card, CardContent } from "../components/ui/card.jsx"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table.jsx"
 import { Button } from "../components/ui/button.jsx"
 import { EmptyState } from "../components/ui/empty-state.jsx"
-import { getPelayananInfo } from "../data/mock.js"
+import { getPelayananInfo, createPelayananInfo, updatePelayananInfo, deletePelayananInfo } from "../data/mock.js"
 
 const PAGE_SIZE = 10
 
@@ -14,7 +15,8 @@ const EMPTY_FORM = {
 }
 
 export function PelayananInfo() {
-  const [pelayananList, setPelayananList] = useState(() => getPelayananInfo())
+  const [pelayananList, setPelayananList] = useState([])
+  const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
 
@@ -23,6 +25,20 @@ export function PelayananInfo() {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [selectedPelayanan, setSelectedPelayanan] = useState(null)
   const [formData, setFormData] = useState(EMPTY_FORM)
+  const [submitting, setSubmitting] = useState(false)
+
+  useEffect(() => {
+    setLoading(true)
+    Promise.resolve(getPelayananInfo())
+      .then((data) => {
+        setPelayananList(data)
+      })
+      .catch((err) => {
+        console.error('Failed to fetch pelayanan info:', err)
+        toast.error("Failed to load pelayanan info")
+      })
+      .finally(() => setLoading(false))
+  }, [])
 
   const filteredPelayanan = useMemo(() => {
     let result = pelayananList
@@ -45,8 +61,17 @@ export function PelayananInfo() {
     currentPage * PAGE_SIZE
   )
 
+  function getNextPelayananId() {
+    if (pelayananList.length === 0) return "70001"
+    const maxId = Math.max(...pelayananList.map((p) => Number(p.pelayanan_id) || 0))
+    return String(maxId + 1)
+  }
+
   function openAddDialog() {
-    setFormData({ ...EMPTY_FORM })
+    setFormData({
+      pelayanan_id: getNextPelayananId(),
+      nama_pelayanan: "",
+    })
     setShowAddDialog(true)
   }
 
@@ -68,35 +93,87 @@ export function PelayananInfo() {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
-  function handleAddPelayanan(e) {
+  async function handleAddPelayanan(e) {
     e.preventDefault()
-    const newPelayanan = {
-      pelayanan_id: formData.pelayanan_id,
-      nama_pelayanan: formData.nama_pelayanan,
+    setSubmitting(true)
+
+    try {
+      const response = await 
+    ({
+        pelayanan_id: formData.pelayanan_id,
+        nama_pelayanan: formData.nama_pelayanan,
+      })
+
+      if (response?.success) {
+        setPelayananList((prev) => [...prev, response.data])
+        setShowAddDialog(false)
+        setFormData(EMPTY_FORM)
+        toast.success("Pelayanan added successfully", {
+          description: `${formData.nama_pelayanan} has been added.`
+        })
+      }
+    } catch (err) {
+      toast.error("Failed to add pelayanan", {
+        description: err.message || "An unexpected error occurred"
+      })
+    } finally {
+      setSubmitting(false)
     }
-    setPelayananList((prev) => [...prev, newPelayanan])
-    setShowAddDialog(false)
   }
 
-  function handleEditPelayanan(e) {
+  async function handleEditPelayanan(e) {
     e.preventDefault()
-    const updated = {
-      pelayanan_id: formData.pelayanan_id,
-      nama_pelayanan: formData.nama_pelayanan,
+    setSubmitting(true)
+
+    try {
+      const response = await updatePelayananInfo(selectedPelayanan.pelayanan_id, {
+        pelayanan_id: formData.pelayanan_id,
+        nama_pelayanan: formData.nama_pelayanan,
+      })
+
+      if (response?.success) {
+        setPelayananList((prev) =>
+          prev.map((p) => (p.pelayanan_id === selectedPelayanan.pelayanan_id ? response.data : p))
+        )
+        setShowEditDialog(false)
+        setSelectedPelayanan(null)
+        setFormData(EMPTY_FORM)
+        toast.success("Pelayanan updated successfully", {
+          description: `${formData.nama_pelayanan} has been updated.`
+        })
+      }
+    } catch (err) {
+      toast.error("Failed to update pelayanan", {
+        description: err.message || "An unexpected error occurred"
+      })
+    } finally {
+      setSubmitting(false)
     }
-    setPelayananList((prev) =>
-      prev.map((p) => (p.pelayanan_id === selectedPelayanan.pelayanan_id ? updated : p))
-    )
-    setShowEditDialog(false)
-    setSelectedPelayanan(null)
   }
 
-  function handleDeletePelayanan() {
-    setPelayananList((prev) =>
-      prev.filter((p) => p.pelayanan_id !== selectedPelayanan.pelayanan_id)
-    )
-    setShowDeleteDialog(false)
-    setSelectedPelayanan(null)
+  async function handleDeletePelayanan() {
+    setSubmitting(true)
+
+    try {
+      const response = await deletePelayananInfo(selectedPelayanan.pelayanan_id)
+
+      if (response?.success) {
+        setPelayananList((prev) =>
+          prev.filter((p) => p.pelayanan_id !== selectedPelayanan.pelayanan_id)
+        )
+        setShowDeleteDialog(false)
+        setSelectedPelayanan(null)
+        toast.success("Pelayanan deleted successfully", {
+          description: `${selectedPelayanan?.nama_pelayanan} has been removed.`
+        })
+      }
+    } catch (err) {
+      toast.error("Failed to delete pelayanan", {
+        description: err.message || "An unexpected error occurred"
+      })
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   function renderPelayananForm(onSubmit, title) {
@@ -122,10 +199,12 @@ export function PelayananInfo() {
               <input
                 type="text"
                 required
+                readOnly
+                disabled
                 value={formData.pelayanan_id}
-                onChange={(e) => handleFormChange("pelayanan_id", e.target.value)}
-                className="h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
+                className="h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring cursor-not-allowed opacity-70 bg-muted"
               />
+              <p className="text-xs text-muted-foreground">Cannot be changed</p>
             </div>
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-medium">Nama Pelayanan</label>
@@ -148,10 +227,20 @@ export function PelayananInfo() {
               >
                 Cancel
               </Button>
-              <Button type="submit">{showEditDialog ? "Save Changes" : "Add Pelayanan"}</Button>
+              <Button type="submit" disabled={submitting}>
+                {submitting ? "Saving..." : (showEditDialog ? "Save Changes" : "Add Pelayanan")}
+              </Button>
             </div>
           </form>
         </div>
+      </div>
+    )
+  }
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64">
+        <p className="text-muted-foreground">Loading pelayanan info...</p>
       </div>
     )
   }
@@ -213,13 +302,6 @@ export function PelayananInfo() {
                       <TableCell>{pelayanan.nama_pelayanan}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => openEditDialog(pelayanan)}
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
                           <Button
                             variant="ghost"
                             size="icon"
@@ -287,9 +369,9 @@ export function PelayananInfo() {
               <Button variant="outline" onClick={() => setShowDeleteDialog(false)}>
                 Cancel
               </Button>
-              <Button variant="destructive" onClick={handleDeletePelayanan}>
+              <Button variant="destructive" onClick={handleDeletePelayanan} disabled={submitting}>
                 <Trash2 className="h-4 w-4" />
-                Delete
+                {submitting ? "Deleting..." : "Delete"}
               </Button>
             </div>
           </div>

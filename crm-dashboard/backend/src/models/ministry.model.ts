@@ -14,68 +14,16 @@ export interface MinistryTypeUpdateData {
   nama_pelayanan: string;
 }
 
-export interface Pelayan {
+export interface PelayanBase {
   no_jemaat: number;
   nama_jemaat: string;
-  is_wl: boolean;
-  is_singer: boolean;
-  is_pianis: boolean;
-  is_saxophone: boolean;
-  is_filler: boolean;
-  is_bass_gitar: boolean;
-  is_drum: boolean;
-  is_mulmed: boolean;
-  is_sound: boolean;
-  is_caringteam: boolean;
-  is_connexion_crew: boolean;
-  is_supporting_crew: boolean;
-  is_cforce: boolean;
-  is_cg_leader: boolean;
-  is_community_pic: boolean;
-  is_others?: boolean;
   total_pelayanan: number;
+  [key: string]: number | string;
 }
 
-export interface PelayanCreateData {
-  no_jemaat: number;
-  nama_jemaat: string;
-  is_wl?: boolean;
-  is_singer?: boolean;
-  is_pianis?: boolean;
-  is_saxophone?: boolean;
-  is_filler?: boolean;
-  is_bass_gitar?: boolean;
-  is_drum?: boolean;
-  is_mulmed?: boolean;
-  is_sound?: boolean;
-  is_caringteam?: boolean;
-  is_connexion_crew?: boolean;
-  is_supporting_crew?: boolean;
-  is_cforce?: boolean;
-  is_cg_leader?: boolean;
-  is_community_pic?: boolean;
-  is_others?: boolean;
-}
-
-export interface PelayanUpdateData {
-  nama_jemaat?: string;
-  is_wl?: boolean;
-  is_singer?: boolean;
-  is_pianis?: boolean;
-  is_saxophone?: boolean;
-  is_filler?: boolean;
-  is_bass_gitar?: boolean;
-  is_drum?: boolean;
-  is_mulmed?: boolean;
-  is_sound?: boolean;
-  is_caringteam?: boolean;
-  is_connexion_crew?: boolean;
-  is_supporting_crew?: boolean;
-  is_cforce?: boolean;
-  is_cg_leader?: boolean;
-  is_community_pic?: boolean;
-  is_others?: boolean;
-}
+export interface Pelayan extends PelayanBase {}
+export interface PelayanCreateData extends PelayanBase {}
+export interface PelayanUpdateData extends PelayanBase {}
 
 export interface PelayanPelayanan {
   id: number;
@@ -120,34 +68,47 @@ export interface BulkAssignmentResult {
   errors: string[];
 }
 
-const BOOLEAN_ROLE_COLUMNS = [
-  'is_wl', 'is_singer', 'is_pianis', 'is_saxophone', 'is_filler',
-  'is_bass_gitar', 'is_drum', 'is_mulmed', 'is_sound', 'is_caringteam',
-  'is_connexion_crew', 'is_supporting_crew', 'is_cforce', 'is_cg_leader', 'is_community_pic',
-  'is_others'
-];
+interface RoleMapping {
+  columns: string[];
+  colToName: Record<string, string>;
+  nameToCol: Record<string, string>;
+}
 
-const BOOLEAN_COL_TO_ROLE_NAME: Record<string, string> = {
-  is_wl: 'Worship Leader',
-  is_singer: 'Singer',
-  is_pianis: 'Pianist',
-  is_saxophone: 'Saxophone',
-  is_filler: 'Filler Musician',
-  is_bass_gitar: 'Bass Guitarist',
-  is_drum: 'Drummer',
-  is_mulmed: 'Multimedia',
-  is_sound: 'Sound Engineer',
-  is_caringteam: 'Caring Team',
-  is_connexion_crew: 'Connexion Crew',
-  is_supporting_crew: 'Supporting Crew',
-  is_cforce: 'CForce',
-  is_cg_leader: 'CG Leader',
-  is_community_pic: 'Community PIC',
-};
+let cachedRoleMapping: RoleMapping | null = null;
 
-function computeTotalPelayanan(data: PelayanCreateData | PelayanUpdateData): number {
-  return BOOLEAN_ROLE_COLUMNS.reduce((count, col) => {
-    return count + ((data as Record<string, unknown>)[col] ? 1 : 0);
+async function getRoleMappingFromDb(): Promise<RoleMapping> {
+  const result = await query<{ pelayanan_id: string; nama_pelayanan: string }>(
+    'SELECT pelayanan_id, nama_pelayanan FROM pelayanan_info ORDER BY nama_pelayanan ASC'
+  );
+
+  const columns: string[] = [];
+  const colToName: Record<string, string> = {};
+  const nameToCol: Record<string, string> = {};
+
+  for (const row of result.rows) {
+    const colName = `is_${row.nama_pelayanan.toLowerCase().replace(/\s+/g, '_')}`;
+    columns.push(colName);
+    colToName[colName] = row.nama_pelayanan;
+    nameToCol[row.nama_pelayanan] = colName;
+  }
+
+  return { columns, colToName, nameToCol };
+}
+
+export async function getRoleMapping(): Promise<RoleMapping> {
+  if (!cachedRoleMapping) {
+    cachedRoleMapping = await getRoleMappingFromDb();
+  }
+  return cachedRoleMapping;
+}
+
+export async function invalidateRoleMappingCache(): Promise<void> {
+  cachedRoleMapping = null;
+}
+
+function computeTotalPelayanan(data: Record<string, unknown>, columns: string[]): number {
+  return columns.reduce((count, col) => {
+    return count + (data[col] ? 1 : 0);
   }, 0);
 }
 
@@ -157,10 +118,13 @@ function toSmallint(value: unknown): number {
   return 0;
 }
 
-function convertBooleanRolesToSmallint(data: Record<string, unknown>): Record<string, unknown> {
+function convertBooleanRolesToSmallint(
+  data: Record<string, unknown>,
+  booleanColumns: string[]
+): Record<string, unknown> {
   const result: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(data)) {
-    if (BOOLEAN_ROLE_COLUMNS.includes(key)) {
+    if (booleanColumns.includes(key)) {
       result[key] = toSmallint(value);
     } else {
       result[key] = value;
@@ -207,7 +171,78 @@ export const MinistryModel = {
        RETURNING *`,
       [data.pelayanan_id, data.nama_pelayanan],
     );
+
+    await invalidateRoleMappingCache();
+
     return result.rows[0];
+  },
+
+  async upsertMinistryType(data: MinistryTypeCreateData): Promise<MinistryType> {
+    const result = await query<MinistryType>(
+      `INSERT INTO pelayanan_info (pelayanan_id, nama_pelayanan)
+       VALUES ($1, $2)
+       ON CONFLICT (pelayanan_id) DO UPDATE
+       SET nama_pelayanan = EXCLUDED.nama_pelayanan
+       RETURNING *`,
+      [data.pelayanan_id, data.nama_pelayanan],
+    );
+
+    await invalidateRoleMappingCache();
+
+    return result.rows[0];
+  },
+
+  async bulkUpsertMinistryTypes(dataArray: MinistryTypeCreateData[]): Promise<BulkAssignmentResult> {
+    const result: BulkAssignmentResult = { assigned: 0, skipped: 0, errors: [] };
+
+    await transaction(async (txQuery) => {
+      for (const data of dataArray) {
+        try {
+          const res = await txQuery(
+            `INSERT INTO pelayanan_info (pelayanan_id, nama_pelayanan)
+             VALUES ($1, $2)
+             ON CONFLICT (pelayanan_id) DO UPDATE
+             SET nama_pelayanan = EXCLUDED.nama_pelayanan`,
+            [data.pelayanan_id, data.nama_pelayanan],
+          );
+          if ((res.rowCount ?? 0) > 0) {
+            result.assigned++;
+          } else {
+            result.skipped++;
+          }
+        } catch (err) {
+          result.errors.push(`Failed to upsert ministry ${data.pelayanan_id}: ${(err as Error).message}`);
+        }
+      }
+    });
+
+    await invalidateRoleMappingCache();
+    return result;
+  },
+
+  async bulkDeleteMinistryTypes(pelayananIds: string[]): Promise<BulkAssignmentResult> {
+    const result: BulkAssignmentResult = { assigned: 0, skipped: 0, errors: [] };
+
+    await transaction(async (txQuery) => {
+      for (const pelayananId of pelayananIds) {
+        try {
+          const res = await txQuery(
+            'DELETE FROM pelayanan_info WHERE pelayanan_id = $1',
+            [pelayananId],
+          );
+          if ((res.rowCount ?? 0) > 0) {
+            result.assigned++;
+          } else {
+            result.skipped++;
+          }
+        } catch (err) {
+          result.errors.push(`Failed to delete ministry ${pelayananId}: ${(err as Error).message}`);
+        }
+      }
+    });
+
+    await invalidateRoleMappingCache();
+    return result;
   },
 
   async updateMinistryType(pelayananId: string, data: MinistryTypeUpdateData): Promise<MinistryType | null> {
@@ -215,6 +250,11 @@ export const MinistryModel = {
       `UPDATE pelayanan_info SET nama_pelayanan = $1 WHERE pelayanan_id = $2 RETURNING *`,
       [data.nama_pelayanan, pelayananId],
     );
+
+    if (result.rowCount && result.rowCount > 0) {
+      await invalidateRoleMappingCache();
+    }
+
     return result.rows[0] || null;
   },
 
@@ -223,6 +263,11 @@ export const MinistryModel = {
       'DELETE FROM pelayanan_info WHERE pelayanan_id = $1',
       [pelayananId],
     );
+
+    if (result.rowCount && result.rowCount > 0) {
+      await invalidateRoleMappingCache();
+    }
+
     return (result.rowCount ?? 0) > 0;
   },
 
@@ -257,8 +302,11 @@ export const MinistryModel = {
   },
 
   async createPelayan(data: PelayanCreateData): Promise<Pelayan> {
-    const totalPelayanan = computeTotalPelayanan(data);
-    const converted = convertBooleanRolesToSmallint(data as unknown as Record<string, unknown>);
+    const mapping = await getRoleMapping();
+    const booleanColumns = mapping.columns;
+
+    const totalPelayanan = computeTotalPelayanan(data as Record<string, unknown>, booleanColumns);
+    const converted = convertBooleanRolesToSmallint(data as Record<string, unknown>, booleanColumns);
     const columns = [...Object.keys(converted), 'total_pelayanan'];
     const values = [...Object.values(converted), totalPelayanan];
     const placeholders = columns.map((_, i) => `$${i + 1}`);
@@ -269,8 +317,7 @@ export const MinistryModel = {
         values,
       );
 
-      // Sync boolean roles to junction table
-      await this._syncJunctionTable(txQuery, data.no_jemaat, data as unknown as Record<string, unknown>);
+      await this._syncJunctionTable(txQuery, data.no_jemaat, data as Record<string, unknown>);
 
       return pelayanResult;
     });
@@ -287,28 +334,28 @@ export const MinistryModel = {
     const existing = await this.getPelayanById(noJemaat);
     if (!existing) return null;
 
-    const converted = convertBooleanRolesToSmallint(data as unknown as Record<string, unknown>);
+    const mapping = await getRoleMapping();
+    const booleanColumns = mapping.columns;
+
+    const converted = convertBooleanRolesToSmallint(data as Record<string, unknown>, booleanColumns);
     const convertedColumns = Object.keys(converted);
     const convertedValues = Object.values(converted);
 
     const merged = { ...existing, ...converted };
-    const totalPelayanan = computeTotalPelayanan(merged as unknown as PelayanCreateData);
+    const totalPelayanan = computeTotalPelayanan(merged as Record<string, unknown>, booleanColumns);
 
     const setClauses = convertedColumns.map((col, i) => `${col} = $${i + 1}`);
     setClauses.push(`total_pelayanan = $${convertedColumns.length + 1}`);
 
-    // Check if is_cforce is being set to true
     const isCforceChanged = 'is_cforce' in data;
     const isCforceTrue = converted.is_cforce === 1;
 
-    // Use transaction to update both pelayan, cgf_members, and junction table atomically
     const result = await transaction(async (txQuery) => {
       const pelayanResult = await txQuery<Pelayan>(
         `UPDATE pelayan SET ${setClauses.join(', ')} WHERE no_jemaat = $${convertedColumns.length + 2} RETURNING *`,
         [...convertedValues, totalPelayanan, noJemaat],
       );
 
-      // If is_cforce is set to true, update cgf_members.is_leader to true
       if (isCforceChanged && isCforceTrue) {
         await txQuery(
           `UPDATE cgf_members SET is_leader = 1 WHERE no_jemaat = $1`,
@@ -316,8 +363,7 @@ export const MinistryModel = {
         );
       }
 
-      // Sync boolean roles to junction table
-      await this._syncJunctionTable(txQuery, noJemaat, merged as unknown as Record<string, unknown>);
+      await this._syncJunctionTable(txQuery, noJemaat, merged as Record<string, unknown>);
 
       return pelayanResult;
     });
@@ -333,14 +379,14 @@ export const MinistryModel = {
     return (result.rowCount ?? 0) > 0;
   },
 
-  // --- Junction Table Helper ---
-
   async _syncJunctionTable(
     txQuery: typeof query,
     noJemaat: number,
     data: Record<string, unknown>,
   ): Promise<void> {
-    for (const [colName, roleName] of Object.entries(BOOLEAN_COL_TO_ROLE_NAME)) {
+    const mapping = await getRoleMapping();
+
+    for (const [colName, roleName] of Object.entries(mapping.colToName)) {
       const isActive = !!data[colName];
       if (isActive) {
         await txQuery(
@@ -360,8 +406,6 @@ export const MinistryModel = {
       }
     }
   },
-
-  // --- Junction Table Methods ---
 
   async assignPelayanan(noJemaat: number, pelayananId: string, updatedBy?: number): Promise<PelayanPelayanan> {
     const result = await query<PelayanPelayanan>(

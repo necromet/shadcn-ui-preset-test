@@ -56,14 +56,14 @@ This document contains the table structures from `create_table.sql` that define 
 |--------|------|-------------|-------------|
 | no_jemaat | INT | Member ID | PRIMARY KEY |
 | nama_jemaat | VARCHAR(255) | Member name | NOT NULL |
-| is_wl | SMALLINT | Worship Leader | DEFAULT 0 |
+| is_worship_leader | SMALLINT | Worship Leader | DEFAULT 0 |
 | is_singer | SMALLINT | Singer | DEFAULT 0 |
-| is_pianis | SMALLINT | Pianist | DEFAULT 0 |
+| is_pianist | SMALLINT | Pianist | DEFAULT 0 |
 | is_saxophone | SMALLINT | Saxophone player | DEFAULT 0 |
 | is_filler | SMALLINT | Filler musician | DEFAULT 0 |
-| is_bass_gitar | SMALLINT | Bass guitarist | DEFAULT 0 |
-| is_drum | SMALLINT | Drummer | DEFAULT 0 |
-| is_mulmed | SMALLINT | Multimedia team | DEFAULT 0 |
+| is_bass_guitarist | SMALLINT | Bass guitarist | DEFAULT 0 |
+| is_drummer | SMALLINT | Drummer | DEFAULT 0 |
+| is_multimedia | SMALLINT | Multimedia team | DEFAULT 0 |
 | is_sound | SMALLINT | Sound engineer | DEFAULT 0 |
 | is_caringteam | SMALLINT | Caring team | DEFAULT 0 |
 | is_connexion_crew | SMALLINT | Connexion crew | DEFAULT 0 |
