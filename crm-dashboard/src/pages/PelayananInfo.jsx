@@ -98,8 +98,7 @@ export function PelayananInfo() {
     setSubmitting(true)
 
     try {
-      const response = await 
-    ({
+      const response = await createPelayananInfo({
         pelayanan_id: formData.pelayanan_id,
         nama_pelayanan: formData.nama_pelayanan,
       })

@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card.jsx"
 import { BarChart3, PieChart, TrendingUp, Users } from "lucide-react"
 import {
@@ -12,15 +13,19 @@ import {
   getKuliahKerjaRatio,
   getAttendanceTrend,
   getCGFSizes,
-} from "../data/mock.js"
+} from "../services/analytics.api.js"
 
-const CHART_COLORS = [
-  "var(--chart-1)",
-  "var(--chart-2)",
-  "var(--chart-3)",
-  "var(--chart-4)",
-  "var(--chart-5)",
-]
+function getChartColors() {
+  const style = getComputedStyle(document.documentElement)
+  return [
+    style.getPropertyValue("--chart-1").trim(),
+    style.getPropertyValue("--chart-2").trim(),
+    style.getPropertyValue("--chart-3").trim(),
+    style.getPropertyValue("--chart-4").trim(),
+    style.getPropertyValue("--chart-5").trim(),
+    style.getPropertyValue("--chart-6").trim(),
+  ]
+}
 
 function CustomTooltip({ active, payload, label }) {
   if (!active || !payload || !payload.length) return null
@@ -36,12 +41,35 @@ function CustomTooltip({ active, payload, label }) {
   )
 }
 
+function ChartLoading() {
+  return (
+    <div className="flex items-center justify-center h-[250px] text-muted-foreground text-sm">
+      Loading chart data...
+    </div>
+  )
+}
+
+function ChartError({ message }) {
+  return (
+    <div className="flex items-center justify-center h-[250px] text-destructive text-sm">
+      {message || "Failed to load data"}
+    </div>
+  )
+}
+
 export function AgeDistributionChart() {
-  const distribution = getAgeDistribution()
-  const data = Object.entries(distribution).map(([age, count]) => ({
-    age,
-    count,
-  }))
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    getAgeDistribution()
+      .then((items) => {
+        setData(items.map((item) => ({ age: item.label, count: item.value })))
+      })
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false))
+  }, [])
 
   return (
     <Card>
@@ -52,26 +80,38 @@ export function AgeDistributionChart() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={250}>
-          <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-            <XAxis dataKey="age" tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} />
-            <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} />
-            <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey="count" fill="var(--chart-1)" radius={[4, 4, 0, 0]} name="Members" />
-          </BarChart>
-        </ResponsiveContainer>
+        {loading ? <ChartLoading /> : error ? <ChartError message={error} /> : (
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+              <XAxis dataKey="age" tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} />
+              <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} />
+              <Tooltip content={<CustomTooltip />} />
+              <Bar dataKey="count" fill="var(--chart-1)" radius={[4, 4, 0, 0]} name="Members" />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
       </CardContent>
     </Card>
   )
 }
 
 export function DomisiliDistributionChart() {
-  const distribution = getDomisiliDistribution()
-  const data = Object.entries(distribution).map(([area, count]) => ({
-    area: area.replace("Jakarta ", "JKT "),
-    count,
-  }))
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    getDomisiliDistribution()
+      .then((items) => {
+        setData(items.map((item) => ({
+          area: item.label.replace("Jakarta ", "JKT "),
+          count: item.value,
+        })))
+      })
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false))
+  }, [])
 
   return (
     <Card>
@@ -82,27 +122,35 @@ export function DomisiliDistributionChart() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={250}>
-          <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-            <XAxis dataKey="area" tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} />
-            <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} />
-            <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey="count" fill="var(--chart-2)" radius={[4, 4, 0, 0]} name="Members" />
-          </BarChart>
-        </ResponsiveContainer>
+        {loading ? <ChartLoading /> : error ? <ChartError message={error} /> : (
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+              <XAxis dataKey="area" tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} />
+              <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} />
+              <Tooltip content={<CustomTooltip />} />
+              <Bar dataKey="count" fill="var(--chart-2)" radius={[4, 4, 0, 0]} name="Members" />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
       </CardContent>
     </Card>
   )
 }
 
 export function CGFInterestFunnelChart() {
-  const funnel = getCGFInterestFunnel()
-  const data = [
-    { name: "Tertarik", count: funnel.tertarik },
-    { name: "Belum Join", count: funnel.belumJoin },
-    { name: "Sudah Join", count: funnel.sudahJoin },
-  ]
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    getCGFInterestFunnel()
+      .then((items) => {
+        setData(items.map((item) => ({ name: item.stage, count: item.count })))
+      })
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false))
+  }, [])
 
   return (
     <Card>
@@ -113,30 +161,39 @@ export function CGFInterestFunnelChart() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={250}>
-          <BarChart data={data} layout="vertical">
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-            <XAxis type="number" tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} />
-            <YAxis type="category" dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} width={80} />
-            <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey="count" radius={[0, 4, 4, 0]} name="Members">
-              {data.map((_, i) => (
-                <Cell key={i} fill={CHART_COLORS[i]} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+        {loading ? <ChartLoading /> : error ? <ChartError message={error} /> : (
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={data} layout="vertical">
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+              <XAxis type="number" tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} />
+              <YAxis type="category" dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} width={100} />
+              <Tooltip content={<CustomTooltip />} />
+              <Bar dataKey="count" radius={[0, 4, 4, 0]} name="Members">
+                {data.map((_, i) => (
+                  <Cell key={i} fill={getChartColors()[i % getChartColors().length]} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        )}
       </CardContent>
     </Card>
   )
 }
 
 export function KuliahKerjaPieChart() {
-  const ratio = getKuliahKerjaRatio()
-  const data = [
-    { name: "Kuliah", value: ratio.kuliah },
-    { name: "Kerja", value: ratio.kerja },
-  ]
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    getKuliahKerjaRatio()
+      .then((items) => {
+        setData(items.map((item) => ({ name: item.label, value: item.value })))
+      })
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false))
+  }, [])
 
   return (
     <Card>
@@ -147,38 +204,50 @@ export function KuliahKerjaPieChart() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={250}>
-          <RechartsPieChart>
-            <Pie
-              data={data}
-              cx="50%"
-              cy="50%"
-              innerRadius={60}
-              outerRadius={90}
-              paddingAngle={4}
-              dataKey="value"
-              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-            >
-              {data.map((_, i) => (
-                <Cell key={i} fill={CHART_COLORS[i]} />
-              ))}
-            </Pie>
-            <Tooltip />
-          </RechartsPieChart>
-        </ResponsiveContainer>
+        {loading ? <ChartLoading /> : error ? <ChartError message={error} /> : (
+          <ResponsiveContainer width="100%" height={250}>
+            <RechartsPieChart>
+              <Pie
+                data={data}
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={90}
+                paddingAngle={4}
+                dataKey="value"
+                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+              >
+                {data.map((_, i) => (
+                  <Cell key={i} fill={getChartColors()[i % getChartColors().length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+            </RechartsPieChart>
+          </ResponsiveContainer>
+        )}
       </CardContent>
     </Card>
   )
 }
 
 export function AttendanceTrendChart() {
-  const trend = getAttendanceTrend()
-  const data = trend.map(w => ({
-    week: w.weekLabel,
-    hadir: w.hadir,
-    total: w.total,
-    rate: w.total > 0 ? Math.round((w.hadir / w.total) * 100) : 0,
-  }))
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    getAttendanceTrend()
+      .then((items) => {
+        setData(items.map((item) => ({
+          week: item.period,
+          hadir: item.total_present,
+          total: item.total_expected,
+          rate: item.attendance_rate,
+        })))
+      })
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false))
+  }, [])
 
   return (
     <Card>
@@ -189,37 +258,45 @@ export function AttendanceTrendChart() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={250}>
-          <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-            <XAxis dataKey="week" tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} interval={2} />
-            <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} domain={[0, 100]} unit="%" />
-            <Tooltip content={<CustomTooltip />} />
-            <Line
-              type="monotone"
-              dataKey="rate"
-              stroke="var(--chart-3)"
-              strokeWidth={2}
-              dot={{ fill: "var(--chart-3)", r: 3 }}
-              name="Attendance %"
-            />
-          </LineChart>
-        </ResponsiveContainer>
+        {loading ? <ChartLoading /> : error ? <ChartError message={error} /> : (
+          <ResponsiveContainer width="100%" height={250}>
+            <LineChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+              <XAxis dataKey="week" tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} interval={2} />
+              <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} domain={[0, 100]} unit="%" />
+              <Tooltip content={<CustomTooltip />} />
+              <Line
+                type="monotone"
+                dataKey="rate"
+                stroke="var(--chart-3)"
+                strokeWidth={2}
+                dot={{ fill: "var(--chart-3)", r: 3 }}
+                name="Attendance %"
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        )}
       </CardContent>
     </Card>
   )
 }
 
 export function CGFSizeComparisonChart() {
-  const sizes = getCGFSizes()
-  if (!sizes || !Array.isArray(sizes)) {
-      return <div>Loading or No Data Available...</div>;
-  }
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  const data = sizes.map(s => ({
-      name: s.nama_cgf.replace("CGF ", ""),
-      count: s.memberCount,
-  }));
+  useEffect(() => {
+    getCGFSizes()
+      .then((items) => {
+        setData(items.map((s) => ({
+          name: s.nama_cgf.replace("CGF ", ""),
+          count: s.member_count,
+        })))
+      })
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false))
+  }, [])
 
   return (
     <Card>
@@ -230,15 +307,17 @@ export function CGFSizeComparisonChart() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={250}>
-          <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-            <XAxis dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} interval={0} angle={-20} textAnchor="end" height={50} />
-            <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} />
-            <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey="count" fill="var(--chart-4)" radius={[4, 4, 0, 0]} name="Members" />
-          </BarChart>
-        </ResponsiveContainer>
+        {loading ? <ChartLoading /> : error ? <ChartError message={error} /> : (
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+              <XAxis dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} interval={0} angle={-20} textAnchor="end" height={50} />
+              <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} />
+              <Tooltip content={<CustomTooltip />} />
+              <Bar dataKey="count" fill="var(--chart-4)" radius={[4, 4, 0, 0]} name="Members" />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
       </CardContent>
     </Card>
   )

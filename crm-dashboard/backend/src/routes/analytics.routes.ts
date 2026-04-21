@@ -42,6 +42,9 @@ router.get('/analytics/members/distribution', async (req: Request, res: Response
       case 'kuliah_kerja':
         data = await AnalyticsModel.getKuliahKerjaRatio();
         break;
+      case 'funnel':
+        data = await AnalyticsModel.getCGFInterestFunnel();
+        break;
       default:
         data = await AnalyticsModel.getGenderDistribution();
     }

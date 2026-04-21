@@ -408,23 +408,63 @@ export const MinistryModel = {
   },
 
   async assignPelayanan(noJemaat: number, pelayananId: string, updatedBy?: number): Promise<PelayanPelayanan> {
-    const result = await query<PelayanPelayanan>(
-      `INSERT INTO pelayan_pelayanan (no_jemaat, pelayanan_id, is_active, updated_by)
-       VALUES ($1, $2, TRUE, $3)
-       ON CONFLICT (no_jemaat, pelayanan_id) DO UPDATE
-       SET is_active = TRUE, updated_at = NOW(), updated_by = $3
-       RETURNING *`,
-      [noJemaat, pelayananId, updatedBy ?? null],
-    );
+    const result = await transaction(async (txQuery) => {
+      const junctionResult = await txQuery<PelayanPelayanan>(
+        `INSERT INTO pelayan_pelayanan (no_jemaat, pelayanan_id, is_active, updated_by)
+         VALUES ($1, $2, TRUE, $3)
+         ON CONFLICT (no_jemaat, pelayanan_id) DO UPDATE
+         SET is_active = TRUE, updated_at = NOW(), updated_by = $3
+         RETURNING *`,
+        [noJemaat, pelayananId, updatedBy ?? null],
+      );
+
+      const pelayananInfo = await txQuery<{ nama_pelayanan: string }>(
+        'SELECT nama_pelayanan FROM pelayanan_info WHERE pelayanan_id = $1',
+        [pelayananId],
+      );
+      if (pelayananInfo.rows[0]) {
+        const colName = `is_${pelayananInfo.rows[0].nama_pelayanan.toLowerCase().replace(/\s+/g, '_')}`;
+        await txQuery(
+          `UPDATE pelayan SET ${colName} = 1, total_pelayanan = (
+            SELECT COUNT(*) FROM pelayan_pelayanan WHERE no_jemaat = $1 AND is_active = TRUE
+          ) WHERE no_jemaat = $1`,
+          [noJemaat],
+        );
+      }
+
+      return junctionResult;
+    });
+
     return result.rows[0];
   },
 
   async removePelayanan(noJemaat: number, pelayananId: string, updatedBy?: number): Promise<boolean> {
-    const result = await query(
-      `UPDATE pelayan_pelayanan SET is_active = FALSE, updated_at = NOW(), updated_by = $3
-       WHERE no_jemaat = $1 AND pelayanan_id = $2`,
-      [noJemaat, pelayananId, updatedBy ?? null],
-    );
+    const result = await transaction(async (txQuery) => {
+      const junctionResult = await txQuery(
+        `UPDATE pelayan_pelayanan SET is_active = FALSE, updated_at = NOW(), updated_by = $3
+         WHERE no_jemaat = $1 AND pelayanan_id = $2`,
+        [noJemaat, pelayananId, updatedBy ?? null],
+      );
+
+      if ((junctionResult.rowCount ?? 0) > 0) {
+        const pelayananInfo = await txQuery<{ nama_pelayanan: string }>(
+          'SELECT nama_pelayanan FROM pelayanan_info WHERE pelayanan_id = $1',
+          [pelayananId],
+        );
+        if (pelayananInfo.rows[0]) {
+          const colName = `is_${pelayananInfo.rows[0].nama_pelayanan.toLowerCase().replace(/\s+/g, '_')}`;
+          await txQuery(
+            `UPDATE pelayan SET ${colName} = 0, total_pelayanan = (
+              SELECT COUNT(*) FROM pelayan_pelayanan WHERE no_jemaat = $1 AND is_active = TRUE
+            ) WHERE no_jemaat = $1`,
+            [noJemaat],
+          );
+        }
+      }
+
+      return junctionResult;
+    });
+
     return (result.rowCount ?? 0) > 0;
   },
 
@@ -490,6 +530,18 @@ export const MinistryModel = {
           );
           if ((res.rowCount ?? 0) > 0) {
             result.assigned++;
+
+            const pelayananInfo = await txQuery<{ nama_pelayanan: string }>(
+              'SELECT nama_pelayanan FROM pelayanan_info WHERE pelayanan_id = $1',
+              [pelayananId],
+            );
+            if (pelayananInfo.rows[0]) {
+              const colName = `is_${pelayananInfo.rows[0].nama_pelayanan.toLowerCase().replace(/\s+/g, '_')}`;
+              await txQuery(
+                `UPDATE pelayan SET ${colName} = 1 WHERE no_jemaat = $1`,
+                [noJemaat],
+              );
+            }
           } else {
             result.skipped++;
           }
@@ -497,6 +549,13 @@ export const MinistryModel = {
           result.errors.push(`Failed to assign pelayanan ${pelayananId}: ${(err as Error).message}`);
         }
       }
+
+      await txQuery(
+        `UPDATE pelayan SET total_pelayanan = (
+          SELECT COUNT(*) FROM pelayan_pelayanan WHERE no_jemaat = $1 AND is_active = TRUE
+        ) WHERE no_jemaat = $1`,
+        [noJemaat],
+      );
     });
 
     return result;
@@ -519,6 +578,18 @@ export const MinistryModel = {
           );
           if ((res.rowCount ?? 0) > 0) {
             result.assigned++;
+
+            const pelayananInfo = await txQuery<{ nama_pelayanan: string }>(
+              'SELECT nama_pelayanan FROM pelayanan_info WHERE pelayanan_id = $1',
+              [pelayananId],
+            );
+            if (pelayananInfo.rows[0]) {
+              const colName = `is_${pelayananInfo.rows[0].nama_pelayanan.toLowerCase().replace(/\s+/g, '_')}`;
+              await txQuery(
+                `UPDATE pelayan SET ${colName} = 0 WHERE no_jemaat = $1`,
+                [noJemaat],
+              );
+            }
           } else {
             result.skipped++;
           }
@@ -526,6 +597,13 @@ export const MinistryModel = {
           result.errors.push(`Failed to remove pelayanan ${pelayananId}: ${(err as Error).message}`);
         }
       }
+
+      await txQuery(
+        `UPDATE pelayan SET total_pelayanan = (
+          SELECT COUNT(*) FROM pelayan_pelayanan WHERE no_jemaat = $1 AND is_active = TRUE
+        ) WHERE no_jemaat = $1`,
+        [noJemaat],
+      );
     });
 
     return result;
