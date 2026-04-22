@@ -60,18 +60,18 @@ const kpiConfig = [
     change: "+5.2%",
   },
   {
-    title: "Total CGF Groups",
-    key: "total_cgf_groups",
-    icon: UserCheck,
-    trend: "up",
-    change: "+2",
-  },
-  {
     title: "Members Without CGF",
     key: "members_without_cgf",
     icon: Calendar,
     trend: "down",
     change: "-3",
+  },
+  {
+    title: "New Members This Week",
+    key: "total_cgf_groups",
+    icon: UserCheck,
+    trend: "up",
+    change: "+2",
   },
   {
     title: "Attendance Rate",
@@ -127,22 +127,6 @@ function KPISection() {
               <p className="text-2xl font-semibold">
                 {kpis[item.key]}{item.suffix || ""}
               </p>
-              <div className="flex items-center gap-1 mt-1">
-                {item.trend === "up" ? (
-                  <ArrowUpRight className="h-3 w-3 text-chart-1" />
-                ) : (
-                  <ArrowDownRight className="h-3 w-3 text-destructive" />
-                )}
-                <span
-                  className={cn(
-                    "text-xs font-medium",
-                    item.trend === "up" ? "text-chart-1" : "text-destructive"
-                  )}
-                >
-                  {item.change}
-                </span>
-                <span className="text-xs text-muted-foreground">vs last month</span>
-              </div>
             </div>
           </CardContent>
         </Card>

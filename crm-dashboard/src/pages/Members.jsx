@@ -99,6 +99,7 @@ export function Members() {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [selectedMember, setSelectedMember] = useState(null)
   const [formData, setFormData] = useState(EMPTY_FORM)
+  const [originalStatusAktif, setOriginalStatusAktif] = useState("")
 
   const domisiliOptions = useMemo(() => {
     const set = new Set(members.map((m) => m.kategori_domisili).filter(Boolean))
@@ -152,6 +153,7 @@ export function Members() {
 
   function openEditDialog(member) {
     setSelectedMember(member)
+    setOriginalStatusAktif(member.status_aktif || "")
     setFormData({
       nama_jemaat: member.nama_jemaat,
       jenis_kelamin: member.jenis_kelamin || "Laki-laki",
@@ -183,17 +185,21 @@ export function Members() {
     
     try {
       const tanggalLahir = formData.tanggal_lahir;
+      const isTanggalLahirValid = tanggalLahir && tanggalLahir !== "Pilih tanggal";
+      const namaCgf = formData.nama_cgf;
+      const isNamaCgfValid = namaCgf && namaCgf !== "-";
+
       const memberData = {
         no_jemaat: nextNoJemaat,
         nama_jemaat: formData.nama_jemaat,
         jenis_kelamin: formData.jenis_kelamin,
-        tanggal_lahir: tanggalLahir,
-        tahun_lahir: tanggalLahir ? parseInt(tanggalLahir.slice(0, 4), 10) : undefined,
-        bulan_lahir: tanggalLahir ? parseInt(tanggalLahir.slice(5, 7), 10) : undefined,
+        tanggal_lahir: isTanggalLahirValid ? tanggalLahir : null,
+        tahun_lahir: isTanggalLahirValid ? parseInt(tanggalLahir.slice(0, 4), 10) : null,
+        bulan_lahir: isTanggalLahirValid ? parseInt(tanggalLahir.slice(5, 7), 10) : null,
         kuliah_kerja: formData.kuliah_kerja || undefined,
         no_handphone: formData.no_handphone || undefined,
         ketertarikan_cgf: formData.ketertarikan_cgf || undefined,
-        nama_cgf: formData.nama_cgf || undefined,
+        nama_cgf: isNamaCgfValid ? namaCgf : null,
         kategori_domisili: formData.kategori_domisili || undefined,
         alamat_domisili: formData.alamat_domisili || undefined,
         status_aktif: formData.status_aktif || undefined,
@@ -225,20 +231,33 @@ export function Members() {
 
   async function handleEditMember(e) {
     e.preventDefault()
+
+    const statusAktifChanged = formData.status_aktif !== originalStatusAktif
+    if (statusAktifChanged && !formData.status_keterangan.trim()) {
+      toast.error("Keterangan required", {
+        description: "Status Keterangan must be filled when Status Aktif is changed."
+      })
+      return
+    }
+
     setIsSubmitting(true)
-    
+
     try {
       const tanggalLahir = formData.tanggal_lahir;
+      const isTanggalLahirValid = tanggalLahir && tanggalLahir !== "Pilih tanggal";
+      const namaCgf = formData.nama_cgf;
+      const isNamaCgfValid = namaCgf && namaCgf !== "-";
+
       const memberData = {
         nama_jemaat: formData.nama_jemaat,
         jenis_kelamin: formData.jenis_kelamin,
-        tanggal_lahir: tanggalLahir,
-        tahun_lahir: tanggalLahir ? parseInt(tanggalLahir.slice(0, 4), 10) : undefined,
-        bulan_lahir: tanggalLahir ? parseInt(tanggalLahir.slice(5, 7), 10) : undefined,
+        tanggal_lahir: isTanggalLahirValid ? tanggalLahir : null,
+        tahun_lahir: isTanggalLahirValid ? parseInt(tanggalLahir.slice(0, 4), 10) : null,
+        bulan_lahir: isTanggalLahirValid ? parseInt(tanggalLahir.slice(5, 7), 10) : null,
         kuliah_kerja: formData.kuliah_kerja || undefined,
         no_handphone: formData.no_handphone || undefined,
         ketertarikan_cgf: formData.ketertarikan_cgf || undefined,
-        nama_cgf: formData.nama_cgf || undefined,
+        nama_cgf: isNamaCgfValid ? namaCgf : null,
         kategori_domisili: formData.kategori_domisili || undefined,
         alamat_domisili: formData.alamat_domisili || undefined,
         status_aktif: formData.status_aktif || undefined,

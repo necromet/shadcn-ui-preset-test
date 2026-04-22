@@ -65,7 +65,11 @@ export function AgeDistributionChart() {
   useEffect(() => {
     getAgeDistribution()
       .then((items) => {
-        setData(items.map((item) => ({ age: item.label, count: item.value })))
+        setData(
+          items
+            .filter((item) => item.label != null)
+            .map((item) => ({ age: item.label, count: item.value }))
+        )
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false))
@@ -87,7 +91,7 @@ export function AgeDistributionChart() {
               <XAxis dataKey="age" tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} />
               <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} />
               <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="count" fill="var(--chart-1)" radius={[4, 4, 0, 0]} name="Members" />
+              <Bar dataKey="count" fill="var(--chart-1)" radius={[8, 8, 0, 0]} name="Members" />
             </BarChart>
           </ResponsiveContainer>
         )}
@@ -104,7 +108,9 @@ export function DomisiliDistributionChart() {
   useEffect(() => {
     getDomisiliDistribution()
       .then((items) => {
-        setData(items.map((item) => ({
+        setData(items
+          .filter((item) => item.label != '')
+          .map((item) => ({
           area: item.label.replace("Jakarta ", "JKT "),
           count: item.value,
         })))

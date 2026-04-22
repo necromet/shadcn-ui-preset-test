@@ -102,19 +102,28 @@ export const AnalyticsModel = {
 
   async getAgeDistribution(): Promise<DistributionItem[]> {
     const result = await query<{ age_group: string; count: string }>(`
-      SELECT
-        CASE
-          WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)) < 13 THEN 'Anak-anak (<13)'
-          WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)) < 18 THEN 'Remaja (13-17)'
-          WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)) < 26 THEN 'Dewasa Muda (18-25)'
-          WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)) < 36 THEN 'Dewasa (26-35)'
-          WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)) < 51 THEN 'Dewasa (36-50)'
-          ELSE 'Senior (50+)'
-        END as age_group,
-        COUNT(*) as count
-      FROM cnx_jemaat_clean
-      GROUP BY age_group
-      ORDER BY MIN(EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)))
+SELECT
+  CASE
+    WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)) = 18 THEN '18'
+    WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)) = 19 THEN '19'
+    WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)) = 20 THEN '20'
+    WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)) = 21 THEN '21'
+    WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)) = 22 THEN '22'
+    WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)) = 23 THEN '23'
+    WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)) = 24 THEN '24'
+    WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)) = 25 THEN '25'
+    WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)) = 26 THEN '26'
+    WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)) = 27 THEN '27'
+    WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)) = 28 THEN '28'
+    WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)) = 29 THEN '29'
+    WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)) = 30 THEN '30'
+    WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)) > 30 THEN '30+'
+    ELSE NULL
+  END as age_group,
+  COUNT(*) as count
+FROM cnx_jemaat_clean
+GROUP BY age_group
+ORDER BY MIN(EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)));
     `);
 
     const total = result.rows.reduce((sum, r) => sum + parseInt(r.count, 10), 0);
@@ -189,28 +198,29 @@ export const AnalyticsModel = {
 
   async getCGFInterestFunnel(): Promise<{ stage: string; count: number }[]> {
     const result = await query<{ stage: string; count: string }>(`
-      SELECT
-        'Total Members' as stage,
+    SELECT
+        'Belum Mau Join' as stage,
         COUNT(*) as count
       FROM cnx_jemaat_clean
+      WHERE ketertarikan_cgf = 'Belum Mau Join'
       UNION ALL
       SELECT
-        'Interested in CGF' as stage,
+        'Mau Join' as stage,
         COUNT(*) as count
       FROM cnx_jemaat_clean
-      WHERE ketertarikan_cgf IS NOT NULL AND ketertarikan_cgf != ''
+      WHERE ketertarikan_cgf = 'Mau Join'
       UNION ALL
       SELECT
-        'Assigned to CGF' as stage,
+        'Sudah Join' as stage,
         COUNT(*) as count
       FROM cnx_jemaat_clean
-      WHERE nama_cgf IS NOT NULL AND nama_cgf != ''
-      UNION ALL
+      WHERE ketertarikan_cgf = 'Sudah Join'
+        UNION ALL
       SELECT
-        'Active CGF Attendance' as stage,
-        COUNT(DISTINCT no_jemaat) as count
-      FROM cgf_attendance
-      WHERE keterangan = 'hadir'
+        'Sudah Tidak Join' as stage,
+        COUNT(*) as count
+      FROM cnx_jemaat_clean
+      WHERE ketertarikan_cgf = 'Sudah Tidak Join'
     `);
 
     return result.rows.map((r) => ({

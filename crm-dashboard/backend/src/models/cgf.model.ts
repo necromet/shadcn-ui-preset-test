@@ -127,12 +127,26 @@ export const CGFModel = {
   },
 
   async addMemberToGroup(data: CGFMemberCreateData): Promise<CGFMember> {
-    const result = await query<CGFMember>(
-      `INSERT INTO cgf_members (no_jemaat, nama_cgf, is_leader)
-       VALUES ($1, $2, $3)
-       RETURNING *`,
-      [data.no_jemaat, data.nama_cgf, data.is_leader || false],
-    );
+    const isLeader = data.is_leader ? 1 : 0;
+
+    const result = await transaction(async (txQuery) => {
+      const insertResult = await txQuery<CGFMember>(
+        `INSERT INTO cgf_members (no_jemaat, nama_cgf, is_leader)
+         VALUES ($1, $2, $3)
+         RETURNING *`,
+         [data.no_jemaat, data.nama_cgf, isLeader],
+      );
+
+      if (isLeader === 1) {
+        await txQuery(
+          `UPDATE pelayan SET is_cforce = 1 WHERE no_jemaat = $1`,
+          [data.no_jemaat],
+        );
+      }
+
+      return insertResult;
+    });
+
     return result.rows[0];
   },
 
@@ -149,21 +163,49 @@ export const CGFModel = {
     const values = Object.values(data);
     const setClauses = columns.map((col, i) => `${col} = $${i + 1}`);
 
-    const result = await query<CGFMember>(
-      `UPDATE cgf_members SET ${setClauses.join(', ')} WHERE no_jemaat = $${columns.length + 1} RETURNING *`,
-      [...values, id],
-    );
+    const isLeaderChanged = 'is_leader' in data;
+
+    const result = await transaction(async (txQuery) => {
+      const updateResult = await txQuery<CGFMember>(
+        `UPDATE cgf_members SET ${setClauses.join(', ')} WHERE no_jemaat = $${columns.length + 1} RETURNING *`,
+        [...values, id],
+      );
+
+      if (isLeaderChanged) {
+        const leaderValue = data.is_leader ? 1 : 0;
+        await txQuery(
+          `UPDATE pelayan SET is_cforce = $1 WHERE no_jemaat = $2`,
+          [leaderValue, id],
+        );
+      }
+
+      return updateResult;
+    });
+
     return result.rows[0] || null;
   },
 
   async removeMemberFromGroup(noJemaat: number, cgId: string): Promise<boolean> {
-    const result = await query(
-      `DELETE FROM cgf_members 
-       WHERE no_jemaat = $1 AND nama_cgf = (
-         SELECT nama_cgf FROM cgf_info WHERE id = $2
-       )`,
-      [noJemaat, cgId],
-    );
+    const result = await transaction(async (txQuery) => {
+      const deleteResult = await txQuery(
+        `DELETE FROM cgf_members 
+         WHERE no_jemaat = $1 AND nama_cgf = (
+           SELECT nama_cgf FROM cgf_info WHERE id = $2
+         )
+         RETURNING is_leader`,
+        [noJemaat, cgId],
+      );
+
+      if (deleteResult.rows[0]?.is_leader === 1) {
+        await txQuery(
+          `UPDATE pelayan SET is_cforce = 0 WHERE no_jemaat = $1`,
+          [noJemaat],
+        );
+      }
+
+      return deleteResult;
+    });
+
     return (result.rowCount ?? 0) > 0;
   },
 

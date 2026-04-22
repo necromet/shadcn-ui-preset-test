@@ -789,11 +789,11 @@ COPY public.cnx_jemaat_baru (jemaat_baru_id, "timestamp", nama_jemaat, jenis_kel
 
 COPY public.cnx_jemaat_clean (no_jemaat, nama_jemaat, jenis_kelamin, tanggal_lahir, tahun_lahir, bulan_lahir, kuliah_kerja, no_handphone, ketertarikan_cgf, nama_cgf, kategori_domisili, alamat_domisili, status_aktif, status_keterangan) FROM stdin;
 104	Frida Indari	Perempuan	\N	\N	\N	Kerja	085724114720	Sudah Join	Asin	\N		Inactive	\N
-40	Carlos Antonio Lopulalan	Laki-laki	2001-05-06	2001	5	Kerja	081357719421	Belum Mau Join	Belum CGF	Others	Jalan pisangan raya, cirendeu, ciputat timur, tangerang selatan	Inactive	Budha
+40	Carlos Antonio Lopulalan	Laki-Laki	2001-05-06	2001	5	Kerja	081357719421	Belum Mau Join	Belum CGF	Others	Jalan pisangan raya, cirendeu, ciputat timur, tangerang selatan	Inactive	Budha
 44	Celine Angelin	Perempuan	2004-07-03	2004	7	Kuliah	089699733753	Mau Join	Belum CGF	BSD	Navapark BSD	Moved	Kuliah di Korea
 60	Clementine Biancalista	Perempuan	2007-05-21	2007	5	Kuliah	08119740121	Mau Join	Belum CGF	Villa Melati Mas	villa melati mas blok L2 no 22A	Moved	Kuliah di LN
 38	Calistha Clementine	Perempuan	2006-02-10	2006	2	Kuliah	087877735240	Belum Mau Join	Belum CGF	Others	Jl Kayu Putih IV no. 95	No Information	\N
-39	Calvin Yuslianto	Laki-laki	2000-10-05	2000	10	Kerja	082366347688	Belum Mau Join	Belum CGF	Others	Jl mesjid, sumatra utara, medan barat	Inactive	\N
+39	Calvin Yuslianto	Laki-Laki	2000-10-05	2000	10	Kerja	082366347688	Belum Mau Join	Belum CGF	Others	Jl mesjid, sumatra utara, medan barat	Inactive	\N
 41	Caroline Avery Tanto	Perempuan	\N	\N	\N	Kuliah	085210037800	Sudah Join	Faith	BSD	BSD	Inactive	\N
 42	Catherine	Perempuan	2000-01-08	2000	1	Kerja	\N	Sudah Join	Belum CGF	Gading Serpong	Gading Serpong 7A	Inactive	\N
 43	Cecilia Verna Wijaya	Perempuan	1996-09-14	1996	9	Kerja	081296366520	Sudah Join	Miracle	Villa Melati Mas	Villa Melati Mas (VMM)	Active	\N
@@ -801,115 +801,115 @@ COPY public.cnx_jemaat_clean (no_jemaat, nama_jemaat, jenis_kelamin, tanggal_lah
 46	Charissa Wicaksana	Perempuan	1993-07-16	1993	7	Kerja	081399210495	Sudah Join	Cornerstone	Others	Reni jaya blok c17 no 11 pondok petir bojongsari depok	Active	\N
 47	Charlene Ardine Charity	Perempuan	\N	\N	\N	Kerja	081386185810	Mau Join	Belum CGF	BSD	BSD	Inactive	\N
 48	Cheryl Aldora	Perempuan	\N	\N	\N	Kerja	081932982818	Sudah Join	Asin	Villa Melati Mas	VMM	Active	\N
-49	Christian Liecarles	Laki-laki	2007-04-26	2007	4	Kuliah	0895326161968	Belum Mau Join	Belum CGF	Others	Jl krisasana no 78 c	Inactive	\N
+49	Christian Liecarles	Laki-Laki	2007-04-26	2007	4	Kuliah	0895326161968	Belum Mau Join	Belum CGF	Others	Jl krisasana no 78 c	Inactive	\N
 50	Christie Priscilla Ngantung	Perempuan	\N	\N	\N	Kerja	087877439296	Sudah Join	Salt	BSD	BSD	Inactive	\N
 51	Christina Marsela	Perempuan	1995-03-17	1995	3	Kerja	085314528899	Sudah Join	Cornerstone	Others	Kebayoran Baru	Active	\N
-52	Christopher Eben Kurniawan	Laki-laki	1999-08-27	1999	8	Kerja	087809080019	Sudah Join	Cornerstone	BSD	BSD	Active	\N
-53	Christopher Pranoto	Laki-laki	2001-01-03	2001	1	Kerja	08119880659	Sudah Join	Asin	Jakarta	Jakarta	Active	\N
+52	Christopher Eben Kurniawan	Laki-Laki	1999-08-27	1999	8	Kerja	087809080019	Sudah Join	Cornerstone	BSD	BSD	Active	\N
+53	Christopher Pranoto	Laki-Laki	2001-01-03	2001	1	Kerja	08119880659	Sudah Join	Asin	Jakarta	Jakarta	Active	\N
 77	Elaine Natalia Parulian Tampubolon	Perempuan	2006-12-25	2006	12	Kuliah	0816944211	Mau Join	Belum CGF	Gading Serpong	Serpong Green Park blok L, no. 3AB	Moved	Kuliah di Semarang
-78	Eldwin Manuel	Laki-laki	\N	\N	\N	Kuliah	0895365240247	Sudah Tidak Join	Belum CGF	\N		Inactive	\N
-135	Isabelle Anastasia	Laki-laki	2007-04-27	2007	4	Kuliah	089506451196	Mau Join	Belum CGF	Villa Melati Mas	Villa Melati Mas blok G-XI/12A	Moved	Kuliah di UI
+78	Eldwin Manuel	Laki-Laki	\N	\N	\N	Kuliah	0895365240247	Sudah Tidak Join	Belum CGF	\N		Inactive	\N
+135	Isabelle Anastasia	Laki-Laki	2007-04-27	2007	4	Kuliah	089506451196	Mau Join	Belum CGF	Villa Melati Mas	Villa Melati Mas blok G-XI/12A	Moved	Kuliah di UI
 139	Janet Christy	Perempuan	2000-11-08	2000	11	Kerja	085719115789	Sudah Join	Miracle	Villa Melati Mas	Jl Regensi Melati Mas Blok B3 No 26	Inactive	Ikut KU
 141	Janice Andreas	Perempuan	2002-01-01	2002	1	Kerja	081318394147	Mau Join	Belum CGF	Gading Serpong	Gading serpong	Moved	Pergi ke LN
 154	Jessica Audrey Tjahjadi	Perempuan	2007-01-08	2007	1	Kuliah	085813072773	Belum Mau Join	Belum CGF	BSD	Nusaloka Blok B1/23	Moved	Kuliah di ITB
 186	Kathleen Lauren Wahyudo	Perempuan	2006-09-11	2006	9	Kuliah	088808492655	Mau Join	Belum CGF	Gading Serpong	Serpong Park F1/38 	Moved	Kuliah di Malang
-190	Kevin Dallian	Laki-laki	\N	\N	\N	Kerja	08115752289	Mau Join	Belum CGF	\N		Moved	Pergi ke Pontianak
-215	Moris	Laki-laki	\N	\N	\N	Tidak Diisi	081806167758	Belum Mau Join	Belum CGF	\N		Active	\N
-303	Win Tjen	Laki-laki	\N	\N	\N	Kuliah	081285001187	Sudah Join	Faith	BSD	BSD	Moved	Pulang ke kampung halaman
+190	Kevin Dallian	Laki-Laki	\N	\N	\N	Kerja	08115752289	Mau Join	Belum CGF	\N		Moved	Pergi ke Pontianak
+215	Moris	Laki-Laki	\N	\N	\N	Tidak Diisi	081806167758	Belum Mau Join	Belum CGF	\N		Active	\N
+303	Win Tjen	Laki-Laki	\N	\N	\N	Kuliah	081285001187	Sudah Join	Faith	BSD	BSD	Moved	Pulang ke kampung halaman
 54	Christy Nathania	Perempuan	1997-08-24	1997	8	Kerja	089602852821	Sudah Join	Miracle	Villa Melati Mas	VMM	Active	\N
 55	Cindy Valencia S	Perempuan	2002-01-04	2002	1	Kerja	081249004646	Sudah Tidak Join	Belum CGF	Jakarta	Ampera IV no. 19. Jakarta	No Information	\N
 56	Clarisa Manuela	Perempuan	2002-06-15	2002	6	Kerja	08111000569	Sudah Join	Pathaway	BSD	BSD	Active	\N
-57	Classico Joydie Sumendap	Laki-laki	\N	\N	\N	Kuliah	085157078122	Sudah Join	Peace	BSD	BSD	Active	\N
+57	Classico Joydie Sumendap	Laki-Laki	\N	\N	\N	Kuliah	085157078122	Sudah Join	Peace	BSD	BSD	Active	\N
 58	Claudia Arantha	Perempuan	1996-05-26	1996	5	Kerja	087774054420	Sudah Join	Cornerstone	BSD	BSD	Active	\N
 59	Claudia Silviany	Perempuan	1997-01-22	1997	1	Kerja	081268005773	Belum Mau Join	Belum CGF	Others	metro sunter blok L nomor 8	No Information	\N
-61	Conrad Ariando Sahat Tambunan	Laki-laki	2002-07-27	2002	7	Kerja	085214951127	Mau Join	Belum CGF	BSD	Jalan Palm Kuning IV Blok BE No 2 Griya Loka BSD Sektor 1.3	Inactive	\N
-62	Daniel Citra	Laki-laki	1997-08-30	1997	8	Kerja	085711544980	Sudah Join	Belum CGF	\N		Active	\N
-63	Daniel Kho	Laki-laki	2002-04-11	2002	4	Kerja	081388702830	Sudah Join	Pathaway	\N		Active	\N
-64	Daniel Koesno	Laki-laki	2000-07-02	2000	7	Kerja	085219454579	Sudah Join	Belum CGF	Gading Serpong	Gading Serpong	Active	\N
-65	Darrell Jeremy	Laki-laki	2005-05-20	2005	5	Kuliah	085894333011	Belum Mau Join	Belum CGF	Jakarta	Jakarta Barat	Inactive	\N
-66	Darryn Emilio Nathaniel	Laki-laki	2003-07-15	2003	7	Kerja	082190294730	Belum Mau Join	Belum CGF	Others	Bencongan	No Information	\N
-67	David Ssaputra Wijaya	Laki-laki	2005-04-19	2005	4	Kuliah	\N	Belum Mau Join	Belum CGF	Others	Datrus Garden Reni Jaya Lama Pondok Petir	No Information	\N
+61	Conrad Ariando Sahat Tambunan	Laki-Laki	2002-07-27	2002	7	Kerja	085214951127	Mau Join	Belum CGF	BSD	Jalan Palm Kuning IV Blok BE No 2 Griya Loka BSD Sektor 1.3	Inactive	\N
+62	Daniel Citra	Laki-Laki	1997-08-30	1997	8	Kerja	085711544980	Sudah Join	Belum CGF	\N		Active	\N
+63	Daniel Kho	Laki-Laki	2002-04-11	2002	4	Kerja	081388702830	Sudah Join	Pathaway	\N		Active	\N
+64	Daniel Koesno	Laki-Laki	2000-07-02	2000	7	Kerja	085219454579	Sudah Join	Belum CGF	Gading Serpong	Gading Serpong	Active	\N
+65	Darrell Jeremy	Laki-Laki	2005-05-20	2005	5	Kuliah	085894333011	Belum Mau Join	Belum CGF	Jakarta	Jakarta Barat	Inactive	\N
+66	Darryn Emilio Nathaniel	Laki-Laki	2003-07-15	2003	7	Kerja	082190294730	Belum Mau Join	Belum CGF	Others	Bencongan	No Information	\N
+67	David Ssaputra Wijaya	Laki-Laki	2005-04-19	2005	4	Kuliah	\N	Belum Mau Join	Belum CGF	Others	Datrus Garden Reni Jaya Lama Pondok Petir	No Information	\N
 68	Debora Emmanuel	Perempuan	2002-04-13	2002	4	Kerja	081585090800	Sudah Join	Pathaway	BSD	BSD	Active	\N
 69	Della Puspanegara	Perempuan	\N	\N	\N	Kerja	081294453750	Belum Mau Join	Belum CGF	BSD	Nomaden : Jakarta / BSD / Alam Sutera	Active	\N
 70	Dhea Agatha Andrian	Perempuan	2001-10-17	2001	10	Kerja	08117172145	Mau Join	Belum CGF	Others	Jalan Raya Cisauk Lapan, Kabupaten Tangerang	No Information	\N
-71	Diego Tristan	Laki-laki	2005-04-17	2005	4	Kuliah	089529031056	Sudah Join	Peace	BSD	Apartemen skyhousw tower leonie	Inactive	\N
-72	Dustin Pradipta	Laki-laki	1996-09-16	1996	9	Tidak Diisi	087880288500	Mau Join	Belum CGF	BSD	BSD	Active	\N
-73	Ebenezer Setiawan	Laki-laki	1995-10-05	1995	10	Kerja	0817247225	Sudah Join	Asin	BSD	BSD	Inactive	\N
-74	Edsel Mahadika Liyis	Laki-laki	1995-04-29	1995	4	Kerja	087875109593	Mau Join	Belum CGF	BSD	Apartemen collins	No Information	\N
-75	Edward Renaldi	Laki-laki	1999-09-21	1999	9	Kerja	081289686449	Sudah Join	Peace	BSD	BSD	Active	\N
+71	Diego Tristan	Laki-Laki	2005-04-17	2005	4	Kuliah	089529031056	Sudah Join	Peace	BSD	Apartemen skyhousw tower leonie	Inactive	\N
+72	Dustin Pradipta	Laki-Laki	1996-09-16	1996	9	Tidak Diisi	087880288500	Mau Join	Belum CGF	BSD	BSD	Active	\N
+73	Ebenezer Setiawan	Laki-Laki	1995-10-05	1995	10	Kerja	0817247225	Sudah Join	Asin	BSD	BSD	Inactive	\N
+74	Edsel Mahadika Liyis	Laki-Laki	1995-04-29	1995	4	Kerja	087875109593	Mau Join	Belum CGF	BSD	Apartemen collins	No Information	\N
+75	Edward Renaldi	Laki-Laki	1999-09-21	1999	9	Kerja	081289686449	Sudah Join	Peace	BSD	BSD	Active	\N
 76	Eirene Christy Oktarosa Bayu	Perempuan	1997-10-07	1997	10	Kerja	082210314952	Mau Join	Belum CGF	Others	Tangerang	No Information	\N
-79	Eliadi Zalukhu	Laki-laki	2004-01-16	2004	1	Kuliah	082260305286	Mau Join	Belum CGF	Others	Tangerang	No Information	\N
+79	Eliadi Zalukhu	Laki-Laki	2004-01-16	2004	1	Kuliah	082260305286	Mau Join	Belum CGF	Others	Tangerang	No Information	\N
 80	Elisabet Meisa	Perempuan	2001-05-16	2001	5	Kerja	081210469462	Mau Join	Belum CGF	\N		No Information	\N
 81	Elizabeth Jenny Trixie	Perempuan	1998-01-01	1998	1	Kerja	085770832323	Sudah Join	Cornerstone	\N		Inactive	\N
 82	Elsa Kristina	Perempuan	\N	\N	\N	Kerja	081212072151	Sudah Join	Asin	\N		Inactive	\N
-83	Emilius Filibertsus Lisiender	Laki-laki	2003-09-02	2003	9	Kuliah	081383739491	Sudah Join	Pathaway	Jakarta	Jakarta	Active	\N
+83	Emilius Filibertsus Lisiender	Laki-Laki	2003-09-02	2003	9	Kuliah	081383739491	Sudah Join	Pathaway	Jakarta	Jakarta	Active	\N
 84	Emily Ann	Perempuan	2002-10-06	2002	10	Kerja	081233569035	Belum Mau Join	Belum CGF	BSD	BSD Visana At The Savia K5/15	No Information	\N
-85	Emmanuel Gultom	Laki-laki	1999-04-26	1999	4	Kerja	0821042646580	Sudah Join	Miracle	BSD	BSD 	Inactive	\N
-86	Epseen	Laki-laki	2001-05-04	2001	5	Kerja	082136955686	Sudah Join	Sabbath	BSD	BSD 	Active	\N
+85	Emmanuel Gultom	Laki-Laki	1999-04-26	1999	4	Kerja	0821042646580	Sudah Join	Miracle	BSD	BSD 	Inactive	\N
+86	Epseen	Laki-Laki	2001-05-04	2001	5	Kerja	082136955686	Sudah Join	Sabbath	BSD	BSD 	Active	\N
 87	Erika	Perempuan	2004-01-21	2004	1	Kuliah	085786988771	Belum Mau Join	Belum CGF	BSD	BSD 	No Information	\N
 307	Wynona	Perempuan	\N	\N	\N	Kuliah	081910470450	Sudah Join	Faith	\N		No Information	\N
-88	Ernest Manuel Sowandi	Laki-laki	2000-04-10	2000	4	Kuliah	085880699608	Sudah Join	Miracle	BSD	BSD 	Inactive	\N
+88	Ernest Manuel Sowandi	Laki-Laki	2000-04-10	2000	4	Kuliah	085880699608	Sudah Join	Miracle	BSD	BSD 	Inactive	\N
 89	Eunice Nahiman Turjono	Perempuan	2000-05-22	2000	5	Kerja	081908081360	Sudah Join	Miracle	BSD	BSD 	Active	\N
 90	Evellyn	Perempuan	2005-11-13	2005	11	Kuliah	087899539768	Belum Mau Join	Belum CGF	Alam Sutera	Alam Sutera	No Information	\N
-91	F. Giovanni Adi Kusuma	Laki-laki	\N	\N	\N	Kerja	085290747111	Sudah Join	Asin	Villa Melati Mas	Villa Melati Blok G2 No.13	Active	\N
+91	F. Giovanni Adi Kusuma	Laki-Laki	\N	\N	\N	Kerja	085290747111	Sudah Join	Asin	Villa Melati Mas	Villa Melati Blok G2 No.13	Active	\N
 92	Feby Angelica Soewandono	Perempuan	2002-10-01	2002	10	Kerja	089605336530	Sudah Join	Pathaway	Gading Serpong	Gading Serpong	Active	\N
 93	Fei Elita	Perempuan	1997-11-26	1997	11	Kerja	085885338105	Sudah Join	Cornerstone	BSD	Anggrek Loka	Active	\N
 94	Felicia Natalie	Perempuan	1997-11-28	1997	11	Kerja	081212488104	Mau Join	Belum CGF	Villa Melati Mas	Villa Melati Mas H7/12A	Inactive	\N
 95	Felicia Sarah Wijaya	Perempuan	1997-10-16	1997	10	Kerja	083813659041	Sudah Join	Miracle	Villa Melati Mas	Regensi Melati Mas	Active	\N
 96	Felicya	Perempuan	1999-04-02	1999	4	Kerja	08128850355	Belum Mau Join	Belum CGF	Villa Melati Mas	Melati Mas	No Information	\N
-97	Felix Nathaniel Surjodinoto	Laki-laki	2005-01-05	2005	1	Kuliah	08111092251	Mau Join	Belum CGF	Villa Melati Mas	Villa Melati Mas Blok H7/12A	Inactive	\N
-98	Ferdinand Wijaya Chandra	Laki-laki	2001-02-14	2001	2	Kerja	08988396121	Mau Join	Belum CGF	Villa Melati Mas	Villa melati	Active	\N
-99	Fernando Joshua	Laki-laki	1998-02-13	1998	2	Kerja	085171597156	Mau Join	Belum CGF	Others	Jalan salem 1 no. 13	Active	\N
-100	Filbert Nathaniel	Laki-laki	\N	\N	\N	Kerja	085811511007	Belum Mau Join	Belum CGF	Villa Melati Mas	VMM	Inactive	\N
+97	Felix Nathaniel Surjodinoto	Laki-Laki	2005-01-05	2005	1	Kuliah	08111092251	Mau Join	Belum CGF	Villa Melati Mas	Villa Melati Mas Blok H7/12A	Inactive	\N
+98	Ferdinand Wijaya Chandra	Laki-Laki	2001-02-14	2001	2	Kerja	08988396121	Mau Join	Belum CGF	Villa Melati Mas	Villa melati	Active	\N
+99	Fernando Joshua	Laki-Laki	1998-02-13	1998	2	Kerja	085171597156	Mau Join	Belum CGF	Others	Jalan salem 1 no. 13	Active	\N
+100	Filbert Nathaniel	Laki-Laki	\N	\N	\N	Kerja	085811511007	Belum Mau Join	Belum CGF	Villa Melati Mas	VMM	Inactive	\N
 101	Florence Ignatia	Perempuan	\N	\N	\N	Kerja	087889919398	Sudah Join	Asin	BSD	BSD	Inactive	\N
-102	Frederick Sawedi	Laki-laki	2007-10-14	2007	10	Kuliah	0818319838	Belum Mau Join	Belum CGF	Alam Sutera	Silkwood Residences	No Information	\N
-103	Frederick Winston Christenshend	Laki-laki	2006-03-02	2006	3	Kuliah	082214372492	Mau Join	Belum CGF	Others	pasific garden	No Information	\N
-105	Gabriel Trifajar Siahaan	Laki-laki	\N	\N	\N	Kuliah	081219856349	Sudah Join	Light	Others	Bintaro	Active	\N
+102	Frederick Sawedi	Laki-Laki	2007-10-14	2007	10	Kuliah	0818319838	Belum Mau Join	Belum CGF	Alam Sutera	Silkwood Residences	No Information	\N
+103	Frederick Winston Christenshend	Laki-Laki	2006-03-02	2006	3	Kuliah	082214372492	Mau Join	Belum CGF	Others	pasific garden	No Information	\N
+105	Gabriel Trifajar Siahaan	Laki-Laki	\N	\N	\N	Kuliah	081219856349	Sudah Join	Light	Others	Bintaro	Active	\N
 106	Gabriela Megumi Kristian	Perempuan	\N	\N	\N	Kuliah	085183162804	Mau Join	Belum CGF	Gading Serpong	Ruko Newton Barat no 1, Gading Serping	No Information	\N
 107	Gabriella Rose Gunadi	Perempuan	2002-06-02	2002	6	Kerja	089655501721	Sudah Join	Light	BSD	BSD	Active	\N
 108	Gabrielle Budiman - Gaby	Perempuan	2002-09-06	2002	9	Kerja	08117496090	Sudah Join	Sabbath	BSD	BSD	Inactive	\N
 109	Gabrielle Priskila	Perempuan	1998-07-28	1998	7	Kerja	087881729400	Sudah Join	Cornerstone	BSD	BSD	No Information	\N
-110	Geraldy Edson Thamrin	Laki-laki	1997-04-24	1997	4	Kerja	087710920323	Sudah Join	Miracle	BSD	BSD	Active	\N
-111	Gilbert Salomo Karnoabe Nainggolan	Laki-laki	2007-06-06	2007	6	Kuliah	081292224566	Mau Join	Belum CGF	BSD	Jl. Palm Kuning 1, Blok BC/17, Griya Loka, Sektor 1.3	Inactive	\N
-112	Giovanni Hutagaol	Laki-laki	2002-07-17	2002	7	Kerja	085886095554	Sudah Join	Pathaway	BSD	BSD 	Inactive	\N
-113	Glenn Eric	Laki-laki	2001-02-04	2001	2	Kerja	061434242016	Mau Join	Belum CGF	Others	Sutera delima 60	No Information	\N
+110	Geraldy Edson Thamrin	Laki-Laki	1997-04-24	1997	4	Kerja	087710920323	Sudah Join	Miracle	BSD	BSD	Active	\N
+111	Gilbert Salomo Karnoabe Nainggolan	Laki-Laki	2007-06-06	2007	6	Kuliah	081292224566	Mau Join	Belum CGF	BSD	Jl. Palm Kuning 1, Blok BC/17, Griya Loka, Sektor 1.3	Inactive	\N
+112	Giovanni Hutagaol	Laki-Laki	2002-07-17	2002	7	Kerja	085886095554	Sudah Join	Pathaway	BSD	BSD 	Inactive	\N
+113	Glenn Eric	Laki-Laki	2001-02-04	2001	2	Kerja	061434242016	Mau Join	Belum CGF	Others	Sutera delima 60	No Information	\N
 114	Gloria Eirene Setyantoro	Perempuan	2004-10-20	2004	10	Kuliah	088215386932	Belum Mau Join	Belum CGF	Karawaci	Karawaci	No Information	\N
 115	Glory Amadea Swabawa	Perempuan	1995-07-20	1995	7	Kerja	089661255764	Sudah Join	Miracle	Villa Melati Mas	VMM	Inactive	\N
 116	Grace Aurelia Agustinus	Perempuan	2006-09-25	2006	9	Kuliah	081806027866	Belum Mau Join	Belum CGF	BSD	icon bsd, verdanville H7/31	No Information	\N
 117	Grace Caterina	Perempuan	1998-09-01	1998	9	Kerja	08568638420	Mau Join	Belum CGF	Gading Serpong	Pondok jagung timur, serpong utara	No Information	\N
 118	Grace Felicia	Perempuan	1999-06-25	1999	6	Kerja	087788773500	Belum Mau Join	Belum CGF	Jakarta	Taman Surya 5 Blok OO4 No 41 Kalideres Jakarta Barat	No Information	\N
 119	Gracia Hardjasa	Perempuan	2003-06-27	2003	6	Kuliah	085929850627	Sudah Join	Light	\N		Inactive	\N
-120	Gustin Finnegan	Laki-laki	1997-08-04	1997	8	Kerja	089698254298	Sudah Join	Miracle	BSD	BSD	Inactive	\N
-121	Haidee Aiditia Iksan	Laki-laki	2003-02-24	2003	2	Kuliah	081999352755	Mau Join	Belum CGF	Alam Sutera	Silkwood Residence	Active	\N
-122	Hans Julian Theophilus	Laki-laki	2007-07-16	2007	7	Kuliah	085939572896	Mau Join	Belum CGF	BSD	Anggrek Loka 2.2 AC 10	Inactive	\N
-123	Hanz Christian	Laki-laki	2004-02-02	2004	2	Kuliah	085172453770	Mau Join	Belum CGF	BSD	BSD	No Information	\N
-124	Harry Ivander	Laki-laki	2002-01-10	2002	1	Kerja	08970441666	Belum Mau Join	Belum CGF	Jakarta	Jakarta selatan	No Information	\N
+120	Gustin Finnegan	Laki-Laki	1997-08-04	1997	8	Kerja	089698254298	Sudah Join	Miracle	BSD	BSD	Inactive	\N
+121	Haidee Aiditia Iksan	Laki-Laki	2003-02-24	2003	2	Kuliah	081999352755	Mau Join	Belum CGF	Alam Sutera	Silkwood Residence	Active	\N
+122	Hans Julian Theophilus	Laki-Laki	2007-07-16	2007	7	Kuliah	085939572896	Mau Join	Belum CGF	BSD	Anggrek Loka 2.2 AC 10	Inactive	\N
+123	Hanz Christian	Laki-Laki	2004-02-02	2004	2	Kuliah	085172453770	Mau Join	Belum CGF	BSD	BSD	No Information	\N
+124	Harry Ivander	Laki-Laki	2002-01-10	2002	1	Kerja	08970441666	Belum Mau Join	Belum CGF	Jakarta	Jakarta selatan	No Information	\N
 125	Heidi Renata Halim	Perempuan	2002-06-24	2002	6	Kerja	085694733363	Belum Mau Join	Belum CGF	BSD	Allevare A8/2, BSD Cisauk	Active	\N
 126	Helen Ruth	Perempuan	2002-11-30	2002	11	Kerja	06586219393	Sudah Join	Miracle	BSD	BSD	Inactive	\N
 127	Helena Agnes	Perempuan	1997-09-23	1997	9	Kerja	081388125533	Sudah Join	Miracle	Villa Melati Mas	VMM	Active	\N
-128	Henokh Ekklesia	Laki-laki	2000-10-30	2000	10	Kerja	085716806559	Sudah Join	Cornerstone	Karawaci	Karawaci	Inactive	\N
+128	Henokh Ekklesia	Laki-Laki	2000-10-30	2000	10	Kerja	085716806559	Sudah Join	Cornerstone	Karawaci	Karawaci	Inactive	\N
 130	Indah Marshanda	Perempuan	\N	\N	\N	Kuliah	\N	Sudah Join	Peace	Gading Serpong	Gading Serpong	Active	\N
 131	Indira Hutabarat	Perempuan	2000-08-08	2000	8	Kerja	08159285099	Belum Mau Join	Belum CGF	Others	Jatiwaringin, Bekasi	No Information	\N
 132	Irene Angelin	Perempuan	2002-01-15	2002	1	Kerja	0895636168111	Belum Mau Join	Belum CGF	BSD	Navapark BSD	Active	\N
 133	Irene Jovita	Perempuan	\N	\N	\N	Kerja	082233595495	Sudah Join	Light	Pamulang	Pamulang	Active	\N
-134	Irenerus Ezra	Laki-laki	1995-05-02	1995	5	Kerja	08985584906	Sudah Join	Salt	BSD	BSD	Inactive	\N
-8	Alexandro Julio	Laki-laki	2005-07-09	2005	7	Kuliah	08117769968	Mau Join	Belum CGF	Gading Serpong	Malibu Village, Delaplane no 22	No Information	\N
-136	Jackie Leonardy	Laki-laki	2000-05-24	2000	5	Kerja	085386343638	Sudah Join	Miracle	Others	Madrid ( Work Abroad )	Inactive	\N
-137	Jacob Alianto	Laki-laki	1994-07-05	1994	7	Kerja	081977117106	Sudah Join	Cornerstone	BSD	BSD 	Active	\N
-138	James Jonathan	Laki-laki	2000-10-06	2000	10	Kerja	082112442594	Belum Mau Join	Belum CGF	Gading Serpong	Gading Serpong	Active	\N
+134	Irenerus Ezra	Laki-Laki	1995-05-02	1995	5	Kerja	08985584906	Sudah Join	Salt	BSD	BSD	Inactive	\N
+8	Alexandro Julio	Laki-Laki	2005-07-09	2005	7	Kuliah	08117769968	Mau Join	Belum CGF	Gading Serpong	Malibu Village, Delaplane no 22	No Information	\N
+136	Jackie Leonardy	Laki-Laki	2000-05-24	2000	5	Kerja	085386343638	Sudah Join	Miracle	Others	Madrid ( Work Abroad )	Inactive	\N
+137	Jacob Alianto	Laki-Laki	1994-07-05	1994	7	Kerja	081977117106	Sudah Join	Cornerstone	BSD	BSD 	Active	\N
+138	James Jonathan	Laki-Laki	2000-10-06	2000	10	Kerja	082112442594	Belum Mau Join	Belum CGF	Gading Serpong	Gading Serpong	Active	\N
 140	Janice Adley	Perempuan	\N	\N	\N	Kerja	085155119742	Sudah Join	Pathaway	Alam Sutera	Alam Sutera	Inactive	\N
 142	Jasmine Fidelia Chandra	Perempuan	\N	\N	\N	Kuliah	081319007980	Sudah Join	Faith	BSD	BSD	Active	\N
-143	Jason Fernando	Laki-laki	2003-03-19	2003	3	Kuliah	085350461798	Belum Mau Join	Belum CGF	Others	Kalimantan	No Information	\N
-144	Jason Liko	Laki-laki	2005-05-05	2005	5	Kuliah	081268005773	Mau Join	Belum CGF	Others	Palembang	No Information	\N
-145	Jason Putra Deo	Laki-laki	2005-09-30	2005	9	Kuliah	087867583577	Mau Join	Belum CGF	BSD	Jl. Rawa Buntu Selatan Blok G1 no 17, sektor 1.1, BSD, Tangerang Selatan	Inactive	\N
-146	Jason Gavrilleo Santoso	Laki-laki	\N	\N	\N	Kuliah	087776746569	Mau Join	Belum CGF	Alam Sutera	Alam Sutera	No Information	\N
-147	Jason Subandi	Laki-laki	\N	\N	\N	Kuliah	08111325858	Sudah Join	Peace	BSD	BSD / Bogor	Active	\N
+143	Jason Fernando	Laki-Laki	2003-03-19	2003	3	Kuliah	085350461798	Belum Mau Join	Belum CGF	Others	Kalimantan	No Information	\N
+144	Jason Liko	Laki-Laki	2005-05-05	2005	5	Kuliah	081268005773	Mau Join	Belum CGF	Others	Palembang	No Information	\N
+145	Jason Putra Deo	Laki-Laki	2005-09-30	2005	9	Kuliah	087867583577	Mau Join	Belum CGF	BSD	Jl. Rawa Buntu Selatan Blok G1 no 17, sektor 1.1, BSD, Tangerang Selatan	Inactive	\N
+146	Jason Gavrilleo Santoso	Laki-Laki	\N	\N	\N	Kuliah	087776746569	Mau Join	Belum CGF	Alam Sutera	Alam Sutera	No Information	\N
+147	Jason Subandi	Laki-Laki	\N	\N	\N	Kuliah	08111325858	Sudah Join	Peace	BSD	BSD / Bogor	Active	\N
 148	Jazzy Gratia Sumendap	Perempuan	2001-03-08	2001	3	Kerja	085156571008	Sudah Join	Belum CGF	Gading Serpong	Gading Serpong	Active	\N
 149	Jenifer	Perempuan	2001-11-01	2001	11	Kerja	081251790688	Mau Join	Belum CGF	Gading Serpong	The Avani Deshna	No Information	\N
 150	Jennifer Lowell	Perempuan	2001-06-19	2001	6	Kerja	08812123232	Belum Mau Join	Belum CGF	BSD	BSD	Active	\N
-151	Jeprijal Bamen	Laki-laki	1995-04-20	1995	4	Kerja	085337245353	Sudah Join	Cornerstone	BSD	BSD	Inactive	\N
-152	Jeremy Claudio Wijaya	Laki-laki	\N	\N	\N	Kuliah	081298947542	Sudah Tidak Join	Belum CGF	BSD	BSD	Active	\N
-153	Jeremy Lewis Surya Tiro	Laki-laki	1998-08-18	1998	8	Kerja	082267001234	Belum Mau Join	Belum CGF	Gading Serpong	Strozzi timur 6, no.1 Gading Serpong	No Information	\N
+151	Jeprijal Bamen	Laki-Laki	1995-04-20	1995	4	Kerja	085337245353	Sudah Join	Cornerstone	BSD	BSD	Inactive	\N
+152	Jeremy Claudio Wijaya	Laki-Laki	\N	\N	\N	Kuliah	081298947542	Sudah Tidak Join	Belum CGF	BSD	BSD	Active	\N
+153	Jeremy Lewis Surya Tiro	Laki-Laki	1998-08-18	1998	8	Kerja	082267001234	Belum Mau Join	Belum CGF	Gading Serpong	Strozzi timur 6, no.1 Gading Serpong	No Information	\N
 155	Jessica Gabriella	Perempuan	\N	\N	\N	Tidak Diisi	\N	Belum Mau Join	Belum CGF	\N		No Information	\N
 156	Jessica Octavia	Perempuan	1992-10-12	1992	10	Kerja	085781084400	Sudah Join	Miracle	Villa Melati Mas	Villa Melati Mas (VMM)	Active	\N
 157	Jessica Yuliana Wibowo	Perempuan	1996-07-17	1996	7	Kerja	085297778008	Sudah Join	Asin	BSD	BSD	Inactive	\N
@@ -917,112 +917,112 @@ COPY public.cnx_jemaat_clean (no_jemaat, nama_jemaat, jenis_kelamin, tanggal_lah
 159	Jessy Clarissa Wijaya	Perempuan	\N	\N	\N	Kuliah	08151810000	Sudah Join	Peace	BSD	BSD	Active	\N
 160	Joan	Perempuan	2001-01-04	2001	1	Kerja	081318372764	Sudah Join	Cornerstone	BSD	BSD	Active	\N
 161	Joan Amanda Moningka Wijaya	Perempuan	2006-09-22	2006	9	Kuliah	081547318105	Sudah Join	Peace	BSD	Kubikahomy Apartment 	Active	\N
-163	Joel Sebastian H	Laki-laki	2000-08-12	2000	8	Tidak Diisi	08871336092	Sudah Join	Sabbath	\N		Active	\N
+163	Joel Sebastian H	Laki-Laki	2000-08-12	2000	8	Tidak Diisi	08871336092	Sudah Join	Sabbath	\N		Active	\N
 164	Joelyna Aurelia Katie Moningka Wijaya	Perempuan	2007-11-22	2007	11	Kuliah	085792107319	Mau Join	Belum CGF	BSD	Kubikahomy	Active	\N
 165	Johnny	Perempuan	1993-07-29	1993	7	Kerja	085703355529	Belum Mau Join	Belum CGF	Others	Jalan Guru Mughni, Gang Andil 6	No Information	\N
-166	Jonathan Aaron Wijaya	Laki-laki	2004-09-22	2004	9	Kuliah	085738808893	Sudah Join	Peace	BSD	BSD	Active	\N
-167	Jonathan Koesno	Laki-laki	\N	\N	\N	Kerja	081219158259	Sudah Join	Belum CGF	\N		Inactive	\N
-168	Jonathan Reynard	Laki-laki	\N	\N	\N	Kerja	082276931278	Mau Join	Belum CGF	Others	Apartement M town	No Information	\N
-169	Jonathan Widi Cahyadi	Laki-laki	1993-12-04	1993	12	Kerja	081212140388	Sudah Join	Miracle	Pamulang	Pamulang	Inactive	\N
-170	Jongka Hero	Laki-laki	2006-06-04	2006	6	Kuliah	085349512971	Belum Mau Join	Belum CGF	Alam Sutera	Alam Sutera	No Information	\N
-171	Jordan Sumardi	Laki-laki	1996-01-21	1996	1	Kerja	087883705888	Mau Join	Belum CGF	BSD	puspita loka	Inactive	\N
+166	Jonathan Aaron Wijaya	Laki-Laki	2004-09-22	2004	9	Kuliah	085738808893	Sudah Join	Peace	BSD	BSD	Active	\N
+167	Jonathan Koesno	Laki-Laki	\N	\N	\N	Kerja	081219158259	Sudah Join	Belum CGF	\N		Inactive	\N
+168	Jonathan Reynard	Laki-Laki	\N	\N	\N	Kerja	082276931278	Mau Join	Belum CGF	Others	Apartement M town	No Information	\N
+169	Jonathan Widi Cahyadi	Laki-Laki	1993-12-04	1993	12	Kerja	081212140388	Sudah Join	Miracle	Pamulang	Pamulang	Inactive	\N
+170	Jongka Hero	Laki-Laki	2006-06-04	2006	6	Kuliah	085349512971	Belum Mau Join	Belum CGF	Alam Sutera	Alam Sutera	No Information	\N
+171	Jordan Sumardi	Laki-Laki	1996-01-21	1996	1	Kerja	087883705888	Mau Join	Belum CGF	BSD	puspita loka	Inactive	\N
 172	Joseph Laurent	Perempuan	2005-12-16	2005	12	Kuliah	085216122005	Mau Join	Belum CGF	BSD	Maxley Suites	Active	\N
-173	Josephine Kalista Utomo	Laki-laki	1999-11-21	1999	11	Kerja	087879112002	Belum Mau Join	Belum CGF	Others	Lippo Cikarang	Inactive	\N
-174	Josh Marvel Nathan	Laki-laki	2002-05-15	2002	5	Kerja	087873014204	Sudah Join	Cornerstone	BSD	The Icon BSD	Active	\N
-175	Joshua Renaldo	Laki-laki	1997-07-11	1997	7	Kerja	085280315906	Sudah Join	Miracle	Villa Melati Mas	Villa Melati Mas (VMM)	Active	\N
-176	Josia Joseph Chandra	Laki-laki	\N	\N	\N	Tidak Diisi	\N	Sudah Join	Sabbath	\N		Active	\N
-177	Josua Hakrio	Laki-laki	1997-08-17	1997	8	Kerja	082285101455	Mau Join	Belum CGF	Others	Palm Merah UL 26	No Information	\N
+173	Josephine Kalista Utomo	Laki-Laki	1999-11-21	1999	11	Kerja	087879112002	Belum Mau Join	Belum CGF	Others	Lippo Cikarang	Inactive	\N
+174	Josh Marvel Nathan	Laki-Laki	2002-05-15	2002	5	Kerja	087873014204	Sudah Join	Cornerstone	BSD	The Icon BSD	Active	\N
+175	Joshua Renaldo	Laki-Laki	1997-07-11	1997	7	Kerja	085280315906	Sudah Join	Miracle	Villa Melati Mas	Villa Melati Mas (VMM)	Active	\N
+176	Josia Joseph Chandra	Laki-Laki	\N	\N	\N	Tidak Diisi	\N	Sudah Join	Sabbath	\N		Active	\N
+177	Josua Hakrio	Laki-Laki	1997-08-17	1997	8	Kerja	082285101455	Mau Join	Belum CGF	Others	Palm Merah UL 26	No Information	\N
 178	Jovanca Marvelia Nathaniel	Perempuan	2007-10-27	2007	10	Kuliah	087885582700	Belum Mau Join	Belum CGF	BSD	Tangerang, BSD, The Icon	Active	\N
 179	Jovanny Nathania	Perempuan	2006-06-23	2006	6	Kuliah	0811578228	Mau Join	Belum CGF	Alam Sutera	Dorm Binus Alsut	No Information	\N
-180	Jovito Colin	Laki-laki	\N	\N	\N	Tidak Diisi	\N	Belum Mau Join	Belum CGF	\N		No Information	\N
-181	Joy Milliaan	Laki-laki	2001-10-31	2001	10	Kerja	081519986610	Belum Mau Join	Belum CGF	Others	Kelapa Gading	No Information	\N
+180	Jovito Colin	Laki-Laki	\N	\N	\N	Tidak Diisi	\N	Belum Mau Join	Belum CGF	\N		No Information	\N
+181	Joy Milliaan	Laki-Laki	2001-10-31	2001	10	Kerja	081519986610	Belum Mau Join	Belum CGF	Others	Kelapa Gading	No Information	\N
 182	Julia	Perempuan	1998-07-08	1998	7	Kerja	085219891478	Mau Join	Belum CGF	Others	Batalyon Kav 9	No Information	\N
-183	Julian Suhendra Tjiang	Laki-laki	2005-07-28	2005	7	Kuliah	087886787285	Belum Mau Join	Belum CGF	BSD	Maxley Suites	No Information	\N
-184	Julian Tirtadjaja	Laki-laki	1995-12-12	1995	12	Kerja	082123229622	Sudah Join	Belum CGF	Villa Melati Mas	Villa Melati Mas (VMM)	Inactive	\N
+183	Julian Suhendra Tjiang	Laki-Laki	2005-07-28	2005	7	Kuliah	087886787285	Belum Mau Join	Belum CGF	BSD	Maxley Suites	No Information	\N
+184	Julian Tirtadjaja	Laki-Laki	1995-12-12	1995	12	Kerja	082123229622	Sudah Join	Belum CGF	Villa Melati Mas	Villa Melati Mas (VMM)	Inactive	\N
 185	Karen Florencia	Perempuan	\N	\N	\N	Kerja	087760462190	Belum Mau Join	Belum CGF	Gading Serpong	Gading Serpong 7A	Inactive	\N
-187	Kenneth Chuhairy	Laki-laki	1996-08-17	1996	8	Kerja	0817862555	Sudah Join	Miracle	BSD	Giri Loka, BSD	Inactive	\N
-188	Kerfin	Laki-laki	1995-05-21	1995	5	Kerja	089530442023	Sudah Join	Miracle	Villa Melati Mas	VMM	Active	\N
-189	Kerlvin Liecarles	Laki-laki	2002-10-08	2002	10	Kerja	082210832397	Sudah Join	Pathaway	BSD	BSD	Active	\N
-191	Kevin Saragih	Laki-laki	2007-01-24	2007	1	Kuliah	081282046275	Mau Join	Belum CGF	BSD	BSD	No Information	\N
+187	Kenneth Chuhairy	Laki-Laki	1996-08-17	1996	8	Kerja	0817862555	Sudah Join	Miracle	BSD	Giri Loka, BSD	Inactive	\N
+188	Kerfin	Laki-Laki	1995-05-21	1995	5	Kerja	089530442023	Sudah Join	Miracle	Villa Melati Mas	VMM	Active	\N
+189	Kerlvin Liecarles	Laki-Laki	2002-10-08	2002	10	Kerja	082210832397	Sudah Join	Pathaway	BSD	BSD	Active	\N
+191	Kevin Saragih	Laki-Laki	2007-01-24	2007	1	Kuliah	081282046275	Mau Join	Belum CGF	BSD	BSD	No Information	\N
 192	Kezia Angeline	Perempuan	2001-09-03	2001	9	Kuliah	082210902001	Sudah Join	Light	Gading Serpong	Strozzi timur 6, no.1 Gading Serpong	Active	\N
 194	Kimberly	Perempuan	2000-09-09	2000	9	Kerja	014243957481	Sudah Join	Miracle	\N		Active	\N
-195	Lionel Nathan	Laki-laki	2007-11-25	2007	11	Kuliah	081288055789	Belum Mau Join	Belum CGF	BSD	delatinos	No Information	\N
+195	Lionel Nathan	Laki-Laki	2007-11-25	2007	11	Kuliah	081288055789	Belum Mau Join	Belum CGF	BSD	delatinos	No Information	\N
 196	Lisa Virianti Mulyo	Perempuan	\N	\N	\N	Tidak Diisi	081933133975	Mau Join	Belum CGF	\N		No Information	\N
 4	Agatha Christie Noviana	Perempuan	2002-09-08	2002	9	Kerja	085387859797	Mau Join	Belum CGF	Others	Kalimantan Barat	No Information	\N
 193	Kezia Putri Deo	Perempuan	\N	\N	\N	Kuliah	087796164664	Sudah Join	Faith	BSD	BSD	Active	\N
-197	Luckemeraldo Jardel	Laki-laki	2006-10-11	2006	10	Kuliah	081217378890	Sudah Join	Faith	BSD	BSD	Active	\N
-198	Luis Manuel	Laki-laki	2002-08-15	2002	8	Kerja	08111000559	Mau Join	Belum CGF	\N		Inactive	\N
+197	Luckemeraldo Jardel	Laki-Laki	2006-10-11	2006	10	Kuliah	081217378890	Sudah Join	Faith	BSD	BSD	Active	\N
+198	Luis Manuel	Laki-Laki	2002-08-15	2002	8	Kerja	08111000559	Mau Join	Belum CGF	\N		Inactive	\N
 199	Mackanzie Lawrence Anna Wijaya	Perempuan	\N	\N	\N	Kuliah	081347482517	Mau Join	Belum CGF	Gading Serpong	Serpong	No Information	\N
 200	Mandy Theodora	Perempuan	\N	\N	\N	Kuliah	081318511111	Sudah Join	Belum CGF	Others	Lippo Village	Inactive	\N
-201	Marcel Widjaja	Laki-laki	2007-06-05	2007	6	Kuliah	085811556828	Belum Mau Join	Belum CGF	Others	Topaz Timur 1 no 1	No Information	\N
-202	Marcelino	Laki-laki	2006-08-11	2006	8	Kuliah	081388509442	Sudah Join	Peace	BSD	BSD	Inactive	\N
-203	Mathew Lambertus Koronpis	Laki-laki	2005-09-08	2005	9	Kuliah	0895806291664	Mau Join	Belum CGF	Gading Serpong	Aeston Park	Inactive	\N
-204	Matthew Benney	Laki-laki	2006-12-19	2006	12	Kuliah	081234683643	Mau Join	Belum CGF	Others	sw	No Information	\N
+201	Marcel Widjaja	Laki-Laki	2007-06-05	2007	6	Kuliah	085811556828	Belum Mau Join	Belum CGF	Others	Topaz Timur 1 no 1	No Information	\N
+202	Marcelino	Laki-Laki	2006-08-11	2006	8	Kuliah	081388509442	Sudah Join	Peace	BSD	BSD	Inactive	\N
+203	Mathew Lambertus Koronpis	Laki-Laki	2005-09-08	2005	9	Kuliah	0895806291664	Mau Join	Belum CGF	Gading Serpong	Aeston Park	Inactive	\N
+204	Matthew Benney	Laki-Laki	2006-12-19	2006	12	Kuliah	081234683643	Mau Join	Belum CGF	Others	sw	No Information	\N
 205	Maura Sukamto	Perempuan	\N	\N	\N	Kuliah	017088826915	Sudah Join	Cornerstone	BSD	Giri Loka, lg kuliah di us	Inactive	\N
 206	Medeline Umboh	Perempuan	2004-04-03	2004	4	Kerja	0895800493047	Mau Join	Belum CGF	Alam Sutera	Silkwood Residence	No Information	\N
 207	Megan Evangeline	Perempuan	2004-08-20	2004	8	Kuliah	08195588559	Sudah Join	Peace	Gading Serpong	Gading Serpong	Active	\N
 208	Melliani Yulianty Dipanggil Mel/Mei/Melli	Perempuan	\N	\N	\N	Kerja	081298802653	Mau Join	Belum CGF	Pamulang	Pamulang	Active	\N
-209	Merfin	Laki-laki	1995-05-21	1995	5	Kerja	089632001951	Sudah Join	Miracle	Villa Melati Mas	VMM	Active	\N
-210	Michael Lika	Laki-laki	2007-09-16	2007	9	Kuliah	085212340916	Mau Join	Belum CGF	BSD	Greencove Blok A5 No. 27	No Information	\N
+209	Merfin	Laki-Laki	1995-05-21	1995	5	Kerja	089632001951	Sudah Join	Miracle	Villa Melati Mas	VMM	Active	\N
+210	Michael Lika	Laki-Laki	2007-09-16	2007	9	Kuliah	085212340916	Mau Join	Belum CGF	BSD	Greencove Blok A5 No. 27	No Information	\N
 211	Michelle	Perempuan	1999-04-23	1999	4	Kerja	081310924363	Mau Join	Belum CGF	Others	Pluit	No Information	\N
 212	Michelle Caroline Obaja	Perempuan	2006-10-04	2006	10	Kuliah	081213654097	Mau Join	Belum CGF	Gading Serpong	Jalan Taman Beryl No. 9, Cluster Beryl, Gading Serpong	No Information	\N
 213	Michelle Gwylyn Wijaya	Perempuan	2001-04-08	2001	4	Kerja	081212870970	Mau Join	Belum CGF	Villa Melati Mas	VMM	No Information	\N
-214	Mona Sinaga	Laki-laki	1988-12-19	1988	12	Kerja	085312849171	Mau Join	Belum CGF	Others	jalan ciater raya blok c nomor 11	Moved	\N
-216	Morrison Kristianto	Laki-laki	2002-07-17	2002	7	Kerja	089665368544	Mau Join	Belum CGF	Gading Serpong	Serpong Regensi Melati Mas Blok E 14 40 Serpong Tangerang Selatan.	Active	\N
+214	Mona Sinaga	Laki-Laki	1988-12-19	1988	12	Kerja	085312849171	Mau Join	Belum CGF	Others	jalan ciater raya blok c nomor 11	Moved	\N
+216	Morrison Kristianto	Laki-Laki	2002-07-17	2002	7	Kerja	089665368544	Mau Join	Belum CGF	Gading Serpong	Serpong Regensi Melati Mas Blok E 14 40 Serpong Tangerang Selatan.	Active	\N
 217	Nadine Eschetetodia	Perempuan	\N	\N	\N	Kerja	\N	Belum Mau Join	Belum CGF	Villa Melati Mas	Regensi Melati Mas	Inactive	\N
 218	Naditta Hutagaol	Perempuan	2006-12-01	2006	12	Kuliah	085591744749	Sudah Join	Faith	BSD	BSD	Active	\N
 219	Naftali Brigitta Gunawan	Perempuan	2003-03-15	2003	3	Kuliah	081282631726	Sudah Join	Light	Others	Ciater	Inactive	\N
 220	Naomi Krisanty	Perempuan	\N	\N	\N	Kerja	085885105106	Sudah Join	Peace	BSD	BSD	No Information	\N
-221	Natanezra Souw	Laki-laki	1999-11-25	1999	11	Kerja	085157562236	Belum Mau Join	Belum CGF	Others	East Asia 2 No. 5, Green Lake City	No Information	\N
-222	Nathan Tandra	Laki-laki	2006-02-03	2006	2	Kuliah	\N	Belum Mau Join	Belum CGF	Alam Sutera	Alam sutera	Active	\N
+221	Natanezra Souw	Laki-Laki	1999-11-25	1999	11	Kerja	085157562236	Belum Mau Join	Belum CGF	Others	East Asia 2 No. 5, Green Lake City	No Information	\N
+222	Nathan Tandra	Laki-Laki	2006-02-03	2006	2	Kuliah	\N	Belum Mau Join	Belum CGF	Alam Sutera	Alam sutera	Active	\N
 223	Nathania Alethea Rianto Sigit	Perempuan	1998-01-08	1998	1	Kerja	08194849449	Sudah Join	Belum CGF	Gading Serpong	GS	Active	\N
 224	Nathania Sofie	Perempuan	1997-10-10	1997	10	Kerja	08997894334	Sudah Join	Belum CGF	Gading Serpong	Gading Serpong	No Information	\N
-225	Nathaniel Shawn Edgar Sondakh	Laki-laki	2007-12-07	2007	12	Kuliah	085220007790	Mau Join	Belum CGF	BSD	Delatinos D8/16	Inactive	\N
-226	Nevio Nathanael	Laki-laki	\N	\N	\N	Kerja	081290224011	Belum Mau Join	Belum CGF	Others	Pavilion Residence A5/7	No Information	\N
-227	Nicholas Gerrard Hermanto	Laki-laki	2007-07-07	2007	7	Kuliah	081385976921	Mau Join	Belum CGF	Gading Serpong	Jl. Flamingo barat no. 52, Cihuni, Pagedangan, Kab. Tangerang, Banten	Active	\N
+225	Nathaniel Shawn Edgar Sondakh	Laki-Laki	2007-12-07	2007	12	Kuliah	085220007790	Mau Join	Belum CGF	BSD	Delatinos D8/16	Inactive	\N
+226	Nevio Nathanael	Laki-Laki	\N	\N	\N	Kerja	081290224011	Belum Mau Join	Belum CGF	Others	Pavilion Residence A5/7	No Information	\N
+227	Nicholas Gerrard Hermanto	Laki-Laki	2007-07-07	2007	7	Kuliah	081385976921	Mau Join	Belum CGF	Gading Serpong	Jl. Flamingo barat no. 52, Cihuni, Pagedangan, Kab. Tangerang, Banten	Active	\N
 228	Nichole Christy	Perempuan	1999-07-20	1999	7	Kerja	085780922791	Belum Mau Join	Belum CGF	BSD	NusaLoka jalan Jawa IX 	Inactive	\N
 229	Nicola Melodyta Suryodinoto	Perempuan	2002-01-14	2002	1	Kuliah	089502506000	Mau Join	Belum CGF	BSD	BSD Sektor 1-2, Jl. Magnolia 4 blok F no.7	Inactive	\N
 230	Nicoline Dorothy Santoso	Perempuan	2005-12-08	2005	12	Tidak Diisi	08119990812	Mau Join	Belum CGF	BSD	BSD	Inactive	\N
 232	Olivia Ajani Rori	Perempuan	2008-05-10	2008	5	Kuliah	081388889670	Mau Join	Belum CGF	Gading Serpong	the green, cluster royal blossom, blok K.6, no.7, Cilenggang, serpong, TangSel 15310 banten	Active	\N
-233	Osbert Nathaniel Wibowo	Laki-laki	2001-11-09	2001	11	Kuliah	085881698702	Sudah Join	Pathaway	Villa Melati Mas	VMM	Inactive	\N
-234	Oswin Suwandi	Laki-laki	1999-12-11	1999	12	Kuliah	087771777154	Sudah Join	Miracle	Villa Melati Mas	VMM	No Information	\N
-235	Owen	Laki-laki	2006-09-25	2006	9	Kuliah	087839119783	Mau Join	Belum CGF	Alam Sutera	Alam Sutera	No Information	\N
-236	Owen Siau	Laki-laki	2005-06-11	2005	6	Kuliah	087839119783	Mau Join	Belum CGF	Alam Sutera	Silkwood Residence	Inactive	\N
-237	Pascal Nathaniel	Laki-laki	\N	\N	\N	Kerja	\N	Belum Mau Join	Belum CGF	\N		No Information	\N
-238	Patricia Audrey	Laki-laki	2003-12-20	2003	12	Kerja	081247430521	Belum Mau Join	Belum CGF	Gading Serpong	Atlanta Village	Inactive	\N
-239	Patrick Christoper	Laki-laki	\N	\N	\N	Kuliah	081293221250	Sudah Tidak Join	Belum CGF	BSD	BSD	Inactive	\N
-240	Paulus Adi Wau	Laki-laki	2003-08-25	2003	8	Kuliah	0895635020257	Sudah Join	Light	BSD	BSD	Inactive	\N
+233	Osbert Nathaniel Wibowo	Laki-Laki	2001-11-09	2001	11	Kuliah	085881698702	Sudah Join	Pathaway	Villa Melati Mas	VMM	Inactive	\N
+234	Oswin Suwandi	Laki-Laki	1999-12-11	1999	12	Kuliah	087771777154	Sudah Join	Miracle	Villa Melati Mas	VMM	No Information	\N
+235	Owen	Laki-Laki	2006-09-25	2006	9	Kuliah	087839119783	Mau Join	Belum CGF	Alam Sutera	Alam Sutera	No Information	\N
+236	Owen Siau	Laki-Laki	2005-06-11	2005	6	Kuliah	087839119783	Mau Join	Belum CGF	Alam Sutera	Silkwood Residence	Inactive	\N
+237	Pascal Nathaniel	Laki-Laki	\N	\N	\N	Kerja	\N	Belum Mau Join	Belum CGF	\N		No Information	\N
+238	Patricia Audrey	Laki-Laki	2003-12-20	2003	12	Kerja	081247430521	Belum Mau Join	Belum CGF	Gading Serpong	Atlanta Village	Inactive	\N
+239	Patrick Christoper	Laki-Laki	\N	\N	\N	Kuliah	081293221250	Sudah Tidak Join	Belum CGF	BSD	BSD	Inactive	\N
+240	Paulus Adi Wau	Laki-Laki	2003-08-25	2003	8	Kuliah	0895635020257	Sudah Join	Light	BSD	BSD	Inactive	\N
 241	Phoebe Nathania	Perempuan	2000-11-02	2000	11	Kerja	08111530211	Sudah Join	Belum CGF	Gading Serpong	Gading Serpong	No Information	\N
-242	Piter Lius	Laki-laki	2002-03-19	2002	3	Kerja	085173190341	Belum Mau Join	Belum CGF	Others	Jl. Tpu parakan Gg. Samen mena no.134, benda baru	No Information	\N
-243	Prabandana Raditya	Laki-laki	2000-08-31	2000	8	Kerja	081380859378	Belum Mau Join	Belum CGF	BSD	The Icon	Active	\N
-244	Primuadi Bali	Laki-laki	1999-01-09	1999	1	Kerja	082311634560	Sudah Join	Sabbath	BSD	BSD	Active	\N
-245	Putri Kasiman	Laki-laki	2005-10-25	2005	10	Kuliah	087867583546	Sudah Join	Faith	BSD	BSD	No Information	\N
-246	Ralph	Laki-laki	\N	\N	\N	Tidak Diisi	\N	Sudah Tidak Join	Belum CGF	\N		Active	\N
-247	Rayner Gabrielle	Laki-laki	2001-05-08	2001	5	Kerja	085920339955	Sudah Join	Belum CGF	Gading Serpong	Gading Serpong	Inactive	\N
-248	Renald Nathaniel Heldi	Laki-laki	2002-05-29	2002	5	Kerja	0818319838	Belum Mau Join	Belum CGF	BSD	The Zora BSD City	Active	\N
-253	Ryan Nathanael Wongso - Ryan	Laki-laki	\N	\N	\N	Kerja	087843130828	Sudah Join	Salt	Jakarta	Jakarta	Active	\N
+242	Piter Lius	Laki-Laki	2002-03-19	2002	3	Kerja	085173190341	Belum Mau Join	Belum CGF	Others	Jl. Tpu parakan Gg. Samen mena no.134, benda baru	No Information	\N
+243	Prabandana Raditya	Laki-Laki	2000-08-31	2000	8	Kerja	081380859378	Belum Mau Join	Belum CGF	BSD	The Icon	Active	\N
+244	Primuadi Bali	Laki-Laki	1999-01-09	1999	1	Kerja	082311634560	Sudah Join	Sabbath	BSD	BSD	Active	\N
+245	Putri Kasiman	Laki-Laki	2005-10-25	2005	10	Kuliah	087867583546	Sudah Join	Faith	BSD	BSD	No Information	\N
+246	Ralph	Laki-Laki	\N	\N	\N	Tidak Diisi	\N	Sudah Tidak Join	Belum CGF	\N		Active	\N
+247	Rayner Gabrielle	Laki-Laki	2001-05-08	2001	5	Kerja	085920339955	Sudah Join	Belum CGF	Gading Serpong	Gading Serpong	Inactive	\N
+248	Renald Nathaniel Heldi	Laki-Laki	2002-05-29	2002	5	Kerja	0818319838	Belum Mau Join	Belum CGF	BSD	The Zora BSD City	Active	\N
+253	Ryan Nathanael Wongso - Ryan	Laki-Laki	\N	\N	\N	Kerja	087843130828	Sudah Join	Salt	Jakarta	Jakarta	Active	\N
 254	Saint Diven	Perempuan	\N	\N	\N	Kerja	085883035551	Mau Join	Belum CGF	Pamulang	Pamulang	Inactive	\N
-255	Sam	Laki-laki	2003-08-07	2003	8	Kuliah	081316007035	Sudah Join	Pathaway	BSD	BSD	Inactive	\N
+255	Sam	Laki-Laki	2003-08-07	2003	8	Kuliah	081316007035	Sudah Join	Pathaway	BSD	BSD	Inactive	\N
 256	Sarah Lynn	Perempuan	2003-06-16	2003	6	Kuliah	081388187873	Sudah Join	Belum CGF	Others	TangKot Modernland	Active	\N
-258	Sean Gabriel	Laki-laki	\N	\N	\N	Tidak Diisi	\N	Sudah Tidak Join	Belum CGF	\N		No Information	\N
-259	Sener Alden	Laki-laki	2005-09-20	2005	9	Kuliah	081399131522	Mau Join	Belum CGF	BSD	maxley suite	No Information	\N
+258	Sean Gabriel	Laki-Laki	\N	\N	\N	Tidak Diisi	\N	Sudah Tidak Join	Belum CGF	\N		No Information	\N
+259	Sener Alden	Laki-Laki	2005-09-20	2005	9	Kuliah	081399131522	Mau Join	Belum CGF	BSD	maxley suite	No Information	\N
 264	Sisilia	Perempuan	2001-03-31	2001	3	Kerja	0895340841465	Mau Join	Belum CGF	Others	Komplek Batan Indah Blok P No.23	Inactive	\N
 5	Agnes Feby	Perempuan	\N	\N	\N	Kerja	085217186165	Sudah Join	Salt	\N		Inactive	\N
-6	Alexander Putera Widjaya	Laki-laki	2008-01-18	2008	1	Kuliah	081212664739	Mau Join	Belum CGF	BSD	BSD, Griyaloka, Jalan Cempaka 1, blok H4/4	No Information	\N
+6	Alexander Putera Widjaya	Laki-Laki	2008-01-18	2008	1	Kuliah	081212664739	Mau Join	Belum CGF	BSD	BSD, Griyaloka, Jalan Cempaka 1, blok H4/4	No Information	\N
 7	Alexandra Madeline Rachel Boham	Perempuan	2005-05-17	2005	5	Kuliah	081212376714	Sudah Join	Faith	BSD	BSD	Active	\N
 9	Alicia Natasha Dynanty	Perempuan	2000-12-29	2000	12	Kerja	081293576622	Sudah Join	Cornerstone	BSD	BSD	Active	\N
 10	Allicia Kustanto	Perempuan	\N	\N	\N	Kerja	085210221998	Belum Mau Join	Belum CGF	BSD	BSD	Inactive	\N
-11	Alphasius Omega Dixon	Laki-laki	1996-05-07	1996	5	Kerja	081806167758	Sudah Join	Cornerstone	Pamulang	Pamulang 	Active	\N
-257	Sean Arden	Laki-laki	\N	\N	\N	Kerja	08161399363	Sudah Join	Cornerstone	Others	Sunter	Inactive	\N
+11	Alphasius Omega Dixon	Laki-Laki	1996-05-07	1996	5	Kerja	081806167758	Sudah Join	Cornerstone	Pamulang	Pamulang 	Active	\N
+257	Sean Arden	Laki-Laki	\N	\N	\N	Kerja	08161399363	Sudah Join	Cornerstone	Others	Sunter	Inactive	\N
 266	Stephanie Joana	Perempuan	\N	\N	\N	Kerja	081908035450	Sudah Join	Salt	\N		Inactive	\N
 267	Stephanie Kowinto	Perempuan	2007-08-19	2007	8	Kuliah	08111908072	Mau Join	Belum CGF	Alam Sutera	Alam Sutera	Active	\N
-268	Stephen Renaldi	Laki-laki	\N	\N	\N	Kerja	081290236252	Belum Mau Join	Belum CGF	BSD	BSD	No Information	\N
-269	Steven Timothy Octovian Gans	Laki-laki	2004-10-16	2004	10	Kuliah	0816302582	Belum Mau Join	Belum CGF	Gading Serpong	Cluster Crystal Jln. Crystal Barat no 45, Gading Serpong, Pakulonan Barat, Kelapa Dua, Tangerang	Active	\N
+268	Stephen Renaldi	Laki-Laki	\N	\N	\N	Kerja	081290236252	Belum Mau Join	Belum CGF	BSD	BSD	No Information	\N
+269	Steven Timothy Octovian Gans	Laki-Laki	2004-10-16	2004	10	Kuliah	0816302582	Belum Mau Join	Belum CGF	Gading Serpong	Cluster Crystal Jln. Crystal Barat no 45, Gading Serpong, Pakulonan Barat, Kelapa Dua, Tangerang	Active	\N
 270	Thelissa Levana Zheng	Perempuan	2004-04-15	2004	4	Kuliah	081806411504	Sudah Join	Pathaway	BSD	BSD	No Information	\N
 271	Theresya Christabsl	Perempuan	2007-09-15	2007	9	Kuliah	0816832688	Belum Mau Join	Belum CGF	BSD	The Zora, Bsd city	No Information	\N
 272	Tiffani Miracle Yanita	Perempuan	1996-01-08	1996	1	Kerja	087851859919	Mau Join	Belum CGF	BSD	Skyhouse BSD	Inactive	\N
 273	Timothy Frederick Lukas	Perempuan	1998-02-07	1998	2	Kerja	0817136270	Sudah Join	Miracle	Villa Melati Mas	VMM	No Information	\N
-274	Timothy Lewis	Laki-laki	2004-04-15	2004	4	Kuliah	082148198080	Belum Mau Join	Belum CGF	\N		Inactive	\N
+274	Timothy Lewis	Laki-Laki	2004-04-15	2004	4	Kuliah	082148198080	Belum Mau Join	Belum CGF	\N		Inactive	\N
 282	Vanesa	Perempuan	1999-03-16	1999	3	Kerja	08990168893	Sudah Join	Miracle	Villa Melati Mas	Regency melati mas blok C6/6	Inactive	\N
 283	Vanessa Danniella	Perempuan	\N	\N	\N	Kerja	089692649731	Sudah Tidak Join	Belum CGF	\N		Active	\N
 284	Vanessa Evelyn Thamrin	Perempuan	2004-06-17	2004	6	Kerja	081808662121	Sudah Join	Pathaway	BSD	BSD	No Information	\N
@@ -1033,74 +1033,74 @@ COPY public.cnx_jemaat_clean (no_jemaat, nama_jemaat, jenis_kelamin, tanggal_lah
 289	Vidrey	Perempuan	2000-10-22	2000	10	Kerja	082124202722	Sudah Join	Cornerstone	BSD	BSD	Inactive	\N
 290	Vieka Santoso	Perempuan	2002-01-06	2002	1	Kerja	0811140948	Belum Mau Join	Belum CGF	BSD	BSD	Active	\N
 291	Vieta Santoso	Perempuan	1996-04-05	1996	4	Kerja	081297766377	Sudah Join	Miracle	BSD	Taman Tirta Golf	No Information	\N
-292	Vincent Leonardo	Laki-laki	2005-07-30	2005	7	Kuliah	081381818084	Sudah Join	Miracle	Villa Melati Mas	VMM	Active	\N
-293	Vincent Nathaniel	Laki-laki	\N	\N	\N	Kerja	08111772775	Sudah Join	Belum CGF	Alam Sutera	Alam Sutera	Active	\N
-294	Vincentius Adryan Hartono	Laki-laki	2007-08-25	2007	8	Kuliah	08121887072	Belum Mau Join	Belum CGF	BSD	Puspitaloka blok A5	Inactive	\N
-295	Vinsensius Christopher Nathaniel Arden	Laki-laki	2002-05-09	2002	5	Kerja	08158039952	Sudah Join	Belum CGF	Gading Serpong	Gading Serpong	Inactive	\N
+292	Vincent Leonardo	Laki-Laki	2005-07-30	2005	7	Kuliah	081381818084	Sudah Join	Miracle	Villa Melati Mas	VMM	Active	\N
+293	Vincent Nathaniel	Laki-Laki	\N	\N	\N	Kerja	08111772775	Sudah Join	Belum CGF	Alam Sutera	Alam Sutera	Active	\N
+294	Vincentius Adryan Hartono	Laki-Laki	2007-08-25	2007	8	Kuliah	08121887072	Belum Mau Join	Belum CGF	BSD	Puspitaloka blok A5	Inactive	\N
+295	Vinsensius Christopher Nathaniel Arden	Laki-Laki	2002-05-09	2002	5	Kerja	08158039952	Sudah Join	Belum CGF	Gading Serpong	Gading Serpong	Inactive	\N
 296	Vioren Defika	Perempuan	2002-05-16	2002	5	Kerja	081289939877	Belum Mau Join	Belum CGF	Gading Serpong	Gading Serpong	Inactive	\N
-297	Virgilius Tan	Laki-laki	\N	\N	\N	Kerja	085310220766	Sudah Tidak Join	Belum CGF	Others	Tangerang	No Information	\N
+297	Virgilius Tan	Laki-Laki	\N	\N	\N	Kerja	085310220766	Sudah Tidak Join	Belum CGF	Others	Tangerang	No Information	\N
 298	Vivian Sumendap	Perempuan	\N	\N	\N	Kuliah	085325536877	Belum Mau Join	Belum CGF	BSD	BSD (Kuliah Prasmul)	Active	\N
-299	Wahyu Wijaya	Laki-laki	2003-03-27	2003	3	Kuliah	0817271369	Sudah Join	Faith	Alam Sutera	Alam Sutera	Active	\N
+299	Wahyu Wijaya	Laki-Laki	2003-03-27	2003	3	Kuliah	0817271369	Sudah Join	Faith	Alam Sutera	Alam Sutera	Active	\N
 300	Wiku Melisa	Perempuan	\N	\N	\N	Kerja	08117044359	Sudah Join	Salt	Jakarta	Jakarta	No Information	\N
-301	William	Laki-laki	2001-10-26	2001	10	Kerja	061433846208	Mau Join	Belum CGF	BSD	Jl Laurel South 3/5, Nava Park, BSD, Tangerang	Active	\N
-302	William Handel Lowry	Laki-laki	1995-10-07	1995	10	Kerja	082253091274	Sudah Join	Cornerstone	BSD	BSD	Inactive	\N
-304	Winston	Laki-laki	2006-03-02	2006	3	Kuliah	082214372492	Belum Mau Join	Belum CGF	Alam Sutera	Alam Sutera	Active	\N
-305	Wisely Liu Dennis	Laki-laki	1994-02-11	1994	2	Kerja	087882529388	Belum Mau Join	Belum CGF	Others	kresem 2 no 8g	Active	\N
-306	Wynner Rafaelle	Laki-laki	2003-08-23	2003	8	Kuliah	087881200862	Sudah Join	Pathaway	Gading Serpong	Gading Serpong	Inactive	\N
+301	William	Laki-Laki	2001-10-26	2001	10	Kerja	061433846208	Mau Join	Belum CGF	BSD	Jl Laurel South 3/5, Nava Park, BSD, Tangerang	Active	\N
+302	William Handel Lowry	Laki-Laki	1995-10-07	1995	10	Kerja	082253091274	Sudah Join	Cornerstone	BSD	BSD	Inactive	\N
+304	Winston	Laki-Laki	2006-03-02	2006	3	Kuliah	082214372492	Belum Mau Join	Belum CGF	Alam Sutera	Alam Sutera	Active	\N
+305	Wisely Liu Dennis	Laki-Laki	1994-02-11	1994	2	Kerja	087882529388	Belum Mau Join	Belum CGF	Others	kresem 2 no 8g	Active	\N
+306	Wynner Rafaelle	Laki-Laki	2003-08-23	2003	8	Kuliah	087881200862	Sudah Join	Pathaway	Gading Serpong	Gading Serpong	Inactive	\N
 308	Yasmine Nathania	Perempuan	\N	\N	\N	Kerja	085866799881	Mau Join	Belum CGF	BSD	Puspita Loka Jl Lili Blok G3/5	Active	\N
-1	Abraham Christopher Elgrego	Laki-laki	2002-03-15	2002	3	Kerja	081338245611	Sudah Join	Pathaway	Gading Serpong	Gading Serpong	Active	\N
+1	Abraham Christopher Elgrego	Laki-Laki	2002-03-15	2002	3	Kerja	081338245611	Sudah Join	Pathaway	Gading Serpong	Gading Serpong	Active	\N
 2	Accoladea Wijaya	Perempuan	2003-06-01	2003	6	Kuliah	0895353279881	Sudah Join	Light	Villa Melati Mas	VMM	Active	\N
 3	Agata Fortuna	Perempuan	1998-04-21	1998	4	Kerja	08115788772	Mau Join	Miracle	Gading Serpong	Tabebuya inspirahaus f5 no 10	Active	\N
-129	Hubert Tatra	Laki-laki	1999-03-07	1999	3	Kerja	08117572378	Sudah Join	Cornerstone	BSD	BSD	Active	\N
+129	Hubert Tatra	Laki-Laki	1999-03-07	1999	3	Kerja	08117572378	Sudah Join	Cornerstone	BSD	BSD	Active	\N
 231	Olivia	Perempuan	\N	\N	\N	Tidak Diisi	088291996778	Sudah Join	Belum CGF	\N		No Information	\N
-249	Riandy W	Laki-laki	\N	\N	\N	Kerja	\N	Sudah Join	Cornerstone	BSD	Foresta Raya Cluster Studento	Active	\N
-250	Robert Muliawan Jaya	Laki-laki	2002-08-09	2002	8	Kerja	087803120999	Mau Join	Belum CGF	Jakarta	Jakarta Barat	Active	\N
+249	Riandy W	Laki-Laki	\N	\N	\N	Kerja	\N	Sudah Join	Cornerstone	BSD	Foresta Raya Cluster Studento	Active	\N
+250	Robert Muliawan Jaya	Laki-Laki	2002-08-09	2002	8	Kerja	087803120999	Mau Join	Belum CGF	Jakarta	Jakarta Barat	Active	\N
 251	Ruth Yura Gracia Gultom	Perempuan	1995-04-14	1995	4	Kerja	081289480600	Sudah Join	Miracle	BSD	BSD	Active	\N
-252	Ryan Agustian	Laki-laki	2001-08-30	2001	8	Kerja	0895803248903	Belum Mau Join	Belum CGF	BSD	BSD	Active	\N
-260	Septawon	Laki-laki	1999-09-06	1999	9	Kerja	0812544230549	Mau Join	Belum CGF	Gading Serpong	Serpong	Active	\N
-261	Serviour Lilihata	Laki-laki	2007-06-11	2007	6	Kuliah	082110178535	Mau Join	Belum CGF	Others	Villa Bintaro Regency Blok G3/4, Kec.Pondok Aren, Kota Tangerang Selatan, Banten	Active	\N
+252	Ryan Agustian	Laki-Laki	2001-08-30	2001	8	Kerja	0895803248903	Belum Mau Join	Belum CGF	BSD	BSD	Active	\N
+260	Septawon	Laki-Laki	1999-09-06	1999	9	Kerja	0812544230549	Mau Join	Belum CGF	Gading Serpong	Serpong	Active	\N
+261	Serviour Lilihata	Laki-Laki	2007-06-11	2007	6	Kuliah	082110178535	Mau Join	Belum CGF	Others	Villa Bintaro Regency Blok G3/4, Kec.Pondok Aren, Kota Tangerang Selatan, Banten	Active	\N
 262	Sherika Marvella	Perempuan	2004-03-04	2004	3	Kuliah	08117288890	Mau Join	Belum CGF	BSD	marigold BSD City	No Information	\N
 263	Silvi Wattimena	Perempuan	2004-09-04	2004	9	Kerja	081273607331	Belum Mau Join	Belum CGF	Gading Serpong	Serpong	Active	\N
-265	Stanly	Laki-laki	\N	\N	\N	Kerja	08113923278	Sudah Join	Belum CGF	Gading Serpong	Gading Serpong 7A	Inactive	\N
-309	Yoel Cavello	Laki-laki	2000-06-05	2000	6	Kerja	089679657452	Sudah Join	Cornerstone	BSD	BSD	Inactive	\N
-310	Yohannes Gunawan	Laki-laki	\N	\N	\N	Kerja	087882178560	Sudah Join	Salt	Others	Jalan raya bukit serua	Active	\N
-311	Yosafat Hans Wijaya	Laki-laki	1998-03-21	1998	3	Kerja	0895336787578	Sudah Join	Miracle	Alam Sutera	Alam Sutera	Inactive	\N
-312	Yosia Kurnia	Laki-laki	\N	\N	\N	Kerja	081288991321	Sudah Join	Salt	BSD	Daerah BSD	No Information	\N
+265	Stanly	Laki-Laki	\N	\N	\N	Kerja	08113923278	Sudah Join	Belum CGF	Gading Serpong	Gading Serpong 7A	Inactive	\N
+309	Yoel Cavello	Laki-Laki	2000-06-05	2000	6	Kerja	089679657452	Sudah Join	Cornerstone	BSD	BSD	Inactive	\N
+310	Yohannes Gunawan	Laki-Laki	\N	\N	\N	Kerja	087882178560	Sudah Join	Salt	Others	Jalan raya bukit serua	Active	\N
+311	Yosafat Hans Wijaya	Laki-Laki	1998-03-21	1998	3	Kerja	0895336787578	Sudah Join	Miracle	Alam Sutera	Alam Sutera	Inactive	\N
+312	Yosia Kurnia	Laki-Laki	\N	\N	\N	Kerja	081288991321	Sudah Join	Salt	BSD	Daerah BSD	No Information	\N
 12	Alvina Rotua Maharani Tambunan	Perempuan	1999-01-27	1999	1	Kerja	081211630473	Sudah Join	Cornerstone	BSD	BSD	Active	\N
 13	Ancillia Wijaya	Perempuan	1999-06-17	1999	6	Kerja	082213620637	Belum Mau Join	Belum CGF	Villa Melati Mas	Villa Melati Mas Blok I 11 No. 56	No Information	\N
-14	Andreas Calvin Tamara	Laki-laki	2000-04-17	2000	4	Kerja	085342170002	Mau Join	Belum CGF	Others	Manado	Inactive	\N
-15	Andrew Halim	Laki-laki	1988-09-18	1988	9	Kerja	082167460828	Sudah Tidak Join	Belum CGF	Jakarta	Jakarta Barat	Inactive	\N
-16	Andy Tanumihardja	Laki-laki	1992-05-30	1992	5	Kerja	087777086135	Mau Join	Belum CGF	Gading Serpong	Buaran, Serpong	No Information	\N
+14	Andreas Calvin Tamara	Laki-Laki	2000-04-17	2000	4	Kerja	085342170002	Mau Join	Belum CGF	Others	Manado	Inactive	\N
+15	Andrew Halim	Laki-Laki	1988-09-18	1988	9	Kerja	082167460828	Sudah Tidak Join	Belum CGF	Jakarta	Jakarta Barat	Inactive	\N
+16	Andy Tanumihardja	Laki-Laki	1992-05-30	1992	5	Kerja	087777086135	Mau Join	Belum CGF	Gading Serpong	Buaran, Serpong	No Information	\N
 17	Angelina M	Perempuan	1998-08-27	1998	8	Kerja	082293968781	Belum Mau Join	Belum CGF	BSD	BSD	No Information	\N
 18	Angeline Calista Slamet	Perempuan	2002-01-18	2002	1	Kerja	089522333181	Belum Mau Join	Belum CGF	BSD	BSD	Active	\N
 19	Angelique Metta	Perempuan	2001-11-15	2001	11	Kerja	085778873151	Mau Join	Belum CGF	Jakarta	 sunter agung, jakarta utara / piazza the mozia	No Information	\N
-20	Angga Avila	Laki-laki	1991-04-13	1991	4	Kerja	085163716898	Sudah Join	Belum CGF	Karawaci	Karawaci	Inactive	\N
-21	Antony Dinata	Laki-laki	1994-04-22	1994	4	Kerja	082210198810	Sudah Join	Miracle	\N		Active	\N
-22	Ardi Wiriadinata	Laki-laki	\N	\N	\N	Kerja	081355132068	Sudah Join	Light	BSD	BSD	Active	\N
-23	Ardya Kristina	Laki-laki	\N	\N	\N	Kerja	087871951980	Sudah Join	Miracle	Gading Serpong	Serpong Park	Active	\N
-24	Ariel Vito Suyata Ong	Laki-laki	2002-05-11	2002	5	Kerja	082283712292	Sudah Join	Cornerstone	BSD	BSD	Active	\N
-25	Armand Pantouw	Laki-laki	\N	\N	\N	Kerja	0811969632	Sudah Join	Light	BSD	Taman giri loka	Active	\N
-26	Arnold Enrique Utama	Laki-laki	2002-03-05	2002	3	Kerja	085103518518	Belum Mau Join	Belum CGF	Others	Paviljoen 55	No Information	\N
+20	Angga Avila	Laki-Laki	1991-04-13	1991	4	Kerja	085163716898	Sudah Join	Belum CGF	Karawaci	Karawaci	Inactive	\N
+21	Antony Dinata	Laki-Laki	1994-04-22	1994	4	Kerja	082210198810	Sudah Join	Miracle	\N		Active	\N
+22	Ardi Wiriadinata	Laki-Laki	\N	\N	\N	Kerja	081355132068	Sudah Join	Light	BSD	BSD	Active	\N
+23	Ardya Kristina	Laki-Laki	\N	\N	\N	Kerja	087871951980	Sudah Join	Miracle	Gading Serpong	Serpong Park	Active	\N
+24	Ariel Vito Suyata Ong	Laki-Laki	2002-05-11	2002	5	Kerja	082283712292	Sudah Join	Cornerstone	BSD	BSD	Active	\N
+25	Armand Pantouw	Laki-Laki	\N	\N	\N	Kerja	0811969632	Sudah Join	Light	BSD	Taman giri loka	Active	\N
+26	Arnold Enrique Utama	Laki-Laki	2002-03-05	2002	3	Kerja	085103518518	Belum Mau Join	Belum CGF	Others	Paviljoen 55	No Information	\N
 27	Aurelua Christie	Perempuan	2005-03-09	2005	3	Kuliah	085212159957	Belum Mau Join	Belum CGF	Villa Melati Mas	Villa Melati Mas B9 	No Information	\N
-28	Austin Benedict Tambun	Laki-laki	2005-03-19	2005	3	Kuliah	087885582700	Mau Join	Belum CGF	Villa Melati Mas	Regensi Melati Mas Blok H7 no 7	No Information	\N
-29	Axel Kanata	Laki-laki	\N	\N	\N	Kuliah	0895602299239	Sudah Join	Sabbath	\N		Active	\N
+28	Austin Benedict Tambun	Laki-Laki	2005-03-19	2005	3	Kuliah	087885582700	Mau Join	Belum CGF	Villa Melati Mas	Regensi Melati Mas Blok H7 no 7	No Information	\N
+29	Axel Kanata	Laki-Laki	\N	\N	\N	Kuliah	0895602299239	Sudah Join	Sabbath	\N		Active	\N
 30	Ayu Aprilia	Perempuan	\N	\N	\N	Kuliah	08111388069	Sudah Join	Miracle	Villa Melati Mas	VMM	Inactive	\N
 31	Bella Kumalasari	Perempuan	1993-09-22	1993	9	Kerja	081283728738	Sudah Join	Miracle	Villa Melati Mas	VMM	Inactive	\N
-32	Bernhardt Hamonangan	Laki-laki	\N	\N	\N	Kerja	0852804988278	Mau Join	Belum CGF	BSD	BSD	Inactive	\N
+32	Bernhardt Hamonangan	Laki-Laki	\N	\N	\N	Kerja	0852804988278	Mau Join	Belum CGF	BSD	BSD	Inactive	\N
 33	Betania	Perempuan	\N	\N	\N	Kuliah	0895801422709	Sudah Join	Faith	BSD	BSD (Prasmul)	No Information	\N
 34	Betsy Kurniawati Witarsa	Perempuan	\N	\N	\N	Kerja	089657599287	Sudah Join	Asin	BSD	BSD	Active	\N
-35	Bimo Adji Prasetyo	Laki-laki	1997-07-08	1997	7	Kerja	085718141825	Sudah Join	Light	Pamulang	Pamulang	Active	\N
-36	Brian Chouw	Laki-laki	1997-07-28	1997	7	Kerja	081234405939	Sudah Tidak Join	Belum CGF	BSD	BSD	Inactive	\N
-37	Bryan Hugo Harjono	Laki-laki	2003-03-01	2003	3	Kerja	08119556955	Mau Join	Belum CGF	BSD	Jl. Laurel South 3 no. 5, Navapark	No Information	\N
-162	Joe Fendero	Laki-laki	\N	\N	\N	Kerja	085715360698	Belum Mau Join	Belum CGF	\N		Active	\N
-275	Timothy Secawardaya	Laki-laki	\N	\N	\N	Kerja	081808561826	Sudah Join	Salt	BSD	BSD	Active	\N
-276	Timotius Aubriel	Laki-laki	2000-12-15	2000	12	Kerja	0821227354080	Sudah Join	Cornerstone	BSD	BSD	Inactive	\N
+35	Bimo Adji Prasetyo	Laki-Laki	1997-07-08	1997	7	Kerja	085718141825	Sudah Join	Light	Pamulang	Pamulang	Active	\N
+36	Brian Chouw	Laki-Laki	1997-07-28	1997	7	Kerja	081234405939	Sudah Tidak Join	Belum CGF	BSD	BSD	Inactive	\N
+37	Bryan Hugo Harjono	Laki-Laki	2003-03-01	2003	3	Kerja	08119556955	Mau Join	Belum CGF	BSD	Jl. Laurel South 3 no. 5, Navapark	No Information	\N
+162	Joe Fendero	Laki-Laki	\N	\N	\N	Kerja	085715360698	Belum Mau Join	Belum CGF	\N		Active	\N
+275	Timothy Secawardaya	Laki-Laki	\N	\N	\N	Kerja	081808561826	Sudah Join	Salt	BSD	BSD	Active	\N
+276	Timotius Aubriel	Laki-Laki	2000-12-15	2000	12	Kerja	0821227354080	Sudah Join	Cornerstone	BSD	BSD	Inactive	\N
 277	Trissa Lonyka	Perempuan	1998-03-31	1998	3	Kuliah	082112507795	Sudah Join	Light	BSD	BSD	No Information	\N
 278	Valencia Devina	Perempuan	2001-11-29	2001	11	Kerja	085770417688	Belum Mau Join	Belum CGF	Pamulang	Pamulang	Active	\N
-279	Valentino Imanuel	Laki-laki	2004-02-22	2004	2	Kuliah	085692244891	Sudah Join	Sabbath	Pamulang	Pamulang	Inactive	\N
+279	Valentino Imanuel	Laki-Laki	2004-02-22	2004	2	Kuliah	085692244891	Sudah Join	Sabbath	Pamulang	Pamulang	Inactive	\N
 281	Vallerie Ann Harjadi	Perempuan	2006-08-29	2006	8	Kuliah	081298926592	Belum Mau Join	Belum CGF	BSD	Visana The Savia K5/15 BSD	Active	\N
-313	Yunato	Laki-laki	1993-06-14	1993	6	Kerja	082122379491	Mau Join	Belum CGF	Pamulang	pamulang	No Information	\N
-280	Vallen Nathaniel	Laki-laki	\N	\N	\N	Kuliah	08111001144	Belum Mau Join	Belum CGF	Alam Sutera	Alam Sutera	Active	masih sering ke cnx
+313	Yunato	Laki-Laki	1993-06-14	1993	6	Kerja	082122379491	Mau Join	Belum CGF	Pamulang	pamulang	No Information	\N
+280	Vallen Nathaniel	Laki-Laki	\N	\N	\N	Kuliah	08111001144	Belum Mau Join	Belum CGF	Alam Sutera	Alam Sutera	Active	masih sering ke cnx
 \.
 
 
@@ -1111,33 +1111,33 @@ COPY public.cnx_jemaat_clean (no_jemaat, nama_jemaat, jenis_kelamin, tanggal_lah
 COPY public.cnx_jemaat_csv (no_jemaat, nama_jemaat, jenis_kelamin, tanggal_lahir, alamat_domisili, kuliah_kerja, no_handphone, ketertarikan_cgf, nama_cgf) FROM stdin;
 12	Alvina Rotua Maharani Tambunan	Perempuan	1/27/1999	BSD	Kerja	081211630473	Sudah join	Cornerstone 
 13	Ancillia Wijaya	Perempuan	6/17/1999	Villa Melati Mas Blok I 11 No. 56	Kerja	082213620637	Belum join dan belum mau join	
-14	Andreas Calvin Tamara	Laki-laki	4/17/2000	Manado	Kerja	085342170002	Belum join tapi mau join 	
-15	Andrew Halim	Laki-laki	9/18/1988	Jakarta Barat	Kerja	6282167460828	udah ga join 	udah ga ke cnx
-16	Andy Tanumihardja	Laki-laki	5/30/1992	Buaran, Serpong	Kerja	087777086135	Belum join tapi mau join 	
+14	Andreas Calvin Tamara	Laki-Laki	4/17/2000	Manado	Kerja	085342170002	Belum join tapi mau join 	
+15	Andrew Halim	Laki-Laki	9/18/1988	Jakarta Barat	Kerja	6282167460828	udah ga join 	udah ga ke cnx
+16	Andy Tanumihardja	Laki-Laki	5/30/1992	Buaran, Serpong	Kerja	087777086135	Belum join tapi mau join 	
 17	angelina m	Perempuan	8/27/1998	BSD	Kerja	082293968781	Belum join dan belum mau join	
 18	Angeline Calista Slamet	Perempuan	1/18/2002	BSD	Kerja	089522333181	Belum join dan belum mau join	
 19	Angelique Metta	Perempuan	11/15/2001	 sunter agung, jakarta utara / piazza the mozia	Kerja	085778873151	Belum join tapi mau join 	
-20	Angga Avila	Laki-laki	4/13/1991	Karawaci	Kerja	085163716898	Sudah join	udah balik surabaya
-21	Antony Dinata	Laki-laki	4/22/1994		Kerja	082210198810	Sudah join	Miracle 
-22	Ardi Wiriadinata	Laki-laki		BSD	Kerja	081355132068	Sudah join	Light 
-23	Ardya Kristina	Laki-laki		Serpong Park	Kerja	087871951980	Sudah join	Miracle 
-24	Ariel Vito Suyata Ong (Vito)	Laki-laki	5/11/2002	BSD	Kerja	082283712292	Sudah join	Cornerstone 
-25	Armand Pantouw	Laki-laki		Taman giri loka	Kerja	0811969632	Sudah join	Light 
-26	Arnold Enrique Utama	Laki-laki	3/5/2002	Paviljoen 55	Kerja	085103518518	Belum join dan belum mau join	
+20	Angga Avila	Laki-Laki	4/13/1991	Karawaci	Kerja	085163716898	Sudah join	udah balik surabaya
+21	Antony Dinata	Laki-Laki	4/22/1994		Kerja	082210198810	Sudah join	Miracle 
+22	Ardi Wiriadinata	Laki-Laki		BSD	Kerja	081355132068	Sudah join	Light 
+23	Ardya Kristina	Laki-Laki		Serpong Park	Kerja	087871951980	Sudah join	Miracle 
+24	Ariel Vito Suyata Ong (Vito)	Laki-Laki	5/11/2002	BSD	Kerja	082283712292	Sudah join	Cornerstone 
+25	Armand Pantouw	Laki-Laki		Taman giri loka	Kerja	0811969632	Sudah join	Light 
+26	Arnold Enrique Utama	Laki-Laki	3/5/2002	Paviljoen 55	Kerja	085103518518	Belum join dan belum mau join	
 27	Aurelua Christie	Perempuan	3/9/2005	Villa Melati Mas B9 	Kuliah	085212159957	Belum join dan belum mau join	
-28	Austin Benedict Tambun	Laki-laki	3/19/2005	Regensi Melati Mas Blok H7 no 7	Kuliah	http://wa.me/6287885582700	Belum join tapi mau join 	
-29	Axel Kanata	Laki-laki			Kuliah	0895602299239	Sudah join	Sabbath
+28	Austin Benedict Tambun	Laki-Laki	3/19/2005	Regensi Melati Mas Blok H7 no 7	Kuliah	http://wa.me/6287885582700	Belum join tapi mau join 	
+29	Axel Kanata	Laki-Laki			Kuliah	0895602299239	Sudah join	Sabbath
 30	Ayu Aprilia	Perempuan		VMM	Kuliah	08111388069	Sudah join	Miracle 
 31	Bella Kumalasari	Perempuan	9/22/1993	VMM	Kerja	081283728738	Sudah join	Miracle 
-32	Bernhardt Hamonangan	Laki-laki		BSD	Kerja	0852804988278	Belum join tapi mau join 	
+32	Bernhardt Hamonangan	Laki-Laki		BSD	Kerja	0852804988278	Belum join tapi mau join 	
 33	Betania (Tania)	Perempuan		BSD (Prasmul)	Kuliah	0895801422709	Sudah join	Faith
 34	Betsy Kurniawati Witarsa	Perempuan		BSD	Kerja	089657599287	Sudah join	Asin
-35	Bimo Adji Prasetyo	Laki-laki	7/8/1997	Pamulang	Kerja	085718141825	Sudah join	Light
-36	Brian Chouw	Laki-laki	7/28/1997	BSD	Kerja	081234405939	udah ga join 	udah ga di bsd
-37	Bryan Hugo Harjono	Laki-laki	3/1/2003	Jl. Laurel South 3 no. 5, Navapark	Kerja	http://wa.me/628119556955	Belum join tapi mau join 	
+35	Bimo Adji Prasetyo	Laki-Laki	7/8/1997	Pamulang	Kerja	085718141825	Sudah join	Light
+36	Brian Chouw	Laki-Laki	7/28/1997	BSD	Kerja	081234405939	udah ga join 	udah ga di bsd
+37	Bryan Hugo Harjono	Laki-Laki	3/1/2003	Jl. Laurel South 3 no. 5, Navapark	Kerja	http://wa.me/628119556955	Belum join tapi mau join 	
 38	Calistha Clementine	Perempuan	2/10/2006	Jl Kayu Putih IV no. 95	Kuliah	087877735240	Belum join dan belum mau join	
-39	Calvin yuslianto	Laki-laki	10/5/2000	Jl mesjid, sumatra utara, medan barat	Kerja	6282366347688	Belum join dan belum mau join	
-40	Carlos Antonio Lopulalan	Laki-laki	5/6/2001	Jalan pisangan raya, cirendeu, ciputat timur, tangerang selatan	Kerja	081357719421	Belum join dan belum mau join	
+39	Calvin yuslianto	Laki-Laki	10/5/2000	Jl mesjid, sumatra utara, medan barat	Kerja	6282366347688	Belum join dan belum mau join	
+40	Carlos Antonio Lopulalan	Laki-Laki	5/6/2001	Jalan pisangan raya, cirendeu, ciputat timur, tangerang selatan	Kerja	081357719421	Belum join dan belum mau join	
 41	Caroline Avery Tanto	Perempuan		BSD	Kuliah	+6285210037800	Sudah join	Faith 
 42	Catherine	Perempuan	1/8/2000	Gading Serpong 7A	Kerja		Sudah join	Grace 
 43	Cecilia Verna Wijaya	Perempuan	9/14/1996	Villa Melati Mas (VMM)	Kerja	081296366520	Sudah join	Miracle 
@@ -1146,111 +1146,111 @@ COPY public.cnx_jemaat_csv (no_jemaat, nama_jemaat, jenis_kelamin, tanggal_lahir
 46	Charissa Wicaksana	Perempuan	7/16/1993	Reni jaya blok c17 no 11 pondok petir bojongsari depok	Kerja	081399210495	Sudah join	Cornerstone 
 47	Charlene Ardine Charity	Perempuan		BSD	Kerja	081386185810	Belum join tapi mau join 	
 48	Cheryl Aldora	Perempuan		VMM	Kerja	081932982818	Sudah join	Asin 
-49	Christian Liecarles	Laki-laki	4/26/2007	Jl krisasana no 78 c	Kuliah	http://wa.me/0895326161968	Belum join dan belum mau join	
+49	Christian Liecarles	Laki-Laki	4/26/2007	Jl krisasana no 78 c	Kuliah	http://wa.me/0895326161968	Belum join dan belum mau join	
 50	Christie Priscilla Ngantung	Perempuan		BSD	Kerja	087877439296	Sudah join	Salt 
 51	Christina Marsela (Wawa)	Perempuan	3/17/1995	Kebayoran Baru	Kerja	085314528899	Sudah join	Cornerstone 
-52	Christopher Eben Kurniawan (Topher, Eben)	Laki-laki	8/27/1999	BSD	Kerja	087809080019	Sudah join	Cornerstone 
-53	Christopher Pranoto (Cepe)	Laki-laki	1/3/2001	Jakarta	Kerja	08119880659	Sudah join	Asin
+52	Christopher Eben Kurniawan (Topher, Eben)	Laki-Laki	8/27/1999	BSD	Kerja	087809080019	Sudah join	Cornerstone 
+53	Christopher Pranoto (Cepe)	Laki-Laki	1/3/2001	Jakarta	Kerja	08119880659	Sudah join	Asin
 54	Christy Nathania 	Perempuan	8/24/1997	VMM	Kerja	089602852821	Sudah join	Miracle 
 55	Cindy Valencia S	Perempuan	1/4/2002	Ampera IV no. 19. Jakarta	Kerja	081249004646	udah ga join 	
 56	Clarisa Manuela	Perempuan	6/15/2002	BSD	Kerja	08111000569	Sudah join	Pathaway
-57	Classico Joydie Sumendap (Ciko)	Laki-laki		BSD	Kuliah	085157078122	Sudah join	Peace
+57	Classico Joydie Sumendap (Ciko)	Laki-Laki		BSD	Kuliah	085157078122	Sudah join	Peace
 58	Claudia Arantha	Perempuan	5/26/1996	BSD	Kerja	‪+6287774054420‬	Sudah join	Cornerstone 
 59	claudia silviany	Perempuan	1/22/1997	metro sunter blok L nomor 8	Kerja	http://wa.me/6281268005773	Belum join dan belum mau join	
 60	clementine biancalista	Perempuan	5/21/2007	villa melati mas blok L2 no 22A	Kuliah	08119740121	Belum join tapi mau join 	
-61	Conrad Ariando Sahat Tambunan	Laki-laki	7/27/2002	Jalan Palm Kuning IV Blok BE No 2 Griya Loka BSD Sektor 1.3	Kerja	085214951127	Belum join tapi mau join 	
-62	Daniel Citra	Laki-laki	8/30/1997		Kerja	085711544980	Sudah join	Grace 
-63	Daniel Kho	Laki-laki	4/11/2002		Kerja	081388702830	Sudah join	Pathaway
-64	Daniel Koesno	Laki-laki	7/2/2000	Gading Serpong	Kerja	085219454579	Sudah join	Grace 
-65	Darrell Jeremy	Laki-laki	5/20/2005	Jakarta Barat	Kuliah	085894333011	Belum join dan belum mau join	
-66	Darryn Emilio Nathaniel	Laki-laki	7/15/2003	Bencongan	Kerja	082190294730	Belum join dan belum mau join	
-67	David Ssaputra Wijaya	Laki-laki	4/19/2005	Datrus Garden Reni Jaya Lama Pondok Petir	Kuliah		Belum join dan belum mau join	
+61	Conrad Ariando Sahat Tambunan	Laki-Laki	7/27/2002	Jalan Palm Kuning IV Blok BE No 2 Griya Loka BSD Sektor 1.3	Kerja	085214951127	Belum join tapi mau join 	
+62	Daniel Citra	Laki-Laki	8/30/1997		Kerja	085711544980	Sudah join	Grace 
+63	Daniel Kho	Laki-Laki	4/11/2002		Kerja	081388702830	Sudah join	Pathaway
+64	Daniel Koesno	Laki-Laki	7/2/2000	Gading Serpong	Kerja	085219454579	Sudah join	Grace 
+65	Darrell Jeremy	Laki-Laki	5/20/2005	Jakarta Barat	Kuliah	085894333011	Belum join dan belum mau join	
+66	Darryn Emilio Nathaniel	Laki-Laki	7/15/2003	Bencongan	Kerja	082190294730	Belum join dan belum mau join	
+67	David Ssaputra Wijaya	Laki-Laki	4/19/2005	Datrus Garden Reni Jaya Lama Pondok Petir	Kuliah		Belum join dan belum mau join	
 68	Debora Emmanuel (Debbie)	Perempuan	4/13/2002	BSD	Kerja	081585090800	Sudah join	Pathaway
 69	Della Puspanegara	Perempuan		Nomaden : Jakarta / BSD / Alam Sutera	Kerja	081294453750	Belum join dan belum mau join	
 70	Dhea Agatha Andrian	Perempuan	10/17/2001	Jalan Raya Cisauk Lapan, Kabupaten Tangerang	Kerja	08117172145	Belum join tapi mau join 	
-71	Diego Tristan	Laki-laki	4/17/2005	Apartemen skyhousw tower leonie	Kuliah	089529031056	Sudah join	Peace 
-72	Dustin Pradipta	Laki-laki	9/16/1996	BSD		087880288500	Belum join tapi mau join 	
-73	Ebenezer Setiawan (Eben)	Laki-laki	10/5/1995	BSD	Kerja	0817247225	Sudah join	Asin
-74	Edsel mahadika liyis	Laki-laki	4/29/1995	Apartemen collins	Kerja	087875109593	Belum join tapi mau join 	
-75	Edward Renaldi (Ewa)	Laki-laki	9/21/1999	BSD	Kerja	081289686449	Sudah join	Peace 
+71	Diego Tristan	Laki-Laki	4/17/2005	Apartemen skyhousw tower leonie	Kuliah	089529031056	Sudah join	Peace 
+72	Dustin Pradipta	Laki-Laki	9/16/1996	BSD		087880288500	Belum join tapi mau join 	
+73	Ebenezer Setiawan (Eben)	Laki-Laki	10/5/1995	BSD	Kerja	0817247225	Sudah join	Asin
+74	Edsel mahadika liyis	Laki-Laki	4/29/1995	Apartemen collins	Kerja	087875109593	Belum join tapi mau join 	
+75	Edward Renaldi (Ewa)	Laki-Laki	9/21/1999	BSD	Kerja	081289686449	Sudah join	Peace 
 76	Eirene Christy Oktarosa Bayu	Perempuan	10/7/1997	Tangerang	Kerja	http://wa.me/6282210314952	Belum join tapi mau join 	
 77	Elaine Natalia Parulian Tampubolon	Perempuan	12/25/2006	Serpong Green Park blok L, no. 3AB	Kuliah	0816944211	Belum join tapi mau join 	
-78	Eldwin Manuel	Laki-laki			Kuliah	‪+62895365240247‬	udah ga join 	udah ga di bsd 
-79	Eliadi Zalukhu	Laki-laki	1/16/2004	Tangerang	Kuliah	082260305286	Belum join tapi mau join 	
+78	Eldwin Manuel	Laki-Laki			Kuliah	‪+62895365240247‬	udah ga join 	udah ga di bsd 
+79	Eliadi Zalukhu	Laki-Laki	1/16/2004	Tangerang	Kuliah	082260305286	Belum join tapi mau join 	
 80	Elisabet meisa 	Perempuan	5/16/2001		Kerja	081210469462	Belum join tapi mau join 	
 81	Elizabeth Jenny Trixie	Perempuan	1/1/1998		Kerja	+6285770832323	Sudah join	Cornerstone 
 82	Elsa Kristina	Perempuan			Kerja	081212072151	Sudah join	Asin
-83	Emilius Filibertsus Lisiender (Emil)	Laki-laki	9/2/2003	Jakarta	Kuliah	081383739491	Sudah join	Pathaway
+83	Emilius Filibertsus Lisiender (Emil)	Laki-Laki	9/2/2003	Jakarta	Kuliah	081383739491	Sudah join	Pathaway
 84	Emily Ann	Perempuan	10/6/2002	BSD Visana At The Savia K5/15	Kerja	081233569035	Belum join dan belum mau join	
-85	Emmanuel Gultom (Noel) 	Laki-laki	4/26/1999	BSD 	Kerja	+821042646580	Sudah join	Miracle 
-86	Epseen	Laki-laki	5/4/2001	BSD 	Kerja	082136955686	Sudah join	Sabbath
+85	Emmanuel Gultom (Noel) 	Laki-Laki	4/26/1999	BSD 	Kerja	+821042646580	Sudah join	Miracle 
+86	Epseen	Laki-Laki	5/4/2001	BSD 	Kerja	082136955686	Sudah join	Sabbath
 87	erika	Perempuan	1/21/2004	BSD 	Kuliah	085786988771	Belum join dan belum mau join	
-88	Ernest Manuel Sowandi	Laki-laki	4/10/2000	BSD 	Kuliah	085880699608	Sudah join	Miracle 
+88	Ernest Manuel Sowandi	Laki-Laki	4/10/2000	BSD 	Kuliah	085880699608	Sudah join	Miracle 
 89	Eunice Nahiman Turjono	Perempuan	5/22/2000	BSD 	Kerja	081908081360	Sudah join	Miracle 
 90	Evellyn 	Perempuan	11/13/2005	Alam Sutera	Kuliah	087899539768	Belum join dan belum mau join	
-91	F. Giovanni Adi Kusuma (Ivan)	Laki-laki		Villa Melati Blok G2 No.13	Kerja	085290747111	Sudah join	Asin
+91	F. Giovanni Adi Kusuma (Ivan)	Laki-Laki		Villa Melati Blok G2 No.13	Kerja	085290747111	Sudah join	Asin
 92	Feby Angelica Soewandono (Feby)	Perempuan	10/1/2002	Gading Serpong	Kerja	089605336530	Sudah join	Pathaway
 93	Fei Elita 	Perempuan	11/26/1997	Anggrek Loka	Kerja	+6285885338105	Sudah join	Cornerstone 
 94	Felicia Natalie	Perempuan	11/28/1997	Villa Melati Mas H7/12A	Kerja	081212488104	Belum join tapi mau join 	
 95	Felicia Sarah Wijaya (Fili)	Perempuan	10/16/1997	Regensi Melati Mas	Kerja	083813659041	Sudah join	Miracle
 96	Felicya	Perempuan	4/2/1999	Melati Mas	Kerja	08128850355	Belum join dan belum mau join	
-97	Felix Nathaniel Surjodinoto 	Laki-laki	1/5/2005	Villa Melati Mas Blok H7/12A	Kuliah	08111092251	Belum join tapi mau join 	
-98	Ferdinand Wijaya Chandra	Laki-laki	2/14/2001	Villa melati	Kerja	08988396121	Belum join tapi mau join 	
-99	Fernando Joshua	Laki-laki	2/13/1998	Jalan salem 1 no. 13	Kerja	085171597156	Belum join tapi mau join 	
-100	Filbert Nathaniel	Laki-laki		VMM	Kerja	085811511007	Belum join dan belum mau join	
+97	Felix Nathaniel Surjodinoto 	Laki-Laki	1/5/2005	Villa Melati Mas Blok H7/12A	Kuliah	08111092251	Belum join tapi mau join 	
+98	Ferdinand Wijaya Chandra	Laki-Laki	2/14/2001	Villa melati	Kerja	08988396121	Belum join tapi mau join 	
+99	Fernando Joshua	Laki-Laki	2/13/1998	Jalan salem 1 no. 13	Kerja	085171597156	Belum join tapi mau join 	
+100	Filbert Nathaniel	Laki-Laki		VMM	Kerja	085811511007	Belum join dan belum mau join	
 101	Florence Ignatia	Perempuan		BSD	Kerja	087889919398	Sudah join	Asin
-102	Frederick Sawedi	Laki-laki	10/14/2007	Silkwood Residences	Kuliah	0818319838	Belum join dan belum mau join	
-103	Frederick Winston Christenshend	Laki-laki	3/2/2006	pasific garden	Kuliah	082214372492	Belum join tapi mau join 	
+102	Frederick Sawedi	Laki-Laki	10/14/2007	Silkwood Residences	Kuliah	0818319838	Belum join dan belum mau join	
+103	Frederick Winston Christenshend	Laki-Laki	3/2/2006	pasific garden	Kuliah	082214372492	Belum join tapi mau join 	
 104	Frida Indari	Perempuan			Kerja	085724114720	Sudah join	Asin
-105	Gabriel Trifajar Siahaan	Laki-laki		Bintaro	Kuliah	081219856349	Sudah join	Light
+105	Gabriel Trifajar Siahaan	Laki-Laki		Bintaro	Kuliah	081219856349	Sudah join	Light
 106	Gabriela Megumi Kristian	Perempuan		Ruko Newton Barat no 1, Gading Serping	Kuliah	085183162804	Belum join tapi mau join 	
 107	Gabriella Rose Gunadi (Gaby)	Perempuan	6/2/2002	BSD	Kerja	089655501721	Sudah join	Light 
 108	Gabrielle Budiman - Gaby	Perempuan	9/6/2002	BSD	Kerja	08117496090	Sudah join	Sabbath
 109	Gabrielle Priskila	Perempuan	7/28/1998	BSD	Kerja	087881729400	Sudah join	Cornerstone 
-110	Geraldy Edson Thamrin (Gerald)	Laki-laki	4/24/1997	BSD	Kerja	087710920323	Sudah join	Miracle 
-111	Gilbert Salomo Karnoabe Nainggolan	Laki-laki	6/6/2007	Jl. Palm Kuning 1, Blok BC/17, Griya Loka, Sektor 1.3	Kuliah	081292224566	Belum join tapi mau join 	
-112	Giovanni Hutagaol (Jovie)	Laki-laki	7/17/2002	BSD 	Kerja	085886095554	Sudah join	Pathaway
-113	Glenn Eric	Laki-laki	2/4/2001	Sutera delima 60	Kerja	61434242016	Belum join tapi mau join 	
+110	Geraldy Edson Thamrin (Gerald)	Laki-Laki	4/24/1997	BSD	Kerja	087710920323	Sudah join	Miracle 
+111	Gilbert Salomo Karnoabe Nainggolan	Laki-Laki	6/6/2007	Jl. Palm Kuning 1, Blok BC/17, Griya Loka, Sektor 1.3	Kuliah	081292224566	Belum join tapi mau join 	
+112	Giovanni Hutagaol (Jovie)	Laki-Laki	7/17/2002	BSD 	Kerja	085886095554	Sudah join	Pathaway
+113	Glenn Eric	Laki-Laki	2/4/2001	Sutera delima 60	Kerja	61434242016	Belum join tapi mau join 	
 114	Gloria Eirene Setyantoro	Perempuan	10/20/2004	Karawaci	Kuliah	088215386932	Belum join dan belum mau join	
 115	Glory Amadea Swabawa	Perempuan	7/20/1995	VMM	Kerja	089661255764	Sudah join	Miracle 
 116	Grace Aurelia Agustinus 	Perempuan	9/25/2006	icon bsd, verdanville H7/31	Kuliah	081806027866	Belum join dan belum mau join	
 117	Grace Caterina	Perempuan	9/1/1998	Pondok jagung timur, serpong utara	Kerja	08568638420	Belum join tapi mau join 	
 118	Grace Felicia	Perempuan	6/25/1999	Taman Surya 5 Blok OO4 No 41 Kalideres Jakarta Barat	Kerja	087788773500	Belum join dan belum mau join	
 119	Gracia Hardjasa (Cia)	Perempuan	6/27/2003		Kuliah	085929850627	Sudah join	Light
-120	Gustin Finnegan	Laki-laki	8/4/1997	BSD	Kerja	089698254298	Sudah join	Miracle
-121	Haidee Aiditia Iksan	Laki-laki	2/24/2003	Silkwood Residence	Kuliah	081999352755	Belum join tapi mau join 	
-122	Hans Julian Theophilus 	Laki-laki	7/16/2007	Anggrek Loka 2.2 AC 10	Kuliah	085939572896	Belum join tapi mau join 	
-123	Hanz Christian	Laki-laki	2/2/2004	BSD	Kuliah	85172453770	Belum join tapi mau join 	
-124	Harry Ivander	Laki-laki	1/10/2002	Jakarta selatan	Kerja	08970441666	Belum join dan belum mau join	
+120	Gustin Finnegan	Laki-Laki	8/4/1997	BSD	Kerja	089698254298	Sudah join	Miracle
+121	Haidee Aiditia Iksan	Laki-Laki	2/24/2003	Silkwood Residence	Kuliah	081999352755	Belum join tapi mau join 	
+122	Hans Julian Theophilus 	Laki-Laki	7/16/2007	Anggrek Loka 2.2 AC 10	Kuliah	085939572896	Belum join tapi mau join 	
+123	Hanz Christian	Laki-Laki	2/2/2004	BSD	Kuliah	85172453770	Belum join tapi mau join 	
+124	Harry Ivander	Laki-Laki	1/10/2002	Jakarta selatan	Kerja	08970441666	Belum join dan belum mau join	
 125	Heidi Renata Halim	Perempuan	6/24/2002	Allevare A8/2, BSD Cisauk	Kerja	085694733363	Belum join dan belum mau join	
 126	Helen Ruth	Perempuan	11/30/2002	BSD	Kerja	+6586219393	Sudah join	Miracle
 127	Helena Agnes (Ailin)	Perempuan	9/23/1997	VMM	Kerja	081388125533	Sudah join	Miracle
-128	Henokh Ekklesia	Laki-laki	10/30/2000	Karawaci	Kerja	085716806559 	Sudah join	Cornerstone
+128	Henokh Ekklesia	Laki-Laki	10/30/2000	Karawaci	Kerja	085716806559 	Sudah join	Cornerstone
 130	Indah Marshanda	Perempuan		Gading Serpong	Kuliah		Sudah join	Peace 
 131	Indira Hutabarat	Perempuan	8/8/2000	Jatiwaringin, Bekasi	Kerja	8159285099	Belum join dan belum mau join	
 132	Irene Angelin	Perempuan	1/15/2002	Navapark BSD	Kerja	0895636168111	Belum join dan belum mau join	
 133	Irene Jovita 	Perempuan		Pamulang	Kerja	082233595495	Sudah join	Light
-134	Irenerus Ezra (Siong)	Laki-laki	5/2/1995	BSD	Kerja	8985584906	Sudah join	Salt
-8	Alexandro Julio	Laki-laki	7/9/2005	Malibu Village, Delaplane no 22	Kuliah	628117769968	Belum join tapi mau join 	
-135	Isabelle Anastasia	Laki-laki	4/27/2007	Villa Melati Mas blok G-XI/12A	Kuliah	089506451196	Belum join tapi mau join 	
-136	Jackie Leonardy	Laki-laki	5/24/2000	Madrid ( Work Abroad )	Kerja	085386343638	Sudah join	Miracle
-137	Jacob Alianto 	Laki-laki	7/5/1994	BSD 	Kerja	081977117106	Sudah join	Cornerstone
-138	James Jonathan	Laki-laki	10/6/2000	Gading Serpong	Kerja	82112442594	Belum join dan belum mau join	
+134	Irenerus Ezra (Siong)	Laki-Laki	5/2/1995	BSD	Kerja	8985584906	Sudah join	Salt
+8	Alexandro Julio	Laki-Laki	7/9/2005	Malibu Village, Delaplane no 22	Kuliah	628117769968	Belum join tapi mau join 	
+135	Isabelle Anastasia	Laki-Laki	4/27/2007	Villa Melati Mas blok G-XI/12A	Kuliah	089506451196	Belum join tapi mau join 	
+136	Jackie Leonardy	Laki-Laki	5/24/2000	Madrid ( Work Abroad )	Kerja	085386343638	Sudah join	Miracle
+137	Jacob Alianto 	Laki-Laki	7/5/1994	BSD 	Kerja	081977117106	Sudah join	Cornerstone
+138	James Jonathan	Laki-Laki	10/6/2000	Gading Serpong	Kerja	82112442594	Belum join dan belum mau join	
 139	Janet Christy	Perempuan	11/8/2000	Jl Regensi Melati Mas Blok B3 No 26	Kerja	085719115789	Sudah join	Miracle 
 140	Janice Adley	Perempuan		Alam Sutera	Kerja	085155119742	Sudah join	Pathaway
 141	Janice Andreas	Perempuan	1/1/2002	Gading serpong	Kerja	81318394147	Belum join tapi mau join 	
 142	Jasmine Fidelia Chandra	Perempuan		BSD	Kuliah	081319007980	Sudah join	Faith
-143	JASON FERNANDO	Laki-laki	3/19/2003	Kalimantan	Kuliah	085350461798	Belum join dan belum mau join	
-144	Jason Liko 	Laki-laki	5/5/2005	Palembang	Kuliah	wa.me/6281268005773	Belum join tapi mau join 	
-145	Jason Putra Deo	Laki-laki	9/30/2005	Jl. Rawa Buntu Selatan Blok G1 no 17, sektor 1.1, BSD, Tangerang Selatan	Kuliah	087867583577	Belum join tapi mau join 	
-146	Jason Gavrilleo Santoso	Laki-laki		Alam Sutera	Kuliah	87776746569	Belum join tapi mau join 	
-147	Jason Subandi (JJ Cowo)	Laki-laki		BSD / Bogor	Kuliah	08111325858	Sudah join	Peace
+143	JASON FERNANDO	Laki-Laki	3/19/2003	Kalimantan	Kuliah	085350461798	Belum join dan belum mau join	
+144	Jason Liko 	Laki-Laki	5/5/2005	Palembang	Kuliah	wa.me/6281268005773	Belum join tapi mau join 	
+145	Jason Putra Deo	Laki-Laki	9/30/2005	Jl. Rawa Buntu Selatan Blok G1 no 17, sektor 1.1, BSD, Tangerang Selatan	Kuliah	087867583577	Belum join tapi mau join 	
+146	Jason Gavrilleo Santoso	Laki-Laki		Alam Sutera	Kuliah	87776746569	Belum join tapi mau join 	
+147	Jason Subandi (JJ Cowo)	Laki-Laki		BSD / Bogor	Kuliah	08111325858	Sudah join	Peace
 148	Jazzy Gratia Sumendap	Perempuan	3/8/2001	Gading Serpong	Kerja	85156571008	Sudah join	Grace
 149	Jenifer	Perempuan	11/1/2001	The Avani Deshna	Kerja	081251790688	Belum join tapi mau join 	
 150	Jennifer Lowell	Perempuan	6/19/2001	BSD	Kerja	8812123232	Belum join dan belum mau join	
-151	Jeprijal bamen	Laki-laki	4/20/1995	BSD	Kerja	085337245353	Sudah join	Cornerstone
-152	Jeremy Claudio Wijaya (Jay/Jey)	Laki-laki		BSD	Kuliah	0812-9894-7542	udah ga join 	
-153	Jeremy Lewis Surya Tiro (Jer)	Laki-laki	8/18/1998	Strozzi timur 6, no.1 Gading Serpong	Kerja	082267001234	Belum join dan belum mau join	
+151	Jeprijal bamen	Laki-Laki	4/20/1995	BSD	Kerja	085337245353	Sudah join	Cornerstone
+152	Jeremy Claudio Wijaya (Jay/Jey)	Laki-Laki		BSD	Kuliah	0812-9894-7542	udah ga join 	
+153	Jeremy Lewis Surya Tiro (Jer)	Laki-Laki	8/18/1998	Strozzi timur 6, no.1 Gading Serpong	Kerja	082267001234	Belum join dan belum mau join	
 154	Jessica Audrey Tjahjadi	Perempuan	1/8/2007	Nusaloka Blok B1/23	Kuliah	85813072773	Belum join dan belum mau join	
 155	Jessica Gabriella	Perempuan					Belum join dan belum mau join	
 156	Jessica Octavia	Perempuan	10/12/1992	Villa Melati Mas (VMM)	Kerja	85781084400	Sudah join	Miracle
@@ -1259,122 +1259,122 @@ COPY public.cnx_jemaat_csv (no_jemaat, nama_jemaat, jenis_kelamin, tanggal_lahir
 159	Jessy Clarissa Wijaya (Jessy)	Perempuan		BSD	Kuliah	08151810000	Sudah join	Peace
 160	Joan	Perempuan	1/4/2001	BSD	Kerja	081318372764	Sudah join	Cornerstone
 161	Joan Amanda Moningka Wijaya 	Perempuan	9/22/2006	Kubikahomy Apartment 	Kuliah	81547318105	Sudah join	Peace
-162	Joe Fendero	Laki-laki			Kerja	085715360698	Belum join dan belum mau join	
-163	Joel Sebastian H	Laki-laki	08/12/2000			08871336092	Sudah join	Sabbath
+162	Joe Fendero	Laki-Laki			Kerja	085715360698	Belum join dan belum mau join	
+163	Joel Sebastian H	Laki-Laki	08/12/2000			08871336092	Sudah join	Sabbath
 164	Joelyna Aurelia Katie Moningka Wijaya	Perempuan	11/22/2007	Kubikahomy	Kuliah	85792107319	Belum join tapi mau join 	
 165	Johnny	Perempuan	7/29/1993	Jalan Guru Mughni, Gang Andil 6	Kerja	85703355529	Belum join dan belum mau join	
-166	Jonathan Aaron Wijaya (Aaron)	Laki-laki	9/22/2004	BSD	Kuliah	085738808893	Sudah join	Peace
-167	Jonathan Koesno	Laki-laki			Kerja	081219158259	Sudah join	Grace
-168	Jonathan Reynard	Laki-laki		Apartement M town	Kerja	wa.me/6282276931278	Belum join tapi mau join 	
-169	Jonathan Widi Cahyadi (Widi)	Laki-laki	12/4/1993	Pamulang	Kerja	81212140388	Sudah join	Miracle
-170	Jongka Hero	Laki-laki	6/4/2006	Alam Sutera	Kuliah	85349512971	Belum join dan belum mau join	
-171	Jordan Sumardi	Laki-laki	1/21/1996	puspita loka	Kerja	87883705888	Belum join tapi mau join 	
+166	Jonathan Aaron Wijaya (Aaron)	Laki-Laki	9/22/2004	BSD	Kuliah	085738808893	Sudah join	Peace
+167	Jonathan Koesno	Laki-Laki			Kerja	081219158259	Sudah join	Grace
+168	Jonathan Reynard	Laki-Laki		Apartement M town	Kerja	wa.me/6282276931278	Belum join tapi mau join 	
+169	Jonathan Widi Cahyadi (Widi)	Laki-Laki	12/4/1993	Pamulang	Kerja	81212140388	Sudah join	Miracle
+170	Jongka Hero	Laki-Laki	6/4/2006	Alam Sutera	Kuliah	85349512971	Belum join dan belum mau join	
+171	Jordan Sumardi	Laki-Laki	1/21/1996	puspita loka	Kerja	87883705888	Belum join tapi mau join 	
 172	Joseph Laurent	Perempuan	12/16/2005	Maxley Suites	Kuliah	85216122005	Belum join tapi mau join 	
-173	Josephine Kalista Utomo	Laki-laki	11/21/1999	Lippo Cikarang	Kerja	087879112002	Belum join dan belum mau join	
-174	Josh Marvel Nathan (Josh)	Laki-laki	5/15/2002	The Icon BSD	Kerja	087873014204	Sudah join	Cornerstone
-175	Joshua Renaldo	Laki-laki	7/11/1997	Villa Melati Mas (VMM)	Kerja	085280315906	Sudah join	Miracle
-176	Josia Joseph Chandra	Laki-laki					Sudah join	Sabbath
-177	Josua hakrio	Laki-laki	8/17/1997	Palm Merah UL 26	Kerja	82285101455	Belum join tapi mau join 	
+173	Josephine Kalista Utomo	Laki-Laki	11/21/1999	Lippo Cikarang	Kerja	087879112002	Belum join dan belum mau join	
+174	Josh Marvel Nathan (Josh)	Laki-Laki	5/15/2002	The Icon BSD	Kerja	087873014204	Sudah join	Cornerstone
+175	Joshua Renaldo	Laki-Laki	7/11/1997	Villa Melati Mas (VMM)	Kerja	085280315906	Sudah join	Miracle
+176	Josia Joseph Chandra	Laki-Laki					Sudah join	Sabbath
+177	Josua hakrio	Laki-Laki	8/17/1997	Palm Merah UL 26	Kerja	82285101455	Belum join tapi mau join 	
 178	Jovanca Marvelia Nathaniel	Perempuan	10/27/2007	Tangerang, BSD, The Icon	Kuliah	wa.me/6287885582700	Belum join dan belum mau join	
 179	Jovanny Nathania	Perempuan	6/23/2006	Dorm Binus Alsut	Kuliah	811578228	Belum join tapi mau join 	
-180	Jovito Colin	Laki-laki					Belum join dan belum mau join	
-181	Joy Milliaan	Laki-laki	10/31/2001	Kelapa Gading	Kerja	081519986610	Belum join dan belum mau join	
+180	Jovito Colin	Laki-Laki					Belum join dan belum mau join	
+181	Joy Milliaan	Laki-Laki	10/31/2001	Kelapa Gading	Kerja	081519986610	Belum join dan belum mau join	
 182	Julia	Perempuan	7/8/1998	Batalyon Kav 9	Kerja	085219891478	Belum join tapi mau join 	
-183	Julian Suhendra Tjiang	Laki-laki	7/28/2005	Maxley Suites	Kuliah	087886787285	Belum join dan belum mau join	
-184	Julian Tirtadjaja	Laki-laki	12/12/1995	Villa Melati Mas (VMM)	Kerja	082123229622	Sudah join	Grace
+183	Julian Suhendra Tjiang	Laki-Laki	7/28/2005	Maxley Suites	Kuliah	087886787285	Belum join dan belum mau join	
+184	Julian Tirtadjaja	Laki-Laki	12/12/1995	Villa Melati Mas (VMM)	Kerja	082123229622	Sudah join	Grace
 185	Karen Florencia (Karen)	Perempuan		Gading Serpong 7A	Kerja	087760462190	Belum join dan belum mau join	
 186	Kathleen Lauren Wahyudo	Perempuan	9/11/2006	Serpong Park F1/38 	Kuliah	088808492655	Belum join tapi mau join 	
-187	Kenneth Chuhairy	Laki-laki	8/17/1996	Giri Loka, BSD	Kerja	0817862555	Sudah join	Miracle 
-188	Kerfin 	Laki-laki	5/21/1995	VMM	Kerja	089530442023	Sudah join	Miracle
-189	Kerlvin Liecarles	Laki-laki	10/8/2002	BSD	Kerja	082210832397	Sudah join	Pathaway
-190	Kevin Dallian (KD)	Laki-laki			Kerja	08115752289	Belum join tapi mau join 	
-191	Kevin Saragih	Laki-laki	1/24/2007	BSD	Kuliah	81282046275	Belum join tapi mau join 	
+187	Kenneth Chuhairy	Laki-Laki	8/17/1996	Giri Loka, BSD	Kerja	0817862555	Sudah join	Miracle 
+188	Kerfin 	Laki-Laki	5/21/1995	VMM	Kerja	089530442023	Sudah join	Miracle
+189	Kerlvin Liecarles	Laki-Laki	10/8/2002	BSD	Kerja	082210832397	Sudah join	Pathaway
+190	Kevin Dallian (KD)	Laki-Laki			Kerja	08115752289	Belum join tapi mau join 	
+191	Kevin Saragih	Laki-Laki	1/24/2007	BSD	Kuliah	81282046275	Belum join tapi mau join 	
 192	Kezia Angeline (kezia, kezkez, kekez)	Perempuan	9/3/2001	Strozzi timur 6, no.1 Gading Serpong	Kuliah	6282210902001	Sudah join	Light
 194	Kimberly	Perempuan	9/9/2000		Kerja	(+)1(424)3957481	Sudah join	Miracle
-195	Lionel Nathan	Laki-laki	11/25/2007	delatinos	Kuliah	81288055789	Belum join dan belum mau join	
+195	Lionel Nathan	Laki-Laki	11/25/2007	delatinos	Kuliah	81288055789	Belum join dan belum mau join	
 196	Lisa Virianti Mulyo	Perempuan				81933133975	Belum join tapi mau join 	
 4	Agatha Christie Noviana	Perempuan	9/8/2002	Kalimantan Barat	Kerja	085387859797	Belum join tapi mau join 	
 193	Kezia Putri Deo	Perempuan		BSD	Kuliah	087796164664	Sudah join	Faith
-197	Luckemeraldo Jardel	Laki-laki	10/11/2006	BSD	Kuliah	081217378890	Sudah join	Faith
-198	Luis Manuel	Laki-laki	8/15/2002		Kerja	08111000559	Belum join tapi mau join 	
+197	Luckemeraldo Jardel	Laki-Laki	10/11/2006	BSD	Kuliah	081217378890	Sudah join	Faith
+198	Luis Manuel	Laki-Laki	8/15/2002		Kerja	08111000559	Belum join tapi mau join 	
 199	Mackanzie Lawrence Anna Wijaya	Perempuan		Serpong	Kuliah	081347482517	Belum join tapi mau join 	
 200	Mandy Theodora (Mandy)	Perempuan		Lippo Village	Kuliah	081318511111	Sudah join	Grace
-201	Marcel Widjaja	Laki-laki	6/5/2007	Topaz Timur 1 no 1	Kuliah	wa.me/6285811556828	Belum join dan belum mau join	
-202	Marcelino	Laki-laki	8/11/2006	BSD	Kuliah	81388509442	Sudah join	Peace 
-203	Mathew Lambertus Koronpis	Laki-laki	9/8/2005	Aeston Park	Kuliah	0895806291664	Belum join tapi mau join 	
-204	matthew benney	Laki-laki	12/19/2006	sw	Kuliah	081234683643	Belum join tapi mau join 	
+201	Marcel Widjaja	Laki-Laki	6/5/2007	Topaz Timur 1 no 1	Kuliah	wa.me/6285811556828	Belum join dan belum mau join	
+202	Marcelino	Laki-Laki	8/11/2006	BSD	Kuliah	81388509442	Sudah join	Peace 
+203	Mathew Lambertus Koronpis	Laki-Laki	9/8/2005	Aeston Park	Kuliah	0895806291664	Belum join tapi mau join 	
+204	matthew benney	Laki-Laki	12/19/2006	sw	Kuliah	081234683643	Belum join tapi mau join 	
 205	Maura Sukamto	Perempuan	2001	Giri Loka, lg kuliah di us	Kuliah	(+)1(708)8826915	Sudah join	Cornerstone
 206	Medeline Umboh	Perempuan	4/3/2004	Silkwood Residence	Kerja	wa.me/62895800493047	Belum join tapi mau join 	
 207	Megan Evangeline (Megan)	Perempuan	8/20/2004	Gading Serpong	Kuliah	08195588559	Sudah join	Peace
 208	Melliani Yulianty (Lim) dipanggil Mel/Mei/Melli	Perempuan		Pamulang	Kerja	081298802653	Belum join tapi mau join 	
-209	Merfin	Laki-laki	5/21/1995	VMM	Kerja	089632001951	Sudah join	Miracle
-210	Michael Lika	Laki-laki	9/16/2007	Greencove Blok A5 No. 27	Kuliah	085212340916	Belum join tapi mau join 	
+209	Merfin	Laki-Laki	5/21/1995	VMM	Kerja	089632001951	Sudah join	Miracle
+210	Michael Lika	Laki-Laki	9/16/2007	Greencove Blok A5 No. 27	Kuliah	085212340916	Belum join tapi mau join 	
 211	Michelle	Perempuan	4/23/1999	Pluit	Kerja	81310924363	Belum join tapi mau join 	
 212	Michelle Caroline Obaja	Perempuan	10/4/2006	Jalan Taman Beryl No. 9, Cluster Beryl, Gading Serpong	Kuliah	081213654097	Belum join tapi mau join 	
 213	Michelle Gwylyn Wijaya	Perempuan	4/8/2001	VMM	Kerja	081212870970	Belum join tapi mau join 	
-214	mona sinaga	Laki-laki	12/19/1988	jalan ciater raya blok c nomor 11	Kerja	85312849171	Belum join tapi mau join 	
-215	Moris	Laki-laki				081806167758	Belum join dan belum mau join	
-216	Morrison Kristianto	Laki-laki	7/17/2002	Serpong Regensi Melati Mas Blok E 14 40 Serpong Tangerang Selatan.	Kerja	wa.me/6289665368544	Belum join tapi mau join 	
+214	mona sinaga	Laki-Laki	12/19/1988	jalan ciater raya blok c nomor 11	Kerja	85312849171	Belum join tapi mau join 	
+215	Moris	Laki-Laki				081806167758	Belum join dan belum mau join	
+216	Morrison Kristianto	Laki-Laki	7/17/2002	Serpong Regensi Melati Mas Blok E 14 40 Serpong Tangerang Selatan.	Kerja	wa.me/6289665368544	Belum join tapi mau join 	
 217	Nadine Eschetetodia	Perempuan		Regensi Melati Mas	Kerja		Belum join dan belum mau join	
 218	Naditta Hutagaol	Perempuan	12/1/2006	BSD	Kuliah	085591744749	Sudah join	Faith
 219	Naftali Brigitta Gunawan (Naftali)	Perempuan	3/15/2003	Ciater	Kuliah	081282631726	Sudah join	Light
 220	Naomi Krisanty	Perempuan		BSD	Kerja	085885105106	Sudah join	Peace
-221	Natanezra Souw	Laki-laki	11/25/1999	East Asia 2 No. 5, Green Lake City	Kerja	085157562236	Belum join dan belum mau join	
-222	Nathan Tandra	Laki-laki	2/3/2006	Alam sutera	Kuliah		Belum join dan belum mau join	
+221	Natanezra Souw	Laki-Laki	11/25/1999	East Asia 2 No. 5, Green Lake City	Kerja	085157562236	Belum join dan belum mau join	
+222	Nathan Tandra	Laki-Laki	2/3/2006	Alam sutera	Kuliah		Belum join dan belum mau join	
 223	Nathania Alethea Rianto Sigit (Thea)	Perempuan	1/8/1998	GS	Kerja	08194849449	Sudah join	Grace
 224	Nathania Sofie	Perempuan	10/10/1997	Gading Serpong	Kerja	08997894334	Sudah join	Grace
-225	Nathaniel Shawn Edgar Sondakh 	Laki-laki	12/7/2007	Delatinos D8/16	Kuliah	085220007790	Belum join tapi mau join 	
-226	Nevio Nathanael	Laki-laki		Pavilion Residence A5/7	Kerja	081290224011	Belum join dan belum mau join	
-227	Nicholas Gerrard Hermanto	Laki-laki	7/7/2007	Jl. Flamingo barat no. 52, Cihuni, Pagedangan, Kab. Tangerang, Banten	Kuliah	wa.me/6281385976921	Belum join tapi mau join 	
+225	Nathaniel Shawn Edgar Sondakh 	Laki-Laki	12/7/2007	Delatinos D8/16	Kuliah	085220007790	Belum join tapi mau join 	
+226	Nevio Nathanael	Laki-Laki		Pavilion Residence A5/7	Kerja	081290224011	Belum join dan belum mau join	
+227	Nicholas Gerrard Hermanto	Laki-Laki	7/7/2007	Jl. Flamingo barat no. 52, Cihuni, Pagedangan, Kab. Tangerang, Banten	Kuliah	wa.me/6281385976921	Belum join tapi mau join 	
 228	Nichole Christy	Perempuan	7/20/1999	NusaLoka jalan Jawa IX 	Kerja	85780922791	Belum join dan belum mau join	
 229	Nicola Melodyta Suryodinoto	Perempuan	1/14/2002	BSD Sektor 1-2, Jl. Magnolia 4 blok F no.7	Kuliah	89502506000	Belum join tapi mau join 	
 230	Nicoline Dorothy Santoso (Nicole)	Perempuan	12/8/2005	BSD		08119990812	Belum join tapi mau join 	
 232	Olivia Ajani Rori	Perempuan	5/10/2008	the green, cluster royal blossom, blok K.6, no.7, Cilenggang, serpong, TangSel 15310 banten	Kuliah	wa.me/6281388889670	Belum join tapi mau join 	
-233	Osbert Nathaniel Wibowo	Laki-laki	11/9/2001	VMM	Kuliah	085881698702	Sudah join	Pathaway
-234	Oswin Suwandi	Laki-laki	12/11/1999	VMM	Kuliah	087771777154	Sudah join	Miracle
-235	Owen	Laki-laki	9/25/2006	Alam Sutera	Kuliah	087839119783	Belum join tapi mau join 	
-236	Owen Siau	Laki-laki	6/11/2005	Silkwood Residence	Kuliah	087839119783	Belum join tapi mau join 	
-237	Pascal Nathaniel	Laki-laki			Kerja		Belum join dan belum mau join	
-238	Patricia Audrey	Laki-laki	12/20/2003	Atlanta Village	Kerja	81247430521	Belum join dan belum mau join	
-239	Patrick Christoper ( Patrick )	Laki-laki		BSD	Kuliah	081293221250	udah ga join 	
-240	Paulus Adi Wau (Adi)	Laki-laki	8/25/2003	BSD	Kuliah	0895635020257	Sudah join	Light 
+233	Osbert Nathaniel Wibowo	Laki-Laki	11/9/2001	VMM	Kuliah	085881698702	Sudah join	Pathaway
+234	Oswin Suwandi	Laki-Laki	12/11/1999	VMM	Kuliah	087771777154	Sudah join	Miracle
+235	Owen	Laki-Laki	9/25/2006	Alam Sutera	Kuliah	087839119783	Belum join tapi mau join 	
+236	Owen Siau	Laki-Laki	6/11/2005	Silkwood Residence	Kuliah	087839119783	Belum join tapi mau join 	
+237	Pascal Nathaniel	Laki-Laki			Kerja		Belum join dan belum mau join	
+238	Patricia Audrey	Laki-Laki	12/20/2003	Atlanta Village	Kerja	81247430521	Belum join dan belum mau join	
+239	Patrick Christoper ( Patrick )	Laki-Laki		BSD	Kuliah	081293221250	udah ga join 	
+240	Paulus Adi Wau (Adi)	Laki-Laki	8/25/2003	BSD	Kuliah	0895635020257	Sudah join	Light 
 241	Phoebe Nathania	Perempuan	11/2/2000	Gading Serpong	Kerja	08111530211	Sudah join	Grace
-242	Piter Lius	Laki-laki	3/19/2002	Jl. Tpu parakan Gg. Samen mena no.134, benda baru	Kerja	085173190341	Belum join dan belum mau join	
-243	Prabandana Raditya	Laki-laki	8/31/2000	The Icon	Kerja	081380859378	Belum join dan belum mau join	
-244	Primuadi Bali	Laki-laki	1/9/1999	BSD	Kerja	082311634560	Sudah join	Sabbath
-245	Putri Kasiman 	Laki-laki	10/25/2005	BSD	Kuliah	087867583546	Sudah join	Faith
-246	Ralph	Laki-laki					udah ga join 	
-247	Rayner Gabrielle	Laki-laki	5/8/2001	Gading Serpong	Kerja	085920339955	Sudah join	Grace
-248	Renald Nathaniel Heldi	Laki-laki	5/29/2002	The Zora BSD City	Kerja	0818319838	Belum join dan belum mau join	
-253	Ryan Nathanael Wongso - Ryan	Laki-laki		Jakarta	Kerja	087843130828	Sudah join	Salt
+242	Piter Lius	Laki-Laki	3/19/2002	Jl. Tpu parakan Gg. Samen mena no.134, benda baru	Kerja	085173190341	Belum join dan belum mau join	
+243	Prabandana Raditya	Laki-Laki	8/31/2000	The Icon	Kerja	081380859378	Belum join dan belum mau join	
+244	Primuadi Bali	Laki-Laki	1/9/1999	BSD	Kerja	082311634560	Sudah join	Sabbath
+245	Putri Kasiman 	Laki-Laki	10/25/2005	BSD	Kuliah	087867583546	Sudah join	Faith
+246	Ralph	Laki-Laki					udah ga join 	
+247	Rayner Gabrielle	Laki-Laki	5/8/2001	Gading Serpong	Kerja	085920339955	Sudah join	Grace
+248	Renald Nathaniel Heldi	Laki-Laki	5/29/2002	The Zora BSD City	Kerja	0818319838	Belum join dan belum mau join	
+253	Ryan Nathanael Wongso - Ryan	Laki-Laki		Jakarta	Kerja	087843130828	Sudah join	Salt
 254	Saint Diven (diven)	Perempuan		Pamulang	Kerja	085883035551	Belum join tapi mau join 	
-255	Sam	Laki-laki	8/7/2003	BSD	Kuliah	081316007035	Sudah join	Pathaway
+255	Sam	Laki-Laki	8/7/2003	BSD	Kuliah	081316007035	Sudah join	Pathaway
 256	Sarah Lynn	Perempuan	6/16/2003	TangKot Modernland	Kuliah	081388187873	Sudah join	Grace
-258	Sean Gabriel	Laki-laki					udah ga join 	
-259	sener alden	Laki-laki	9/20/2005	maxley suite	Kuliah	http://wa.me/081399131522	Belum join tapi mau join 	
+258	Sean Gabriel	Laki-Laki					udah ga join 	
+259	sener alden	Laki-Laki	9/20/2005	maxley suite	Kuliah	http://wa.me/081399131522	Belum join tapi mau join 	
 264	Sisilia	Perempuan	3/31/2001	Komplek Batan Indah Blok P No.23	Kerja	0895340841465	Belum join tapi mau join 	
 5	Agnes Feby	Perempuan			Kerja	085217186165	Sudah join	Salt
-6	Alexander Putera Widjaya 	Laki-laki	1/18/2008	BSD, Griyaloka, Jalan Cempaka 1, blok H4/4	Kuliah	081212664739	Belum join tapi mau join 	
+6	Alexander Putera Widjaya 	Laki-Laki	1/18/2008	BSD, Griyaloka, Jalan Cempaka 1, blok H4/4	Kuliah	081212664739	Belum join tapi mau join 	
 7	Alexandra Madeline Rachel Boham 	Perempuan	5/17/2005	BSD	Kuliah	081212376714	Sudah join	Faith
 9	Alicia Natasha Dynanty	Perempuan	12/29/2000	BSD	Kerja	081293576622	Sudah join	Cornerstone 
 10	Allicia Kustanto 	Perempuan		BSD	Kerja	085210221998	Belum join dan belum mau join	Udah ga di bsd
-11	Alphasius Omega Dixon	Laki-laki	5/7/1996	Pamulang 	Kerja	081806167758	Sudah join	Cornerstone 
-257	Sean Arden	Laki-laki		Sunter	Kerja	08161399363	Sudah join	Cornerstone
+11	Alphasius Omega Dixon	Laki-Laki	5/7/1996	Pamulang 	Kerja	081806167758	Sudah join	Cornerstone 
+257	Sean Arden	Laki-Laki		Sunter	Kerja	08161399363	Sudah join	Cornerstone
 266	Stephanie Joana	Perempuan			Kerja	081908035450	Sudah join	Salt
 267	Stephanie Kowinto	Perempuan	8/19/2007	Alam Sutera	Kuliah	08111908072	Belum join tapi mau join 	
-268	Stephen Renaldi	Laki-laki		BSD	Kerja	081290236252	Belum join dan belum mau join	
-269	Steven Timothy Octovian Gans	Laki-laki	10/16/2004	Cluster Crystal Jln. Crystal Barat no 45, Gading Serpong, Pakulonan Barat, Kelapa Dua, Tangerang	Kuliah	0816302582	Belum join dan belum mau join	
+268	Stephen Renaldi	Laki-Laki		BSD	Kerja	081290236252	Belum join dan belum mau join	
+269	Steven Timothy Octovian Gans	Laki-Laki	10/16/2004	Cluster Crystal Jln. Crystal Barat no 45, Gading Serpong, Pakulonan Barat, Kelapa Dua, Tangerang	Kuliah	0816302582	Belum join dan belum mau join	
 270	Thelissa Levana Zheng (Lissa)	Perempuan	4/15/2004	BSD	Kuliah	081806411504	Sudah join	Pathaway
 271	Theresya Christabsl	Perempuan	9/15/2007	The Zora, Bsd city	Kuliah	http://wa.me/62816832688	Belum join dan belum mau join	
 272	Tiffani Miracle Yanita	Perempuan	1/8/1996	Skyhouse BSD	Kerja	087851859919	Belum join tapi mau join 	
 273	Timothy Frederick Lukas (Timmy)	Perempuan	2/7/1998	VMM	Kerja	0817136270	Sudah join	Miracle
-274	Timothy Lewis	Laki-laki	4/15/2004		Kuliah	082148198080	Belum join dan belum mau join	
-275	Timothy Secawardaya (Tim)	Laki-laki		BSD	Kerja	081808561826	Sudah join	Salt
-276	Timotius Aubriel (Timi)	Laki-laki	12/15/2000	BSD	Kerja	0821227354080	Sudah join	Cornerstone 
+274	Timothy Lewis	Laki-Laki	4/15/2004		Kuliah	082148198080	Belum join dan belum mau join	
+275	Timothy Secawardaya (Tim)	Laki-Laki		BSD	Kerja	081808561826	Sudah join	Salt
+276	Timotius Aubriel (Timi)	Laki-Laki	12/15/2000	BSD	Kerja	0821227354080	Sudah join	Cornerstone 
 277	Trissa Lonyka	Perempuan	3/31/1998	BSD	Kuliah	082112507795	Sudah join	light
 278	Valencia Devina	Perempuan	11/29/2001	Pamulang	Kerja	085770417688	Belum join dan belum mau join	
-279	Valentino Imanuel	Laki-laki	2/22/2004	Pamulang	Kuliah	085692244891	Sudah join	Sabbath
-280	Vallen Nathaniel (Vallen)	Laki-laki		Alam Sutera	Kuliah	08111001144	Belum join dan belum mau join	
+279	Valentino Imanuel	Laki-Laki	2/22/2004	Pamulang	Kuliah	085692244891	Sudah join	Sabbath
+280	Vallen Nathaniel (Vallen)	Laki-Laki		Alam Sutera	Kuliah	08111001144	Belum join dan belum mau join	
 281	Vallerie Ann Harjadi	Perempuan	8/29/2006	Visana The Savia K5/15 BSD	Kuliah	081298926592	Belum join dan belum mau join	
 282	Vanesa	Perempuan	3/16/1999	Regency melati mas blok C6/6	Kerja	08990168893	Sudah join	Miracle
 283	Vanessa Danniella (nes)	Perempuan			Kerja	+6289692649731	udah ga join 	udah ga di bsd 
@@ -1386,42 +1386,42 @@ COPY public.cnx_jemaat_csv (no_jemaat, nama_jemaat, jenis_kelamin, tanggal_lahir
 289	Vidrey 	Perempuan	10/22/2000	BSD	Kerja	082124202722	Sudah join	Cornerstone 
 290	Vieka Santoso	Perempuan	1/6/2002	BSD	Kerja	0811140948	Belum join dan belum mau join	
 291	Vieta Santoso	Perempuan	4/5/1996	Taman Tirta Golf	Kerja	081297766377	Sudah join	Miracle
-292	Vincent Leonardo	Laki-laki	7/30/2005	VMM	Kuliah	081381818084	Sudah join	Miracle
-293	Vincent Nathaniel 	Laki-laki		Alam Sutera	Kerja	08111772775	Sudah join	
-294	Vincentius Adryan Hartono	Laki-laki	8/25/2007	Puspitaloka blok A5	Kuliah	08121887072	Belum join dan belum mau join	
-295	Vinsensius Christopher Nathaniel Arden	Laki-laki	5/9/2002	Gading Serpong	Kerja	08158039952	Sudah join	Grace 
+292	Vincent Leonardo	Laki-Laki	7/30/2005	VMM	Kuliah	081381818084	Sudah join	Miracle
+293	Vincent Nathaniel 	Laki-Laki		Alam Sutera	Kerja	08111772775	Sudah join	
+294	Vincentius Adryan Hartono	Laki-Laki	8/25/2007	Puspitaloka blok A5	Kuliah	08121887072	Belum join dan belum mau join	
+295	Vinsensius Christopher Nathaniel Arden	Laki-Laki	5/9/2002	Gading Serpong	Kerja	08158039952	Sudah join	Grace 
 296	Vioren Defika	Perempuan	5/16/2002	Gading Serpong	Kerja	081289939877	Belum join dan belum mau join	
-297	Virgilius Tan 	Laki-laki		Tangerang	Kerja	085310220766	udah ga join 	
+297	Virgilius Tan 	Laki-Laki		Tangerang	Kerja	085310220766	udah ga join 	
 298	Vivian Sumendap	Perempuan		BSD (Kuliah Prasmul)	Kuliah	085325536877	Belum join dan belum mau join	
-299	Wahyu Wijaya	Laki-laki	3/27/2003	Alam Sutera	Kuliah	0817271369	Sudah join	Faith
+299	Wahyu Wijaya	Laki-Laki	3/27/2003	Alam Sutera	Kuliah	0817271369	Sudah join	Faith
 300	Wiku Melisa 	Perempuan		Jakarta	Kerja	08117044359	Sudah join	Salt
-301	William	Laki-laki	10/26/2001	Jl Laurel South 3/5, Nava Park, BSD, Tangerang	Kerja	http://wa.me/61433846208	Belum join tapi mau join 	
-302	William Handel Lowry	Laki-laki	10/7/1995	BSD	Kerja	82253091274	Sudah join	Cornerstone 
-303	Win Tjen	Laki-laki		BSD	Kuliah	081285001187	Sudah join	Faith
-304	Winston	Laki-laki	3/2/2006	Alam Sutera	Kuliah	082214372492	Belum join dan belum mau join	
-305	wisely liu dennis	Laki-laki	2/11/1994	kresem 2 no 8g	Kerja	087882529388	Belum join dan belum mau join	
-306	Wynner Rafaelle	Laki-laki	8/23/2003	Gading Serpong	Kuliah	087881200862	Sudah join	Pathaway 
+301	William	Laki-Laki	10/26/2001	Jl Laurel South 3/5, Nava Park, BSD, Tangerang	Kerja	http://wa.me/61433846208	Belum join tapi mau join 	
+302	William Handel Lowry	Laki-Laki	10/7/1995	BSD	Kerja	82253091274	Sudah join	Cornerstone 
+303	Win Tjen	Laki-Laki		BSD	Kuliah	081285001187	Sudah join	Faith
+304	Winston	Laki-Laki	3/2/2006	Alam Sutera	Kuliah	082214372492	Belum join dan belum mau join	
+305	wisely liu dennis	Laki-Laki	2/11/1994	kresem 2 no 8g	Kerja	087882529388	Belum join dan belum mau join	
+306	Wynner Rafaelle	Laki-Laki	8/23/2003	Gading Serpong	Kuliah	087881200862	Sudah join	Pathaway 
 307	Wynona	Perempuan			Kuliah	81910470450	Sudah join	Faith, Kuliah ke Amrik
 308	Yasmine Nathania	Perempuan		Puspita Loka Jl Lili Blok G3/5	Kerja	085866799881	Belum join tapi mau join 	
-1	Abraham Christopher Elgrego (Hanhan)	Laki-laki	3/15/2002	Gading Serpong	Kerja	081338245611	Sudah join	Pathaway
+1	Abraham Christopher Elgrego (Hanhan)	Laki-Laki	3/15/2002	Gading Serpong	Kerja	081338245611	Sudah join	Pathaway
 2	Accoladea Wijaya 	Perempuan	6/1/2003	VMM	Kuliah	0895353279881	Sudah join	Light
 3	Agata fortuna	Perempuan	4/21/1998	Tabebuya inspirahaus f5 no 10	Kerja	08115788772	Belum join tapi mau join 	Miracle
-129	Hubert Tatra	Laki-laki	3/7/1999	BSD	Kerja	08117572378	Sudah join	Cornerstone
+129	Hubert Tatra	Laki-Laki	3/7/1999	BSD	Kerja	08117572378	Sudah join	Cornerstone
 231	Olivia	Perempuan				088291996778	Sudah join	Grace
-249	Riandy W	Laki-laki	2000	Foresta Raya Cluster Studento	Kerja		Sudah join	Cornerstone 
-250	Robert Muliawan Jaya	Laki-laki	8/9/2002	Jakarta Barat	Kerja	087803120999	Belum join tapi mau join 	
+249	Riandy W	Laki-Laki	2000	Foresta Raya Cluster Studento	Kerja		Sudah join	Cornerstone 
+250	Robert Muliawan Jaya	Laki-Laki	8/9/2002	Jakarta Barat	Kerja	087803120999	Belum join tapi mau join 	
 251	Ruth Yura Gracia Gultom (Yura)	Perempuan	4/14/1995	BSD	Kerja	081289480600	Sudah join	Miracle 
-252	Ryan Agustian	Laki-laki	8/30/2001	BSD	Kerja	0895803248903	Belum join dan belum mau join	
-260	Septawon	Laki-laki	9/6/1999	Serpong	Kerja	0812544230549	Belum join tapi mau join 	
-261	Serviour Lilihata	Laki-laki	6/11/2007	Villa Bintaro Regency Blok G3/4, Kec.Pondok Aren, Kota Tangerang Selatan, Banten	Kuliah	082110178535	Belum join tapi mau join 	
+252	Ryan Agustian	Laki-Laki	8/30/2001	BSD	Kerja	0895803248903	Belum join dan belum mau join	
+260	Septawon	Laki-Laki	9/6/1999	Serpong	Kerja	0812544230549	Belum join tapi mau join 	
+261	Serviour Lilihata	Laki-Laki	6/11/2007	Villa Bintaro Regency Blok G3/4, Kec.Pondok Aren, Kota Tangerang Selatan, Banten	Kuliah	082110178535	Belum join tapi mau join 	
 262	Sherika Marvella	Perempuan	3/4/2004	marigold BSD City	Kuliah	http://wa.me/08117288890	Belum join tapi mau join 	
 263	Silvi Wattimena	Perempuan	9/4/2004	Serpong	Kerja	081273607331	Belum join dan belum mau join	
-265	Stanly	Laki-laki		Gading Serpong 7A	Kerja	08113923278	Sudah join	Grace
-309	Yoel Cavello (Cavel)	Laki-laki	6/5/2000	BSD	Kerja	089679657452	Sudah join	Cornerstone
-310	Yohannes Gunawan	Laki-laki		Jalan raya bukit serua	Kerja	087882178560	Sudah join	Salt 
-311	Yosafat Hans Wijaya	Laki-laki	3/21/1998	Alam Sutera	Kerja	0895336787578	Sudah join	Miracle
-312	Yosia Kurnia	Laki-laki		Daerah BSD	Kerja	081288991321	Sudah join	Salt, lagi rantau ke Salatiga
-313	yunato	Laki-laki	6/14/1993	pamulang	Kerja	http://wa.me/6282122379491	Belum join tapi mau join 	
+265	Stanly	Laki-Laki		Gading Serpong 7A	Kerja	08113923278	Sudah join	Grace
+309	Yoel Cavello (Cavel)	Laki-Laki	6/5/2000	BSD	Kerja	089679657452	Sudah join	Cornerstone
+310	Yohannes Gunawan	Laki-Laki		Jalan raya bukit serua	Kerja	087882178560	Sudah join	Salt 
+311	Yosafat Hans Wijaya	Laki-Laki	3/21/1998	Alam Sutera	Kerja	0895336787578	Sudah join	Miracle
+312	Yosia Kurnia	Laki-Laki		Daerah BSD	Kerja	081288991321	Sudah join	Salt, lagi rantau ke Salatiga
+313	yunato	Laki-Laki	6/14/1993	pamulang	Kerja	http://wa.me/6282122379491	Belum join tapi mau join 	
 \.
 
 
