@@ -50,51 +50,51 @@ export const MemberCreateSchema = z.object({
   no_jemaat: z.number().int(),
   nama_jemaat: z.string().min(2),
   jenis_kelamin: z.enum(['Laki-laki', 'Perempuan']),
-  tanggal_lahir: z.string(),
-  tahun_lahir: z.number().int().optional(),
-  bulan_lahir: z.number().int().min(1).max(12).optional(),
-  kuliah_kerja: z.string().optional(),
-  no_handphone: z.string().optional(),
-  ketertarikan_cgf: z.string().optional(),
-  nama_cgf: z.string().optional(),
-  kategori_domisili: z.string().optional(),
-  alamat_domisili: z.string().optional(),
-  status_aktif: z.string().optional(),
-  status_keterangan: z.string().optional(),
+  tanggal_lahir: z.string().nullable(),
+  tahun_lahir: z.number().int().nullable().optional(),
+  bulan_lahir: z.number().int().nullable().optional(),
+  kuliah_kerja: z.string().nullable().optional(),
+  no_handphone: z.string().nullable().optional(),
+  ketertarikan_cgf: z.string().nullable().optional(),
+  nama_cgf: z.string().nullable().optional(),
+  kategori_domisili: z.string().nullable().optional(),
+  alamat_domisili: z.string().nullable().optional(),
+  status_aktif: z.string().nullable().optional(),
+  status_keterangan: z.string().nullable().optional(),
 });
 export type MemberCreate = z.infer<typeof MemberCreateSchema>;
 
 export const MemberUpdateSchema = z.object({
   nama_jemaat: z.string().min(2),
   jenis_kelamin: z.enum(['Laki-laki', 'Perempuan']),
-  tanggal_lahir: z.string(),
-  tahun_lahir: z.number().int().optional(),
-  bulan_lahir: z.number().int().min(1).max(12).optional(),
-  kuliah_kerja: z.string().optional(),
-  no_handphone: z.string().optional(),
-  ketertarikan_cgf: z.string().optional(),
-  nama_cgf: z.string().optional(),
-  kategori_domisili: z.string().optional(),
-  alamat_domisili: z.string().optional(),
-  status_aktif: z.string().optional(),
-  status_keterangan: z.string().optional(),
+  tanggal_lahir: z.string().nullable(),
+  tahun_lahir: z.number().int().nullable().optional(),
+  bulan_lahir: z.number().int().nullable().optional(),
+  kuliah_kerja: z.string().nullable().optional(),
+  no_handphone: z.string().nullable().optional(),
+  ketertarikan_cgf: z.string().nullable().optional(),
+  nama_cgf: z.string().nullable().optional(),
+  kategori_domisili: z.string().nullable().optional(),
+  alamat_domisili: z.string().nullable().optional(),
+  status_aktif: z.string().nullable().optional(),
+  status_keterangan: z.string().nullable().optional(),
 });
 export type MemberUpdate = z.infer<typeof MemberUpdateSchema>;
 
 export const MemberPartialUpdateSchema = z.object({
   nama_jemaat: z.string().min(2).optional(),
   jenis_kelamin: z.enum(['Laki-laki', 'Perempuan']).optional(),
-  tanggal_lahir: z.string().optional(),
-  tahun_lahir: z.number().int().optional(),
-  bulan_lahir: z.number().int().min(1).max(12).optional(),
-  kuliah_kerja: z.string().optional(),
-  no_handphone: z.string().optional(),
-  ketertarikan_cgf: z.string().optional(),
-  nama_cgf: z.string().optional(),
-  kategori_domisili: z.string().optional(),
-  alamat_domisili: z.string().optional(),
-  status_aktif: z.string().optional(),
-  status_keterangan: z.string().optional(),
+  tanggal_lahir: z.string().nullable().optional(),
+  tahun_lahir: z.number().int().nullable().optional(),
+  bulan_lahir: z.number().int().nullable().optional(),
+  kuliah_kerja: z.string().nullable().optional(),
+  no_handphone: z.string().nullable().optional(),
+  ketertarikan_cgf: z.string().nullable().optional(),
+  nama_cgf: z.string().nullable().optional(),
+  kategori_domisili: z.string().nullable().optional(),
+  alamat_domisili: z.string().nullable().optional(),
+  status_aktif: z.string().nullable().optional(),
+  status_keterangan: z.string().nullable().optional(),
 });
 export type MemberPartialUpdate = z.infer<typeof MemberPartialUpdateSchema>;
 
@@ -360,7 +360,7 @@ export type PelayanListResponse = z.infer<typeof PelayanListResponseSchema>;
 export const StatusHistorySchema = z.object({
   id: z.number().int().optional(),
   no_jemaat: z.number().int().optional(),
-  status: z.enum(['Active', 'Inactive', 'No Information', 'Moved']).optional(),
+  status: z.enum(['Active', 'Inactive', 'Sabbatical', 'Moved', 'No Information']).optional(),
   changed_at: z.string().optional(),
   reason: z.string().optional(),
   member: MemberSchema.optional(),
@@ -369,13 +369,13 @@ export type StatusHistory = z.infer<typeof StatusHistorySchema>;
 
 export const StatusHistoryCreateSchema = z.object({
   no_jemaat: z.number().int(),
-  status: z.enum(['Active', 'Inactive', 'No Information', 'Moved']),
+  status: z.enum(['Active', 'Inactive', 'Sabbatical', 'Moved', 'No Information']),
   reason: z.string().optional(),
 });
 export type StatusHistoryCreate = z.infer<typeof StatusHistoryCreateSchema>;
 
 export const StatusHistoryUpdateSchema = z.object({
-  status: z.enum(['Active', 'Inactive', 'No Information', 'Moved']).optional(),
+  status: z.enum(['Active', 'Inactive', 'Sabbatical', 'Moved', 'No Information']).optional(),
   reason: z.string().optional(),
 });
 export type StatusHistoryUpdate = z.infer<typeof StatusHistoryUpdateSchema>;

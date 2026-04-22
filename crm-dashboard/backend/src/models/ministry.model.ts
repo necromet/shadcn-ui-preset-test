@@ -348,7 +348,6 @@ export const MinistryModel = {
     setClauses.push(`total_pelayanan = $${convertedColumns.length + 1}`);
 
     const isCforceChanged = 'is_cforce' in data;
-    const isCforceTrue = converted.is_cforce === 1;
 
     const result = await transaction(async (txQuery) => {
       const pelayanResult = await txQuery<Pelayan>(
@@ -356,10 +355,11 @@ export const MinistryModel = {
         [...convertedValues, totalPelayanan, noJemaat],
       );
 
-      if (isCforceChanged && isCforceTrue) {
+      if (isCforceChanged) {
+        const cforceValue = (converted.is_cforce === 1 || converted.is_cforce === true) ? 1 : 0;
         await txQuery(
-          `UPDATE cgf_members SET is_leader = 1 WHERE no_jemaat = $1`,
-          [noJemaat],
+          `UPDATE cgf_members SET is_leader = $1 WHERE no_jemaat = $2`,
+          [cforceValue, noJemaat],
         );
       }
 
@@ -541,6 +541,14 @@ export const MinistryModel = {
                 `UPDATE pelayan SET ${colName} = 1 WHERE no_jemaat = $1`,
                 [noJemaat],
               );
+
+              // Sync is_cforce to cgf_members.is_leader
+              if (colName === 'is_cforce') {
+                await txQuery(
+                  `UPDATE cgf_members SET is_leader = 1 WHERE no_jemaat = $1`,
+                  [noJemaat],
+                );
+              }
             }
           } else {
             result.skipped++;
@@ -589,6 +597,14 @@ export const MinistryModel = {
                 `UPDATE pelayan SET ${colName} = 0 WHERE no_jemaat = $1`,
                 [noJemaat],
               );
+
+              // Sync is_cforce to cgf_members.is_leader
+              if (colName === 'is_cforce') {
+                await txQuery(
+                  `UPDATE cgf_members SET is_leader = 0 WHERE no_jemaat = $1`,
+                  [noJemaat],
+                );
+              }
             }
           } else {
             result.skipped++;

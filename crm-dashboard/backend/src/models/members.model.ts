@@ -142,26 +142,40 @@ export const MembersModel = {
     const validCgf = nama_cgf && nama_cgf.trim() !== '' && nama_cgf !== 'Belum CGF';
     
     if (!validCgf) {
-      // Unlink from cgf_members (set no_jemaat = NULL) if row exists
+      // Remove from cgf_members if row exists
       await queryFn(
-        'UPDATE cgf_members SET no_jemaat = NULL WHERE no_jemaat = $1',
+        'DELETE FROM cgf_members WHERE no_jemaat = $1',
         [no_jemaat],
       );
       return;
     }
 
-    // Upsert into cgf_members
-    // The member was just inserted/updated in cnx_jemaat_clean within the same transaction,
-    // so it should be visible here due to transaction isolation
-    await queryFn(
-      `INSERT INTO cgf_members (no_jemaat, nama_jemaat, nama_cgf, no_handphone, is_leader)
-       VALUES ($1, $2, $3, $4, false)
-       ON CONFLICT (no_jemaat) DO UPDATE SET
-         nama_jemaat = EXCLUDED.nama_jemaat,
-         nama_cgf = EXCLUDED.nama_cgf,
-         no_handphone = EXCLUDED.no_handphone`,
-      [no_jemaat, nama_jemaat, nama_cgf, no_handphone],
+    // Check if the member is a CForce leader in pelayan table
+    const pelayanResult = await queryFn(
+      'SELECT is_cforce FROM pelayan WHERE no_jemaat = $1',
+      [no_jemaat],
     );
+    const isLeaderValue = pelayanResult.rows[0]?.is_cforce ? 1 : 0;
+
+    // Upsert into cgf_members
+    await queryFn(
+       `INSERT INTO cgf_members (no_jemaat, nama_jemaat, nama_cgf, no_handphone, is_leader)
+        VALUES ($1, $2, $3, $4, $5)
+        ON CONFLICT (no_jemaat) DO UPDATE SET
+          nama_jemaat = EXCLUDED.nama_jemaat,
+          nama_cgf = EXCLUDED.nama_cgf,
+          no_handphone = EXCLUDED.no_handphone,
+          is_leader = EXCLUDED.is_leader`,
+      [no_jemaat, nama_jemaat, nama_cgf, no_handphone, isLeaderValue],
+    );
+
+    // If member is a leader, ensure pelayan.is_cforce is also 1
+    if (isLeaderValue === 1) {
+      await queryFn(
+        'UPDATE pelayan SET is_cforce = 1 WHERE no_jemaat = $1 AND is_cforce = 0',
+        [no_jemaat],
+      );
+    }
   },
 
   async create(data: MemberCreateData): Promise<Member> {
@@ -196,6 +210,16 @@ export const MembersModel = {
         return this.getById(no_jemaat);
       }
 
+      // Fetch current status_aktif before update if it's being changed
+      let previousStatusAktif: string | null = null;
+      if (data.status_aktif !== undefined) {
+        const currentResult = await txQuery<{ status_aktif: string | null }>(
+          'SELECT status_aktif FROM cnx_jemaat_clean WHERE no_jemaat = $1',
+          [no_jemaat],
+        );
+        previousStatusAktif = currentResult.rows[0]?.status_aktif ?? null;
+      }
+
       const values = Object.values(data);
       const setClauses = columns.map((col, i) => `${col} = $${i + 1}`);
 
@@ -206,6 +230,32 @@ export const MembersModel = {
       const member = result.rows[0];
       if (!member) {
         return null;
+      }
+
+      // Log status change to cnx_jemaat_status_history
+      if (data.status_aktif !== undefined && data.status_aktif !== previousStatusAktif) {
+        const maxIdResult = await txQuery<{ max_id: number | null }>(
+          'SELECT COALESCE(MAX(id), 90000) as max_id FROM cnx_jemaat_status_history WHERE id >= 90000',
+        );
+        const nextId = (maxIdResult.rows[0]?.max_id ?? 90000) + 1;
+
+        await txQuery(
+          `INSERT INTO cnx_jemaat_status_history (id, no_jemaat, status, reason)
+           VALUES ($1, $2, $3, $4)`,
+          [nextId, no_jemaat, data.status_aktif, data.status_keterangan || null],
+        );
+      } else if (data.status_keterangan !== undefined) {
+        // status_keterangan changed without status_aktif change — update latest history record's reason
+        await txQuery(
+          `UPDATE cnx_jemaat_status_history SET reason = $1
+           WHERE id = (
+             SELECT id FROM cnx_jemaat_status_history
+             WHERE no_jemaat = $2
+             ORDER BY changed_at DESC, id DESC
+             LIMIT 1
+           )`,
+          [data.status_keterangan || null, no_jemaat],
+        );
       }
 
       // Sync cgf_members table

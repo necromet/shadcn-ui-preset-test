@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react"
-import { Search, Plus, Pencil, Trash2, ChevronLeft, ChevronRight, X, Check, ChevronDown } from "lucide-react"
+import { Search, Plus, Pencil, Trash2, ChevronLeft, ChevronRight, X, Check, ChevronDown, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 import { Card, CardContent } from "../components/ui/card.jsx"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table.jsx"
@@ -65,6 +65,7 @@ export function Pelayan() {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [selectedPelayan, setSelectedPelayan] = useState(null)
   const [formData, setFormData] = useState(EMPTY_FORM)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const availableMembers = useMemo(() => {
     const existingNoJemaat = new Set(pelayanList.map((p) => p.no_jemaat))
@@ -172,6 +173,7 @@ export function Pelayan() {
       ...booleanFlags,
     }
 
+    setIsSubmitting(true)
     try {
       const response = await createPelayan(newPelayan, allMembers)
       if (response?.success) {
@@ -190,6 +192,8 @@ export function Pelayan() {
       } else {
         toast.error("An unexpected error occurred")
       }
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -202,6 +206,7 @@ export function Pelayan() {
     const toAssign = selectedIds
     const toRemove = allPelayananIds.filter(id => !selectedIds.includes(id))
 
+    setIsSubmitting(true)
     try {
       await bulkUpdatePelayanan(noJemaat, { assign: toAssign, remove: toRemove })
 
@@ -229,6 +234,8 @@ export function Pelayan() {
       } else {
         toast.error("An unexpected error occurred")
       }
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -435,7 +442,16 @@ export function Pelayan() {
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={!formData.no_jemaat}>{showEditDialog ? "Save Changes" : "Add Pelayan"}</Button>
+              <Button type="submit" disabled={isSubmitting || !formData.no_jemaat}>
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    {showEditDialog ? "Saving..." : "Adding..."}
+                  </>
+                ) : (
+                  showEditDialog ? "Save Changes" : "Add Pelayan"
+                )}
+              </Button>
             </div>
           </form>
         </div>
