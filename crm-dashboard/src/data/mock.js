@@ -418,6 +418,179 @@ async function getEventById(eventId) {
     .then(json => json.data ?? null);
 }
 
+async function createEvent(data) {
+  const res = await fetch(`${API_BASE}/events`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  const json = await res.json();
+  if (!res.ok || !json.success) {
+    throw new Error(json.error?.message || 'Failed to create event');
+  }
+  invalidateCache(`${API_BASE}/events`);
+  return json;
+}
+
+async function updateEvent(eventId, data) {
+  const res = await fetch(`${API_BASE}/events/${eventId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  const json = await res.json();
+  if (!res.ok || !json.success) {
+    throw new Error(json.error?.message || 'Failed to update event');
+  }
+  invalidateCache(`${API_BASE}/events`);
+  invalidateCache(`${API_BASE}/events/${eventId}`);
+  return json;
+}
+
+async function deleteEvent(eventId) {
+  const res = await fetch(`${API_BASE}/events/${eventId}`, {
+    method: 'DELETE',
+  });
+  if (!res.ok) {
+    const json = await res.json().catch(() => ({}));
+    throw new Error(json.error?.message || 'Failed to delete event');
+  }
+  invalidateCache(`${API_BASE}/events`);
+  invalidateCache(`${API_BASE}/events/${eventId}`);
+  return true;
+}
+
+async function getEventParticipants(eventId) {
+  const json = await getCached(`${API_BASE}/events/${eventId}/participants`);
+  return json.data || [];
+}
+
+async function addEventParticipant(data) {
+  const res = await fetch(`${API_BASE}/events/${data.event_id}/participants`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ no_jemaat: data.no_jemaat, role: data.role }),
+  });
+  const json = await res.json();
+  if (!res.ok || !json.success) {
+    throw new Error(json.error?.message || 'Failed to add participant');
+  }
+  invalidateCache(`${API_BASE}/events/${data.event_id}/participants`);
+  return json;
+}
+
+async function updateEventParticipant(id, data, eventId) {
+  const res = await fetch(`${API_BASE}/events/${eventId}/participants/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  const json = await res.json();
+  if (!res.ok || !json.success) {
+    throw new Error(json.error?.message || 'Failed to update participant');
+  }
+  invalidateCache(`${API_BASE}/events/${eventId}/participants`);
+  return json;
+}
+
+async function removeEventParticipant(id, eventId) {
+  const res = await fetch(`${API_BASE}/events/${eventId}/participants/${id}`, {
+    method: 'DELETE',
+  });
+  if (!res.ok) {
+    const json = await res.json().catch(() => ({}));
+    throw new Error(json.error?.message || 'Failed to remove participant');
+  }
+  invalidateCache(`${API_BASE}/events/${eventId}/participants`);
+  return true;
+}
+
+function getMostPopularEventTypes() {
+  const categoryStats = {};
+  const categories = ['Camp', 'Retreat', 'Quarterly', 'Monthly', 'Special', 'Workshop'];
+  categories.forEach(cat => { categoryStats[cat] = { eventCount: 0, totalAttendance: 0 }; });
+
+  event_history.forEach(event => {
+    if (categoryStats[event.category] !== undefined) {
+      categoryStats[event.category].eventCount++;
+      const count = event_participation.filter(ep => ep.event_id === event.event_id).length;
+      categoryStats[event.category].totalAttendance += count;
+    }
+  });
+
+  return Promise.resolve(
+    categories.map(cat => ({
+      category: cat,
+      eventCount: categoryStats[cat].eventCount,
+      avgAttendance: categoryStats[cat].eventCount > 0
+        ? Math.round(categoryStats[cat].totalAttendance / categoryStats[cat].eventCount)
+        : 0,
+      totalAttendance: categoryStats[cat].totalAttendance,
+    })).filter(c => c.eventCount > 0)
+      .sort((a, b) => b.avgAttendance - a.avgAttendance)
+  );
+}
+
+function getEventParticipationSummary(eventId) {
+  const event = event_history.find(e => e.event_id === eventId);
+  if (!event) return Promise.resolve(null);
+
+  const participants = event_participation.filter(ep => ep.event_id === eventId);
+  const peserta = participants.filter(p => p.role === 'Peserta').length;
+  const panitia = participants.filter(p => p.role === 'Panitia').length;
+  const volunteer = participants.filter(p => p.role === 'Volunteer').length;
+
+  const similarEvents = event_history
+    .filter(e => e.category === event.category && e.event_id !== eventId && e.event_date < event.event_date)
+    .sort((a, b) => new Date(b.event_date) - new Date(a.event_date));
+
+  let prevAttendance = null;
+  let trend = null;
+  if (similarEvents.length > 0) {
+    prevAttendance = event_participation.filter(ep => ep.event_id === similarEvents[0].event_id).length;
+    if (prevAttendance > participants.length) trend = 'down';
+    else if (prevAttendance < participants.length) trend = 'up';
+    else trend = 'same';
+  }
+
+  return Promise.resolve({
+    event_id: event.event_id,
+    event_name: event.event_name,
+    event_date: event.event_date,
+    category: event.category,
+    totalAttendance: participants.length,
+    peserta,
+    panitia,
+    volunteer,
+    prevAttendance,
+    trend,
+  });
+}
+
+function getTopVolunteers(limit = 20) {
+  const volunteerMap = {};
+  event_participation
+    .filter(ep => ep.role === 'Panitia' || ep.role === 'Volunteer')
+    .forEach(ep => {
+      if (!volunteerMap[ep.no_jemaat]) {
+        volunteerMap[ep.no_jemaat] = { no_jemaat: ep.no_jemaat, eventsVolunteered: 0, asPanitia: 0, asVolunteer: 0 };
+      }
+      volunteerMap[ep.no_jemaat].eventsVolunteered++;
+      if (ep.role === 'Panitia') volunteerMap[ep.no_jemaat].asPanitia++;
+      else volunteerMap[ep.no_jemaat].asVolunteer++;
+    });
+
+  const result = Object.values(volunteerMap)
+    .map(v => {
+      const member = members.find(m => m.no_jemaat === v.no_jemaat);
+      return { ...v, nama_jemaat: member ? member.nama_jemaat : 'Unknown', nama_cgf: member ? member.nama_cgf : null };
+    })
+    .sort((a, b) => b.eventsVolunteered - a.eventsVolunteered)
+    .slice(0, limit);
+
+  return Promise.resolve(result);
+}
+
 // async function getUpcomingEvents(days = 7) {
 //   const now = new Date();
 //   const endDate = new Date(now);
@@ -720,9 +893,8 @@ async function getKuliahKerjaRatio() {
 }
 
 async function getBirthdayMembers() {
-  const currentMonth = 4; // April
   const members = await getMembers();
-  return members.filter(m => m.bulan_lahir === currentMonth);
+  return members.filter(m => m.tanggal_lahir);
 }
 
 export async function getStatusDistribution() {
@@ -972,6 +1144,21 @@ export async function getUpcomingEvents(days = 7) {
     .sort((a, b) => new Date(a.event_date) - new Date(b.event_date));
 
   return upcoming.map(event => {
+    const participantCount = event_participation.filter(ep => ep.event_id === event.event_id).length;
+    return { ...event, participantCount };
+  });
+}
+
+export async function getEventsForMonth(month, year) {
+  const startStr = `${year}-${String(month + 1).padStart(2, '0')}-01`;
+  const lastDay = new Date(year, month + 1, 0).getDate();
+  const endStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
+
+  const monthEvents = event_history
+    .filter(e => e.event_date >= startStr && e.event_date <= endStr)
+    .sort((a, b) => new Date(a.event_date) - new Date(b.event_date));
+
+  return monthEvents.map(event => {
     const participantCount = event_participation.filter(ep => ep.event_id === event.event_id).length;
     return { ...event, participantCount };
   });
@@ -1264,6 +1451,16 @@ export {
   getMemberById,
   getEvents,
   getEventById,
+  createEvent,
+  updateEvent,
+  deleteEvent,
+  getEventParticipants,
+  addEventParticipant,
+  updateEventParticipant,
+  removeEventParticipant,
+  getMostPopularEventTypes,
+  getEventParticipationSummary,
+  getTopVolunteers,
   getCGFGroups,
   getCGFGroupById,
   getCGFMembers,

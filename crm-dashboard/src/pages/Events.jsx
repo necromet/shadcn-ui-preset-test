@@ -1,11 +1,22 @@
-import { useState, useEffect, useMemo } from "react"
-import { Search, Plus, Pencil, Trash2, Calendar, MapPin, ExternalLink, Filter } from "lucide-react"
+import { useState, useEffect, useMemo, useCallback } from "react"
+import { toast } from "sonner"
+import { Search, Plus, Pencil, Trash2, Calendar, MapPin, ExternalLink, Filter, Eye } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card.jsx"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table.jsx"
 import { Button } from "../components/ui/button.jsx"
 import { Badge } from "../components/ui/badge.jsx"
-import { getEvents } from "../data/mock.js"
 import { EmptyState } from "../components/ui/empty-state.jsx"
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "../components/ui/alert-dialog.jsx"
+import { EventFormModal } from "../components/events/EventFormModal.jsx"
+import { EventDetailModal } from "../components/events/EventDetailModal.jsx"
+import {
+  getEvents, createEvent, updateEvent, deleteEvent,
+  getEventParticipants, addEventParticipant, updateEventParticipant,
+  removeEventParticipant, getMembers,
+} from "../data/mock.js"
 
 const PAGE_SIZE = 10
 
@@ -25,19 +36,48 @@ export function Events() {
   const [categoryFilter, setCategoryFilter] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
 
+  // Form modal state
+  const [formModalOpen, setFormModalOpen] = useState(false)
+  const [editingEvent, setEditingEvent] = useState(null)
+  const [formSubmitting, setFormSubmitting] = useState(false)
+
+  // Delete dialog state
+  const [deleteTarget, setDeleteTarget] = useState(null)
+  const [deleteSubmitting, setDeleteSubmitting] = useState(false)
+
+  // Detail modal state
+  const [detailEvent, setDetailEvent] = useState(null)
+  const [detailParticipants, setDetailParticipants] = useState([])
+  const [allMembers, setAllMembers] = useState([])
+
+  const fetchEvents = useCallback(async () => {
+    setLoading(true)
+    try {
+      const data = await getEvents()
+      setEvents(data)
+    } catch (err) {
+      toast.error("Failed to load events", {
+        description: err.message || "An unexpected error occurred",
+      })
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
   useEffect(() => {
-    async function fetchEvents() {
-      setLoading(true)
+    fetchEvents()
+  }, [fetchEvents])
+
+  useEffect(() => {
+    async function loadMembers() {
       try {
-        const data = await getEvents()
-        setEvents(data)
+        const data = await getMembers()
+        setAllMembers(data)
       } catch (err) {
-        console.error("Failed to fetch events:", err)
-      } finally {
-        setLoading(false)
+        console.error("Failed to fetch members:", err)
       }
     }
-    fetchEvents()
+    loadMembers()
   }, [])
 
   const categories = useMemo(() => {
@@ -98,6 +138,133 @@ export function Events() {
     return `In ${diffDays} days`
   }
 
+  // --- Handlers ---
+
+  function handleAddClick() {
+    setEditingEvent(null)
+    setFormModalOpen(true)
+  }
+
+  function handleEditClick(event) {
+    setEditingEvent(event)
+    setFormModalOpen(true)
+  }
+
+  async function handleFormSubmit(data) {
+    setFormSubmitting(true)
+    try {
+      if (editingEvent) {
+        await updateEvent(editingEvent.event_id, data)
+        toast.success("Event updated successfully", {
+          description: `"${data.event_name}" has been updated.`,
+        })
+      } else {
+        await createEvent(data)
+        toast.success("Event created successfully", {
+          description: `"${data.event_name}" has been added.`,
+        })
+      }
+      setFormModalOpen(false)
+      setEditingEvent(null)
+      await fetchEvents()
+    } catch (err) {
+      toast.error(editingEvent ? "Failed to update event" : "Failed to create event", {
+        description: err.message || "An unexpected error occurred",
+      })
+    } finally {
+      setFormSubmitting(false)
+    }
+  }
+
+  async function handleDeleteConfirm() {
+    if (!deleteTarget) return
+    setDeleteSubmitting(true)
+    try {
+      await deleteEvent(deleteTarget.event_id)
+      toast.success("Event deleted successfully", {
+        description: `"${deleteTarget.event_name}" has been removed.`,
+      })
+      setDeleteTarget(null)
+      await fetchEvents()
+    } catch (err) {
+      toast.error("Failed to delete event", {
+        description: err.message || "An unexpected error occurred",
+      })
+    } finally {
+      setDeleteSubmitting(false)
+    }
+  }
+
+  async function handleRowClick(event) {
+    setDetailEvent(event)
+    try {
+      const participants = await getEventParticipants(event.event_id)
+      setDetailParticipants(participants)
+    } catch (err) {
+      toast.error("Failed to load participants", {
+        description: err.message,
+      })
+      setDetailParticipants([])
+    }
+  }
+
+  async function refreshParticipants() {
+    if (!detailEvent) return
+    try {
+      const participants = await getEventParticipants(detailEvent.event_id)
+      setDetailParticipants(participants)
+    } catch (err) {
+      console.error("Failed to refresh participants:", err)
+    }
+  }
+
+  async function handleAddParticipant(data) {
+    try {
+      await addEventParticipant(data)
+      toast.success("Participant added", {
+        description: "Member has been registered to this event.",
+      })
+      await refreshParticipants()
+    } catch (err) {
+      toast.error("Failed to add participant", {
+        description: err.message || "An unexpected error occurred",
+      })
+      throw err
+    }
+  }
+
+  async function handleUpdateParticipant(id, data) {
+    if (!detailEvent) return
+    try {
+      await updateEventParticipant(id, data, detailEvent.event_id)
+      toast.success("Role updated", {
+        description: "Participant role has been changed.",
+      })
+      await refreshParticipants()
+    } catch (err) {
+      toast.error("Failed to update role", {
+        description: err.message || "An unexpected error occurred",
+      })
+      throw err
+    }
+  }
+
+  async function handleRemoveParticipant(id) {
+    if (!detailEvent) return
+    try {
+      await removeEventParticipant(id, detailEvent.event_id)
+      toast.success("Participant removed", {
+        description: "Member has been removed from this event.",
+      })
+      await refreshParticipants()
+    } catch (err) {
+      toast.error("Failed to remove participant", {
+        description: err.message || "An unexpected error occurred",
+      })
+      throw err
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -105,7 +272,7 @@ export function Events() {
           <h1 className="text-3xl font-bold tracking-tight">Events</h1>
           <p className="text-muted-foreground">Manage church events and activities</p>
         </div>
-        <Button>
+        <Button onClick={handleAddClick}>
           <Plus className="size-4 mr-2" />
           Add Event
         </Button>
@@ -177,15 +344,19 @@ export function Events() {
                 </TableHeader>
                 <TableBody>
                   {paginatedEvents.map((event) => (
-                    <TableRow key={event.event_id}>
+                    <TableRow
+                      key={event.event_id}
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => handleRowClick(event)}
+                    >
                       <TableCell>
                         <div>
                           <p className="font-medium">{event.event_name}</p>
                           {event.description && (
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {event.description.length > 30 ? `${event.description.substring(0, 30)}...` : event.description}
-                        </p>
-                      )}
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {event.description.length > 30 ? `${event.description.substring(0, 30)}...` : event.description}
+                            </p>
+                          )}
                         </div>
                       </TableCell>
                       <TableCell>
@@ -216,6 +387,7 @@ export function Events() {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline"
+                            onClick={(e) => e.stopPropagation()}
                           >
                             <ExternalLink className="size-3" />
                             Google Cal
@@ -225,11 +397,32 @@ export function Events() {
                         )}
                       </TableCell>
                       <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <Button variant="ghost" size="icon" className="size-8">
+                        <div className="flex items-center justify-end gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="size-8"
+                            onClick={(e) => { e.stopPropagation(); handleRowClick(event) }}
+                            title="View details"
+                          >
+                            <Eye className="size-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="size-8"
+                            onClick={(e) => { e.stopPropagation(); handleEditClick(event) }}
+                            title="Edit event"
+                          >
                             <Pencil className="size-4" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="size-8 text-destructive">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="size-8 text-destructive"
+                            onClick={(e) => { e.stopPropagation(); setDeleteTarget(event) }}
+                            title="Delete event"
+                          >
                             <Trash2 className="size-4" />
                           </Button>
                         </div>
@@ -268,6 +461,54 @@ export function Events() {
           )}
         </CardContent>
       </Card>
+
+      {/* Event Form Modal (Create/Edit) */}
+      <EventFormModal
+        open={formModalOpen}
+        onOpenChange={(open) => {
+          setFormModalOpen(open)
+          if (!open) setEditingEvent(null)
+        }}
+        event={editingEvent}
+        onSubmit={handleFormSubmit}
+        submitting={formSubmitting}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deleteTarget} onOpenChange={(v) => !v && setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Event</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete <strong>{deleteTarget?.event_name}</strong>?
+              This will also remove all participant records for this event. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleteSubmitting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              disabled={deleteSubmitting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleteSubmitting ? "Deleting..." : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Event Detail Modal with Participant Management */}
+      <EventDetailModal
+        open={!!detailEvent}
+        onOpenChange={(v) => !v && setDetailEvent(null)}
+        event={detailEvent}
+        participants={detailParticipants}
+        members={allMembers}
+        onAddParticipant={handleAddParticipant}
+        onUpdateParticipant={handleUpdateParticipant}
+        onRemoveParticipant={handleRemoveParticipant}
+        onRefreshParticipants={refreshParticipants}
+      />
     </div>
   )
 }

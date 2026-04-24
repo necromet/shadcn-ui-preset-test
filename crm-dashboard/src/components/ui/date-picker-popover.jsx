@@ -3,6 +3,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "./popover.jsx";
 import { Button } from "./button.jsx";
 import { Calendar } from "./calendar.jsx";
 import { CalendarDays } from "lucide-react";
+import { cn } from "../../lib/utils.js";
 
 /**
  * Parse a date string safely without timezone issues.
@@ -16,7 +17,7 @@ function parseLocalDate(dateStr) {
   return new Date(year, month - 1, day);
 }
 
-function DatePickerPopover({ date, onDateChange, maxDate, placeholder }) {
+function DatePickerPopover({ date, onDateChange, maxDate, placeholder, className }) {
   const [open, setOpen] = React.useState(false);
 
   const handleSelect = (d) => {
@@ -36,7 +37,7 @@ function DatePickerPopover({ date, onDateChange, maxDate, placeholder }) {
         <Button
           variant="outline"
           size="sm"
-          className="h-9 justify-start text-left font-normal"
+          className={cn("h-9 justify-start text-left font-normal", className)}
         >
           <CalendarDays className="h-4 w-4 mr-2" />
           {date || placeholder || "Pilih tanggal"}

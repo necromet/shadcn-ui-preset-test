@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react"
-import { Search, Plus, Pencil, Trash2, ChevronLeft, ChevronRight, X, Check, ChevronDown, Loader2 } from "lucide-react"
+import { Search, Plus, Pencil, Trash2, ChevronLeft, ChevronRight, X, Check, ChevronDown, Loader2, Download } from "lucide-react"
 import { toast } from "sonner"
 import { Card, CardContent } from "../components/ui/card.jsx"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table.jsx"
@@ -101,6 +101,26 @@ export function Pelayan() {
     setSearchQuery("")
     setRoleFilter("")
     setCurrentPage(1)
+  }
+
+  function exportToCSV() {
+    const roleHeaders = ministryRoles.map(r => r.label)
+    const headers = ["No. Jemaat", "Nama", ...roleHeaders, "Total Pelayanan"]
+    const rows = filteredPelayan.map(p => [
+      p.no_jemaat,
+      p.nama_jemaat,
+      ...ministryRoles.map(r => p[r.key] ? "Yes" : "No"),
+      p.total_pelayanan || 0,
+    ])
+    const csv = [headers, ...rows].map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n")
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = `pelayan_export_${new Date().toISOString().slice(0, 10)}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+    toast.success("Export successful", { description: `${filteredPelayan.length} pelayan exported to CSV.` })
   }
 
   function openAddDialog() {
@@ -474,10 +494,16 @@ export function Pelayan() {
           <h1 className="text-2xl font-semibold">Pelayan</h1>
           <p className="text-sm text-muted-foreground">Manage ministry and their service roles</p>
         </div>
-        <Button onClick={openAddDialog}>
-          <Plus className="h-4 w-4" />
-          Add Pelayan
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" onClick={exportToCSV} disabled={filteredPelayan.length === 0}>
+            <Download className="h-4 w-4" />
+            Export CSV
+          </Button>
+          <Button onClick={openAddDialog}>
+            <Plus className="h-4 w-4" />
+            Add Pelayan
+          </Button>
+        </div>
       </div>
 
       <Card>

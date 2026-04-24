@@ -17,6 +17,7 @@ const SORT_OPTIONS = [
 function CustomTooltip({ active, payload }) {
   if (!active || !payload?.length) return null
   const data = payload[0].payload
+
   return (
     <div
       className="rounded-lg border px-3 py-2 shadow-sm text-sm"
@@ -62,7 +63,11 @@ export function MinistryParticipation() {
   }, [])
 
   const sortedData = useMemo(() => {
-    const data = [...rawData]
+    const total = rawData.reduce((sum, item) => sum + item.count, 0) || totalServing
+    const data = rawData.map(item => ({
+      ...item,
+      percentage: total > 0 ? Math.round((item.count / total) * 100) : 0,
+    }))
     switch (sortOrder) {
       case "alpha":
         return data.sort((a, b) => a.ministry.localeCompare(b.ministry))
@@ -72,7 +77,7 @@ export function MinistryParticipation() {
       default:
         return data.sort((a, b) => b.count - a.count)
     }
-  }, [rawData, sortOrder])
+  }, [rawData, sortOrder, totalServing])
 
   return (
     <Card>

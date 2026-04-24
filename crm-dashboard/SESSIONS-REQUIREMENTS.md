@@ -4,7 +4,9 @@
 
 This document outlines the functional and non-functional requirements for the Authentication and User Management features: **Login Page**, **Logout Page**, **Settings Page**, and **Session Management**.
 
-**Tech Stack:** React + Vite, Clerk (authentication provider), shadcn/ui, Tailwind CSS.
+**Tech Stack:** React + Vite, Clerk (authentication provider), Supabase (PostgreSQL + access control), shadcn/ui, Tailwind CSS.
+
+**Auth Architecture:** Clerk handles authentication (sign-in/sign-out, session tokens). Supabase PostgreSQL hosts an `allowed_users` table that acts as an access control list — only users present in this table can access the application after Clerk authentication.
 
 ---
 
@@ -46,9 +48,66 @@ This document outlines the functional and non-functional requirements for the Au
 
 ---
 
-## 2. Logout Page
+## 2. Access Control (Supabase Allowed Users)
 
-### 2.1 Functional Requirements
+### 2.1 Overview
+
+After Clerk authenticates a user, the system checks the Supabase `allowed_users` table to determine if that user is permitted to access the application. This provides a simple, admin-controlled allowlist without requiring Supabase Auth.
+
+### 2.2 Database Schema
+
+```sql
+CREATE TABLE IF NOT EXISTS allowed_users (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  clerk_user_id TEXT UNIQUE NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  display_name TEXT,
+  role TEXT DEFAULT 'user' CHECK (role IN ('admin', 'user', 'viewer')),
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_allowed_users_clerk_id ON allowed_users(clerk_user_id);
+CREATE INDEX idx_allowed_users_email ON allowed_users(email);
+```
+
+### 2.3 Functional Requirements
+
+| ID | Requirement | Priority |
+|----|-------------|----------|
+| AC-01 | The system shall maintain an `allowed_users` table in Supabase PostgreSQL. | High |
+| AC-02 | The system shall check the `allowed_users` table after Clerk authentication succeeds. | High |
+| AC-03 | The system shall deny access and redirect to `/login` if the authenticated Clerk user is not in `allowed_users` or `is_active = false`. | High |
+| AC-04 | The system shall display an "Access Denied" message when a valid Clerk user is not in the allowlist. | High |
+| AC-05 | The system shall provide a backend API endpoint `GET /api/v1/auth/check-access` that verifies a Clerk user ID against `allowed_users`. | High |
+| AC-06 | The system shall store the Clerk user ID (`clerk_user_id`) and email in `allowed_users` upon admin approval. | High |
+| AC-07 | The system shall allow admins to add/remove users from the allowlist via direct database access or an admin API. | Medium |
+| AC-08 | The system shall cache the access check result client-side for the duration of the session to avoid repeated API calls. | Medium |
+
+### 2.4 Non-Functional Requirements
+
+| ID | Requirement |
+|----|-------------|
+| AC-NF-01 | Access check shall add no more than 100ms latency to the initial page load. |
+| AC-NF-02 | The `allowed_users` table shall be indexed on `clerk_user_id` and `email` for fast lookups. |
+| AC-NF-03 | Access check API shall be rate-limited to prevent abuse. |
+
+### 2.5 Integration Flow
+
+```
+User → Clerk <SignIn /> → Clerk authenticates → JWT/session created
+  → ProtectedRoute calls GET /api/v1/auth/check-access with clerk_user_id
+  → Backend queries allowed_users table
+  → If found & is_active: grant access → dashboard
+  → If not found or inactive: deny access → show "Access Denied" → sign out
+```
+
+---
+
+## 3. Logout Page
+
+### 3.1 Functional Requirements
 
 | ID | Requirement | Priority |
 |----|-------------|----------|
@@ -61,7 +120,7 @@ This document outlines the functional and non-functional requirements for the Au
 | LO-07 | The system shall handle session expiry gracefully — redirect to login with an appropriate message. | High |
 | LO-08 | The system shall support single-logout (SLO) for Google OAuth sessions via Clerk. | Low |
 
-### 2.2 Non-Functional Requirements
+### 3.2 Non-Functional Requirements
 
 | ID | Requirement |
 |----|-------------|
@@ -69,7 +128,7 @@ This document outlines the functional and non-functional requirements for the Au
 | LO-NF-02 | Back-button navigation after logout shall not expose authenticated content (cache control headers). |
 | LO-NF-03 | Logout shall be accessible via keyboard shortcut (configurable). |
 
-### 2.3 UI Components (shadcn/ui)
+### 3.3 UI Components (shadcn/ui)
 
 - `DropdownMenu` — user menu with logout option
 - `AlertDialog` — logout confirmation
@@ -77,11 +136,11 @@ This document outlines the functional and non-functional requirements for the Au
 
 ---
 
-## 3. Settings Page
+## 4. Settings Page
 
-### 3.1 Functional Requirements
+### 4.1 Functional Requirements
 
-#### 3.1.1 Profile Settings
+#### 4.1.1 Profile Settings
 
 | ID | Requirement | Priority |
 |----|-------------|----------|
@@ -89,7 +148,7 @@ This document outlines the functional and non-functional requirements for the Au
 | S-02 | The system shall allow users to view and update their email address (with re-verification via Clerk). | High |
 | S-03 | The system shall allow users to upload/change their profile avatar via Clerk's user profile. | Medium |
 
-#### 3.1.2 Security Settings
+#### 4.1.2 Security Settings
 
 | ID | Requirement | Priority |
 |----|-------------|----------|
@@ -98,20 +157,20 @@ This document outlines the functional and non-functional requirements for the Au
 | S-06 | The system shall allow users to view and revoke active sessions from Clerk's session management. | High |
 | S-07 | The system shall provide a list of recent login activity with timestamps and device info. | Medium |
 
-#### 3.1.3 Preferences
+#### 4.1.3 Preferences
 
 | ID | Requirement | Priority |
 |----|-------------|----------|
 | S-08 | The system shall allow users to toggle between light/dark/system theme. | Medium |
 | S-09 | The system shall allow users to configure notification preferences (email, in-app). | Medium |
 
-#### 3.1.4 Account Management
+#### 4.1.4 Account Management
 
 | ID | Requirement | Priority |
 |----|-------------|----------|
 | S-10 | The system shall allow users to delete their account (with confirmation and grace period). | Medium |
 
-### 3.2 Non-Functional Requirements
+### 4.2 Non-Functional Requirements
 
 | ID | Requirement |
 |----|-------------|
@@ -120,7 +179,7 @@ This document outlines the functional and non-functional requirements for the Au
 | S-NF-03 | Sensitive actions (password change, account deletion) shall require re-authentication. |
 | S-NF-04 | The settings page shall be fully responsive across all viewports. |
 
-### 3.3 UI Components (shadcn/ui + Clerk)
+### 4.3 UI Components (shadcn/ui + Clerk)
 
 - `Tabs` — settings sections (Profile, Security, Preferences, Account)
 - Clerk `<UserProfile />` — embedded user profile management
@@ -135,9 +194,9 @@ This document outlines the functional and non-functional requirements for the Au
 
 ---
 
-## 4. Session Management
+## 5. Session Management
 
-### 4.1 Functional Requirements
+### 5.1 Functional Requirements
 
 | ID | Requirement | Priority |
 |----|-------------|----------|
@@ -152,7 +211,7 @@ This document outlines the functional and non-functional requirements for the Au
 | SM-09 | The system shall invalidate all sessions on password change via Clerk. | High |
 | SM-10 | The system shall support session fixation protection (handled by Clerk). | High |
 
-### 4.2 Non-Functional Requirements
+### 5.2 Non-Functional Requirements
 
 | ID | Requirement |
 |----|-------------|
@@ -161,7 +220,7 @@ This document outlines the functional and non-functional requirements for the Au
 | SM-NF-03 | Session tokens shall use cryptographically secure random generation (managed by Clerk). |
 | SM-NF-04 | Expired sessions shall be cleaned up automatically by Clerk's infrastructure. |
 
-### 4.3 Clerk Session Configuration
+### 5.3 Clerk Session Configuration
 
 ```typescript
 // Clerk session token configuration
@@ -177,7 +236,7 @@ This document outlines the functional and non-functional requirements for the Au
 
 ---
 
-## 5. Cross-Cutting Requirements
+## 6. Cross-Cutting Requirements
 
 | ID | Requirement | Priority |
 |----|-------------|----------|
@@ -189,18 +248,20 @@ This document outlines the functional and non-functional requirements for the Au
 
 ---
 
-## 6. Assumptions and Dependencies
+## 7. Assumptions and Dependencies
 
 - The project uses **React + Vite** as the frontend framework.
 - UI components are built with **shadcn/ui** and styled with **Tailwind CSS**.
 - Authentication is provided by **Clerk** (hosted auth service).
+- **Supabase PostgreSQL** hosts the `allowed_users` table for access control.
+- The backend uses **Express + pg** to query Supabase PostgreSQL directly.
 - Google OAuth is configured as a social connection in the Clerk dashboard.
 - Session timeout is set to **15 minutes** for active sessions.
 - HTTPS is enforced in production environments.
 
 ---
 
-## 7. Resolved Questions
+## 8. Resolved Questions
 
 | # | Question | Resolution |
 |---|----------|------------|
@@ -209,3 +270,4 @@ This document outlines the functional and non-functional requirements for the Au
 | 3 | Is 2FA required? | **No, not yet** — will be added in a future phase |
 | 4 | Specific compliance requirements? | **No** beyond standard best practices |
 | 5 | OAuth providers for SSO? | **Google Login** only |
+| 6 | How to control which users can log in? | **Supabase `allowed_users` table** — Clerk authenticates, then Supabase allowlist gates access |

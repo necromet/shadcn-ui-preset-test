@@ -35,11 +35,9 @@ import { MinistryParticipation } from "../components/dashboard/MinistryParticipa
 import { RecentStatusChanges } from "../components/dashboard/RecentStatusChanges.jsx"
 import { AtRiskAlerts } from "../components/dashboard/AtRiskAlerts.jsx"
 import { ServiceFrequency } from "../components/dashboard/ServiceFrequency.jsx"
-import { UpcomingEvents } from "../components/dashboard/UpcomingEvents.jsx"
 import { WorshipTeamComposition } from "../components/dashboard/WorshipTeamComposition.jsx"
 import { CGHealthDashboard } from "../components/dashboard/CGHealthDashboard.jsx"
 import { EventAttendanceTrends } from "../components/dashboard/EventAttendanceTrends.jsx"
-import { MemberEngagementScore } from "../components/dashboard/MemberEngagementScore.jsx"
 import { MultiSkillAnalysis } from "../components/dashboard/MultiSkillAnalysis.jsx"
 import { CareVisitTracker } from "../components/dashboard/CareVisitTracker.jsx"
 import {
@@ -331,15 +329,11 @@ export function DashboardHome() {
           </div>
         </TabsContent>
         <TabsContent value="events" className="flex flex-col gap-6">
-          <div className="grid gap-6 grid-cols-1 xl:grid-cols-2">
-            <UpcomingEvents />
-            <EventAttendanceTrends />
-          </div>
+          <EventAttendanceTrends />
         </TabsContent>
         <TabsContent value="engagement" className="flex flex-col gap-6">
           <div className="grid gap-6 grid-cols-1 xl:grid-cols-2">
             <ServiceFrequency />
-            <MemberEngagementScore />
           </div>
           <AtRiskAlerts />
         </TabsContent>

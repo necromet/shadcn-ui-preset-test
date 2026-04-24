@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useCallback } from "react"
-import { Search, Plus, Pencil, Trash2, ChevronLeft, ChevronRight, X, UserPlus, CalendarDays, MessageCircle, CircleArrowOutUpRightIcon, ArrowUpRightFromSquareIcon, Loader2 } from "lucide-react"
+import { Search, Plus, Pencil, Trash2, ChevronLeft, ChevronRight, X, UserPlus, CalendarDays, MessageCircle, CircleArrowOutUpRightIcon, ArrowUpRightFromSquareIcon, Loader2, Download } from "lucide-react"
 import { toast } from "sonner"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card.jsx"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table.jsx"
@@ -144,6 +144,33 @@ export function Members() {
     setSearchQuery("")
     setFilters({ gender: "", cgfStatus: "", domisili: "" })
     setCurrentPage(1)
+  }
+
+  function exportToCSV() {
+    const headers = ["No. Jemaat", "Nama", "Gender", "Tanggal Lahir", "Kuliah/Kerja", "No. Handphone", "CGF Status", "Nama CGF", "Kategori Domisili", "Alamat Domisili", "Status Aktif", "Status Keterangan"]
+    const rows = filteredMembers.map(m => [
+      m.no_jemaat,
+      m.nama_jemaat,
+      m.jenis_kelamin || "",
+      parseTanggalLahir(m.tanggal_lahir),
+      m.kuliah_kerja || "",
+      m.no_handphone || "",
+      m.ketertarikan_cgf || "",
+      m.nama_cgf || "",
+      m.kategori_domisili || "",
+      m.alamat_domisili || "",
+      m.status_aktif || "",
+      m.status_keterangan || "",
+    ])
+    const csv = [headers, ...rows].map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n")
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = `members_export_${new Date().toISOString().slice(0, 10)}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+    toast.success("Export successful", { description: `${filteredMembers.length} members exported to CSV.` })
   }
 
   function openAddDialog() {
@@ -526,10 +553,16 @@ export function Members() {
           <h1 className="text-2xl font-semibold">Members</h1>
           <p className="text-sm text-muted-foreground">Manage church members and CGF memberships</p>
         </div>
-        <Button onClick={openAddDialog}>
-          <Plus className="h-4 w-4" />
-          Add Member
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" onClick={exportToCSV} disabled={filteredMembers.length === 0}>
+            <Download className="h-4 w-4" />
+            Export CSV
+          </Button>
+          <Button onClick={openAddDialog}>
+            <Plus className="h-4 w-4" />
+            Add Member
+          </Button>
+        </div>
       </div>
 
       <Card>

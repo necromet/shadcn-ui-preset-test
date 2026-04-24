@@ -138,7 +138,59 @@ ORDER BY ministries_count
 
 ### 3. Event Analytics
 
-#### Upcoming Events
+> **Full specification:** See [EVENT-REQUIREMENTS.MD](./EVENT-REQUIREMENTS.MD) for complete database schema, API endpoints, frontend component details, and all event-related queries.
+
+#### Database Schema
+
+**Table: `event_history`**
+| Column | Type | Nullable | Notes |
+|--------|------|----------|-------|
+| `event_id` | serial4 (PK) | No | Auto-increment |
+| `event_name` | varchar(255) | No | Event display name |
+| `event_date` | date | No | Event date |
+| `category` | event_category_enum | No | Camp, Retreat, Quarterly, Monthly, Special, Workshop |
+| `location` | varchar(255) | Yes | Venue |
+| `description` | text | Yes | Event details |
+| `gcal_event_id` | varchar(255) | Yes | Google Calendar sync ID |
+| `gcal_link` | text | Yes | Google Calendar URL |
+| `last_synced_at` | timestamptz | Yes | Last sync timestamp |
+
+**Table: `event_participation`**
+| Column | Type | Nullable | Notes |
+|--------|------|----------|-------|
+| `id` | serial4 (PK) | No | Auto-increment |
+| `event_id` | int4 (FK) | No | → `event_history.event_id` (CASCADE) |
+| `no_jemaat` | int4 (FK) | No | → `cnx_jemaat_clean.no_jemaat` (CASCADE) |
+| `role` | event_role_enum | No | Peserta (default), Panitia, Volunteer |
+| `registered_at` | timestamp | Auto | `DEFAULT now()` |
+
+- **Unique constraint:** `UNIQUE(event_id, no_jemaat)` — one registration per member per event
+- **Indexes:** `idx_event_history_category`, `idx_event_history_date`, `idx_event_history_gcal_event_id`, `idx_event_participation_event`, `idx_event_participation_jemaat`, `idx_event_participation_role`
+
+#### API Endpoints (Implemented)
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/events` | List events (paginated, filterable by `category`, `start_date`, `end_date`) |
+| POST | `/events` | Create event (validated via Zod `EventCreateSchema`) |
+| GET | `/events/:eventId` | Get single event |
+| PUT | `/events/:eventId` | Update event (validated via Zod `EventUpdateSchema`) |
+| DELETE | `/events/:eventId` | Delete event |
+| GET | `/events/:eventId/participants` | List event participants |
+| POST | `/events/:eventId/participants` | Add participant (validated via Zod `EventParticipationCreateSchema`) |
+| PUT | `/events/:eventId/participants/:id` | Update participant role |
+| DELETE | `/events/:eventId/participants/:id` | Remove participant |
+| GET | `/members/:no_jemaat/events` | List events for a member |
+
+#### Frontend Components (Implemented)
+
+| Component | File | Description |
+|-----------|------|-------------|
+| Events Page | `src/pages/Events.jsx` | Full event list with search, category filter, pagination (10/page), sync status |
+| Upcoming Events | `src/components/dashboard/UpcomingEvents.jsx` | Dashboard widget: next 7 days, source/category filters |
+| Event Attendance Trends | `src/components/dashboard/EventAttendanceTrends.jsx` | Line chart by category + interactive calendar view |
+
+#### Upcoming Events Widget
 
 - **Data Source:** `event_history` table + `event_participation` table
 - **Visualization:** Calendar view or list view
@@ -147,34 +199,36 @@ ORDER BY ministries_count
   - Event name, date, and category
   - Registration status (from `event_participation`):
     - Registered participants count
-    - Registered volunteers/pantria count
+    - Registered volunteers/panitia count
     - Capacity percentage (if applicable)
 - **Additional Features:**
   - Color-coding by event category (Camp, Retreat, Quarterly, Monthly)
   - Click to view event details
-  - "Register" button for volunteers/pantria (if applicable)
+  - "Register" button for volunteers/panitia (if applicable)
+  - Source filter (All / Google Calendar synced / Local only)
+  - Google Calendar link for synced events
 
 #### Event Attendance Trends
 
 - **Data Source:** `event_history` table + `event_participation` table
-- **Visualization:** Line chart with optional overlay
+- **Visualization:** Line chart with optional overlay + interactive calendar tab
 - **Metrics Displayed:**
   - Monthly/Quarterly event attendance over time (last 12 months)
-  - Separate lines for different event categories
+  - Separate lines for different event categories (Camp, Retreat, Quarterly, Monthly, Special, Workshop)
   - Optional: Stacked area showing participation roles (Peserta, Panitia, Volunteer)
 - **Calculation Logic:**
 ```sql
 SELECT
-  DATE_FORMAT(eh.event_date, '%Y-%m') AS month,
+  TO_CHAR(DATE_TRUNC('month', eh.event_date), 'YYYY-MM') AS month,
   eh.category,
   COUNT(DISTINCT ep.no_jemaat) AS total_attendees,
-  SUM(CASE WHEN ep.role = 'Peserta' THEN 1 ELSE 0 END) AS peserta_count,
-  SUM(CASE WHEN ep.role IN ('Panitia', 'Volunteer') THEN 1 ELSE 0 END) AS volunteer_panitia_count
+  COUNT(DISTINCT CASE WHEN ep.role = 'Peserta' THEN ep.no_jemaat END) AS peserta_count,
+  COUNT(DISTINCT CASE WHEN ep.role IN ('Panitia', 'Volunteer') THEN ep.no_jemaat END) AS volunteer_panitia_count
 FROM event_history eh
 LEFT JOIN event_participation ep ON eh.event_id = ep.event_id
-WHERE eh.event_date >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
-GROUP BY DATE_FORMAT(eh.event_date, '%Y-%m'), eh.category
-ORDER BY month, eh.category
+WHERE eh.event_date >= CURRENT_DATE - INTERVAL '12 months'
+GROUP BY DATE_TRUNC('month', eh.event_date), eh.category
+ORDER BY month, eh.category;
 ```
 
 #### Most Popular Event Types
@@ -190,18 +244,52 @@ ORDER BY month, eh.category
 SELECT
   eh.category,
   COUNT(DISTINCT eh.event_id) AS event_count,
-  AVG(attendance_count) AS avg_attendance,
-  SUM(attendance_count) AS total_attendance
+  ROUND(AVG(ep_counts.attendance), 1) AS avg_attendance,
+  SUM(ep_counts.attendance) AS total_attendance
 FROM event_history eh
 JOIN (
-    SELECT event_id, COUNT(DISTINCT no_jemaat) AS attendance_count
+    SELECT event_id, COUNT(DISTINCT no_jemaat) AS attendance
     FROM event_participation
     GROUP BY event_id
-) ep ON eh.event_id = ep.event_id
-WHERE eh.event_date >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+) ep_counts ON eh.event_id = ep_counts.event_id
+WHERE eh.event_date >= CURRENT_DATE - INTERVAL '12 months'
 GROUP BY eh.category
-ORDER BY avg_attendance DESC
+ORDER BY avg_attendance DESC;
 ```
+
+#### Event Participation Summary (Recent Activity)
+
+- **Data Source:** `event_history` table + `event_participation` table
+- **Visualization:** Summary cards
+- **Metrics Displayed for Most Recent Event:**
+  - Event name and date
+  - Total attendance
+  - Breakdown by role: Peserta, Panitia, Volunteer
+  - Comparison to similar past events (same category)
+  - Trend indicator (up/down/same vs. previous similar event)
+- **Query:**
+```sql
+SELECT
+  eh.event_id, eh.event_name, eh.event_date, eh.category,
+  COUNT(DISTINCT ep.no_jemaat) AS total_attendance,
+  COUNT(DISTINCT CASE WHEN ep.role = 'Peserta' THEN ep.no_jemaat END) AS peserta,
+  COUNT(DISTINCT CASE WHEN ep.role = 'Panitia' THEN ep.no_jemaat END) AS panitia,
+  COUNT(DISTINCT CASE WHEN ep.role = 'Volunteer' THEN ep.no_jemaat END) AS volunteer
+FROM event_history eh
+LEFT JOIN event_participation ep ON eh.event_id = ep.event_id
+WHERE eh.event_date <= CURRENT_DATE
+GROUP BY eh.event_id, eh.event_name, eh.event_date, eh.category
+ORDER BY eh.event_date DESC
+LIMIT 1;
+```
+
+#### Insights from Event Data
+
+1. **Resource Forecasting:** Predict volunteer and material needs based on historical participation
+2. **Engagement Segmentation:** Identify most engaged members (frequent volunteers across event types)
+3. **Event Optimization:** Determine optimal timing and format for different event categories
+4. **ROI Measurement:** Compare attendance and engagement across event types to guide resource allocation
+5. **Community Building:** Track growth in volunteer base as indicator of ownership and commitment
 
 ---
 
