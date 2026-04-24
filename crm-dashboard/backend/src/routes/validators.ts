@@ -455,9 +455,9 @@ export const EventParticipationSchema = z.object({
 export type EventParticipation = z.infer<typeof EventParticipationSchema>;
 
 export const EventParticipationCreateSchema = z.object({
-  event_id: z.number().int(),
   no_jemaat: z.number().int(),
   role: z.enum(['Peserta', 'Panitia', 'Volunteer']),
+  registered_at: z.string().optional(),
 });
 export type EventParticipationCreate = z.infer<typeof EventParticipationCreateSchema>;
 

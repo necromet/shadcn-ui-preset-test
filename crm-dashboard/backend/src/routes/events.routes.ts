@@ -166,6 +166,34 @@ router.post('/events/:eventId/participants', validate(schemas.EventParticipation
 });
 
 /**
+ * Add participants in bulk to event
+ * POST /events/:eventId/participants/bulk
+ */
+router.post('/events/:eventId/participants/bulk', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const eventId = parseInt(req.params.eventId, 10);
+    const { participants } = req.body;
+
+    if (!Array.isArray(participants) || participants.length === 0) {
+      res.status(400).json({
+        success: false,
+        error: { code: 400, message: 'participants must be a non-empty array' },
+      });
+      return;
+    }
+
+    const result = await EventsModel.addParticipantsBulk(eventId, participants);
+
+    res.status(201).json({
+      success: true,
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
  * Update participant record
  * PUT /events/:eventId/participants/:id
  */
@@ -209,6 +237,24 @@ router.delete('/events/:eventId/participants/:id', async (req: Request, res: Res
     }
 
     res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * Get participant analytics for an event
+ * GET /events/:eventId/participants/analytics
+ */
+router.get('/events/:eventId/participants/analytics', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const eventId = parseInt(req.params.eventId, 10);
+    const analytics = await EventsModel.getParticipantAnalytics(eventId);
+
+    res.json({
+      success: true,
+      data: analytics,
+    });
   } catch (err) {
     next(err);
   }

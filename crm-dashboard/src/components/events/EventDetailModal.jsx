@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react"
-import { Users, Plus, Trash2, UserCog, MapPin, Calendar, Cloud, HardDrive } from "lucide-react"
+import { Users, Plus, Trash2, UserCog, MapPin, Calendar, Cloud, HardDrive, Search } from "lucide-react"
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from "../ui/dialog.jsx"
@@ -7,6 +7,7 @@ import { Button } from "../ui/button.jsx"
 import { Badge } from "../ui/badge.jsx"
 import { Separator } from "../ui/separator.jsx"
 import { Input } from "../ui/input.jsx"
+import { Checkbox } from "../ui/checkbox.jsx"
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "../ui/select.jsx"
@@ -50,13 +51,14 @@ export function EventDetailModal({
   participants,
   members: allMembers,
   onAddParticipant,
+  onAddParticipants,
   onUpdateParticipant,
   onRemoveParticipant,
 }) {
   const [searchQuery, setSearchQuery] = useState("")
   const [showAddForm, setShowAddForm] = useState(false)
-  const [selectedMemberId, setSelectedMemberId] = useState("")
-  const [selectedRole, setSelectedRole] = useState("Peserta")
+  const [addSearchQuery, setAddSearchQuery] = useState("")
+  const [selectedMembers, setSelectedMembers] = useState({})
   const [removeTarget, setRemoveTarget] = useState(null)
   const [editRoleTarget, setEditRoleTarget] = useState(null)
   const [editRoleValue, setEditRoleValue] = useState("")
@@ -66,8 +68,8 @@ export function EventDetailModal({
       const timer = setTimeout(() => {
         setSearchQuery("")
         setShowAddForm(false)
-        setSelectedMemberId("")
-        setSelectedRole("Peserta")
+        setAddSearchQuery("")
+        setSelectedMembers({})
         setRemoveTarget(null)
         setEditRoleTarget(null)
       }, 0)
@@ -91,22 +93,89 @@ export function EventDetailModal({
     return allMembers.filter((m) => !registeredIds.has(m.no_jemaat))
   }, [allMembers, participants])
 
+  const filteredAvailableMembers = useMemo(() => {
+    if (!addSearchQuery.trim()) return availableMembers
+    const q = addSearchQuery.toLowerCase()
+    return availableMembers.filter(
+      (m) =>
+        (m.nama_jemaat && m.nama_jemaat.toLowerCase().includes(q)) ||
+        (m.nama_cgf && m.nama_cgf.toLowerCase().includes(q))
+    )
+  }, [availableMembers, addSearchQuery])
+
+  const selectedMemberIds = useMemo(
+    () => Object.keys(selectedMembers).filter((id) => selectedMembers[id]),
+    [selectedMembers]
+  )
+
   const roleCounts = useMemo(() => {
     const counts = { Peserta: 0, Panitia: 0, Volunteer: 0 }
     participants.forEach((p) => { if (counts[p.role] !== undefined) counts[p.role]++ })
     return counts
   }, [participants])
 
-  async function handleAddParticipant() {
-    if (!selectedMemberId) return
-    try {
-      await onAddParticipant({
-        event_id: event.event_id,
-        no_jemaat: parseInt(selectedMemberId, 10),
-        role: selectedRole,
+  function toggleMember(no_jemaat) {
+    setSelectedMembers((prev) => {
+      const next = { ...prev }
+      if (next[no_jemaat]) {
+        delete next[no_jemaat]
+      } else {
+        next[no_jemaat] = "Peserta"
+      }
+      return next
+    })
+  }
+
+  function setMemberRole(no_jemaat, role) {
+    setSelectedMembers((prev) => ({ ...prev, [no_jemaat]: role }))
+  }
+
+  function toggleAll() {
+    const allSelected = filteredAvailableMembers.every((m) => selectedMembers[m.no_jemaat])
+    if (allSelected) {
+      const next = { ...selectedMembers }
+      filteredAvailableMembers.forEach((m) => { delete next[m.no_jemaat] })
+      setSelectedMembers(next)
+    } else {
+      const next = { ...selectedMembers }
+      filteredAvailableMembers.forEach((m) => {
+        if (!next[m.no_jemaat]) next[m.no_jemaat] = "Peserta"
       })
-      setSelectedMemberId("")
-      setSelectedRole("Peserta")
+      setSelectedMembers(next)
+    }
+  }
+
+  function nowJakarta() {
+    const d = new Date()
+    return d.toLocaleString("sv-SE", { timeZone: "Asia/Jakarta" }).replace(" ", "T")
+  }
+
+  async function handleAddSelected() {
+    const entries = Object.entries(selectedMembers).filter(([, role]) => role)
+    if (entries.length === 0) return
+    const registeredAt = nowJakarta()
+    try {
+      if (entries.length > 1 && onAddParticipants) {
+        const participantsList = entries.map(([no_jemaat, role]) => ({
+          no_jemaat: parseInt(no_jemaat, 10),
+          role,
+          registered_at: registeredAt,
+        }))
+        await onAddParticipants(event.event_id, participantsList)
+      } else {
+        await Promise.all(
+          entries.map(([no_jemaat, role]) =>
+            onAddParticipant({
+              event_id: event.event_id,
+              no_jemaat: parseInt(no_jemaat, 10),
+              role,
+              registered_at: registeredAt,
+            })
+          )
+        )
+      }
+      setSelectedMembers({})
+      setAddSearchQuery("")
       setShowAddForm(false)
     } catch {
       // Error toast handled by parent
@@ -235,40 +304,85 @@ export function EventDetailModal({
               </Button>
             </div>
 
-            {/* Add Participant Form */}
+            {/* Add Participant Checklist */}
             {showAddForm && (
               <div className="rounded-lg border p-3 bg-muted/30 space-y-3">
-                <div className="grid grid-cols-[1fr_140px_auto] gap-2">
-                  <Select value={selectedMemberId} onValueChange={setSelectedMemberId}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select member..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {availableMembers.length === 0 ? (
-                        <SelectItem value="__none" disabled>All members registered</SelectItem>
-                      ) : (
-                        availableMembers.map((m) => (
-                          <SelectItem key={m.no_jemaat} value={String(m.no_jemaat)}>
-                            {m.nama_jemaat}
-                          </SelectItem>
-                        ))
-                      )}
-                    </SelectContent>
-                  </Select>
-                  <Select value={selectedRole} onValueChange={setSelectedRole}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {ROLES.map((r) => (
-                        <SelectItem key={r} value={r}>{r}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Button size="sm" onClick={handleAddParticipant} disabled={!selectedMemberId}>
-                    Add
-                  </Button>
+                <div className="flex items-center gap-2">
+                  <Search className="size-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search members..."
+                    value={addSearchQuery}
+                    onChange={(e) => setAddSearchQuery(e.target.value)}
+                    className="h-8 text-sm flex-1"
+                  />
                 </div>
+
+                {filteredAvailableMembers.length === 0 ? (
+                  <p className="text-sm text-muted-foreground text-center py-4">
+                    {availableMembers.length === 0 ? "All members are already registered" : "No members match your search"}
+                  </p>
+                ) : (
+                  <div className="max-h-[220px] overflow-y-auto space-y-1">
+                    <div className="flex items-center gap-2 px-1 py-1.5 border-b mb-1">
+                      <Checkbox
+                        checked={filteredAvailableMembers.length > 0 && filteredAvailableMembers.every((m) => selectedMembers[m.no_jemaat])}
+                        indeterminate={
+                          filteredAvailableMembers.some((m) => selectedMembers[m.no_jemaat]) &&
+                          !filteredAvailableMembers.every((m) => selectedMembers[m.no_jemaat])
+                        }
+                        onCheckedChange={toggleAll}
+                      />
+                      <span className="text-xs font-medium text-muted-foreground">
+                        Select all ({filteredAvailableMembers.length})
+                      </span>
+                    </div>
+                    {filteredAvailableMembers.map((m) => {
+                      const isChecked = Boolean(selectedMembers[m.no_jemaat])
+                      return (
+                        <div
+                          key={m.no_jemaat}
+                          className={cn(
+                            "flex items-center gap-2 px-1 py-1.5 rounded-sm transition-colors",
+                            isChecked && "bg-accent/50"
+                          )}
+                        >
+                          <Checkbox
+                            checked={isChecked}
+                            onCheckedChange={() => toggleMember(m.no_jemaat)}
+                          />
+                          <span className="text-sm flex-1 truncate">{m.nama_jemaat}</span>
+                          {isChecked && (
+                            <Select
+                              value={selectedMembers[m.no_jemaat]}
+                              onValueChange={(role) => setMemberRole(m.no_jemaat, role)}
+                            >
+                              <SelectTrigger className="h-7 w-[110px] text-xs">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {ROLES.map((r) => (
+                                  <SelectItem key={r} value={r}>{r}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+
+                {selectedMemberIds.length > 0 && (
+                  <div className="flex items-center justify-between pt-1 border-t">
+                    <span className="text-xs text-muted-foreground">
+                      {selectedMemberIds.length} member{selectedMemberIds.length !== 1 ? "s" : ""} selected
+                    </span>
+                    <Button size="sm" onClick={handleAddSelected}>
+                      <Plus className="size-3 mr-1" />
+                      Add Selected
+                    </Button>
+                  </div>
+                )}
               </div>
             )}
 

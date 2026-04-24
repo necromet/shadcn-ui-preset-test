@@ -273,10 +273,11 @@ export const MembersModel = {
 
   async delete(no_jemaat: number): Promise<boolean> {
     return transaction(async (txQuery) => {
-      await txQuery(
-        'UPDATE cgf_members SET no_jemaat = NULL WHERE no_jemaat = $1',
-        [no_jemaat],
-      );
+      await txQuery('DELETE FROM event_participation WHERE no_jemaat = $1', [no_jemaat]);
+      await txQuery('DELETE FROM cnx_jemaat_status_history WHERE no_jemaat = $1', [no_jemaat]);
+      await txQuery('DELETE FROM cgf_members WHERE no_jemaat = $1', [no_jemaat]);
+      await txQuery('DELETE FROM cgf_attendance WHERE no_jemaat = $1', [no_jemaat]);
+      await txQuery('DELETE FROM pelayan WHERE no_jemaat = $1', [no_jemaat]);
       const result = await txQuery(
         'DELETE FROM cnx_jemaat_clean WHERE no_jemaat = $1',
         [no_jemaat],

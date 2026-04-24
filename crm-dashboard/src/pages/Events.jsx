@@ -14,7 +14,7 @@ import { EventFormModal } from "../components/events/EventFormModal.jsx"
 import { EventDetailModal } from "../components/events/EventDetailModal.jsx"
 import {
   getEvents, createEvent, updateEvent, deleteEvent,
-  getEventParticipants, addEventParticipant, updateEventParticipant,
+  getEventParticipants, addEventParticipant, addEventParticipants, updateEventParticipant,
   removeEventParticipant, getMembers,
 } from "../data/mock.js"
 
@@ -227,6 +227,21 @@ export function Events() {
       await refreshParticipants()
     } catch (err) {
       toast.error("Failed to add participant", {
+        description: err.message || "An unexpected error occurred",
+      })
+      throw err
+    }
+  }
+
+  async function handleAddParticipants(eventId, participantsList) {
+    try {
+      await addEventParticipants(eventId, participantsList)
+      toast.success("Participants added", {
+        description: `${participantsList.length} member${participantsList.length !== 1 ? 's have' : ' has'} been registered to this event.`,
+      })
+      await refreshParticipants()
+    } catch (err) {
+      toast.error("Failed to add participants", {
         description: err.message || "An unexpected error occurred",
       })
       throw err
@@ -505,6 +520,7 @@ export function Events() {
         participants={detailParticipants}
         members={allMembers}
         onAddParticipant={handleAddParticipant}
+        onAddParticipants={handleAddParticipants}
         onUpdateParticipant={handleUpdateParticipant}
         onRemoveParticipant={handleRemoveParticipant}
         onRefreshParticipants={refreshParticipants}

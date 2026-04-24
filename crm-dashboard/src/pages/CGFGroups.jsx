@@ -4,7 +4,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { Button } from "../components/ui/button.jsx";
 import { Badge } from "../components/ui/badge.jsx";
 import { Skeleton } from "../components/ui/skeleton.jsx";
-import { Plus, Pencil, Users, MapPin, Clock, ArrowLeft, UserPlus, Trash2, Crown } from "lucide-react";
+import { Input } from "../components/ui/input.jsx";
+import { Label } from "../components/ui/label.jsx";
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "../components/ui/select.jsx";
+import { toast } from "sonner";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "../components/ui/alert-dialog.jsx";
+import { Plus, Pencil, Users, MapPin, Clock, ArrowLeft, Trash2, Crown } from "lucide-react";
 import { MemberAvatar } from "../components/ui/member-avatar.jsx";
 import { EmptyState } from "../components/ui/empty-state.jsx";
 import {
@@ -14,6 +24,31 @@ import {
 } from "../data/mock.js";
 
 const API_BASE = import.meta.env.VITE_API_URL;
+
+const HARI_OPTIONS = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
+
+async function apiRequest(endpoint, options = {}) {
+  const url = `${API_BASE}${endpoint}`;
+  const response = await fetch(url, {
+    headers: { "Content-Type": "application/json" },
+    ...options,
+  });
+  if (response.status === 204) {
+    return null;
+  }
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error?.message || `HTTP ${response.status}`);
+  }
+  return data;
+}
+
+function generateGroupId(existingIds) {
+  const maxId = existingIds.length > 0
+    ? Math.max(...existingIds.map(id => parseInt(id, 10)))
+    : 80000;
+  return String(maxId + 1).padStart(5, "0");
+}
 
 export function CGFGroups() {
   const [groups, setGroups] = useState([]);
@@ -29,6 +64,7 @@ export function CGFGroups() {
   const [selectedGroupId, setSelectedGroupId] = useState(null);
   const [showGroupDialog, setShowGroupDialog] = useState(false);
   const [editingGroup, setEditingGroup] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
   const selectedGroup = useMemo(
     () => groups.find(g => g.cg_id === selectedGroupId) || null,
@@ -45,28 +81,77 @@ export function CGFGroups() {
     setShowGroupDialog(true);
   };
 
-  const handleSaveGroup = (formData) => {
-    if (editingGroup) {
-      setGroups(prev =>
-        prev.map(g =>
-          g.cg_id === editingGroup.cg_id ? { ...g, ...formData } : g
-        )
-      );
-    } else {
-      const newId = Math.max(...groups.map(g => g.cg_id)) + 1;
-      setGroups(prev => [
-        ...prev,
-        { cg_id: newId, ...formData },
-      ]);
+  const handleDeleteGroup = async () => {
+    if (!deleteTarget) return;
+    try {
+      const cgId = String(deleteTarget.cg_id);
+      await apiRequest(`/groups/${cgId}`, { method: "DELETE" });
+      toast.success("Group deleted successfully");
+      const refreshed = await getAttendanceCGFList();
+      setGroups(refreshed);
+    } catch (err) {
+      console.error("Failed to delete group:", err);
+      toast.error("Failed to delete group");
+    }
+    setDeleteTarget(null);
+  };
+
+  const handleSaveGroup = async (formData) => {
+    try {
+      if (editingGroup) {
+        const cgId = String(editingGroup.cg_id);
+        await apiRequest(`/groups/${cgId}`, {
+          method: "PUT",
+          body: JSON.stringify({
+            nama_cgf: formData.nama_cgf,
+            lokasi_1: formData.lokasi_1,
+            lokasi_2: formData.lokasi_2 || undefined,
+            hari: formData.hari,
+          }),
+        });
+        toast.success("Group updated successfully");
+      } else {
+        const newId = generateGroupId(groups.map(g => String(g.cg_id)));
+        await apiRequest("/groups", {
+          method: "POST",
+          body: JSON.stringify({
+            id: newId,
+            nama_cgf: formData.nama_cgf,
+            lokasi_1: formData.lokasi_1,
+            lokasi_2: formData.lokasi_2 || undefined,
+            hari: formData.hari,
+          }),
+        });
+        toast.success("Group created successfully");
+      }
+      const refreshed = await getAttendanceCGFList();
+      setGroups(refreshed);
+    } catch (err) {
+      console.error("Failed to save group:", err);
+      toast.error(editingGroup ? "Failed to update group" : "Failed to create group");
     }
     setShowGroupDialog(false);
     setEditingGroup(null);
   };
 
-  const handleGroupUpdated = useCallback((cgId, formData) => {
-    setGroups(prev =>
-      prev.map(g => g.cg_id === cgId ? { ...g, ...formData } : g)
-    );
+  const handleGroupUpdated = useCallback(async (cgId, formData) => {
+    try {
+      await apiRequest(`/groups/${cgId}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          nama_cgf: formData.nama_cgf,
+          lokasi_1: formData.lokasi_1,
+          lokasi_2: formData.lokasi_2 || undefined,
+          hari: formData.hari,
+        }),
+      });
+      toast.success("Group updated successfully");
+      const refreshed = await getAttendanceCGFList();
+      setGroups(refreshed);
+    } catch (err) {
+      console.error("Failed to update group:", err);
+      toast.error("Failed to update group");
+    }
   }, []);
 
   if (loading) {
@@ -101,6 +186,7 @@ export function CGFGroups() {
         group={selectedGroup}
         onBack={() => setSelectedGroupId(null)}
         onGroupUpdated={handleGroupUpdated}
+        onDelete={() => setSelectedGroupId(null)}
       />
     );
   }
@@ -110,7 +196,7 @@ export function CGFGroups() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-semibold">CGF Groups</h2>
-          <p className="text-sm text-muted-foreground">Kelola Cell Group Fellowship</p>
+          <p className="text-sm text-muted-foreground">Manage CGF</p>
         </div>
         <Button onClick={handleCreateGroup}>
           <Plus className="h-4 w-4 mr-1" /> Create Group
@@ -155,6 +241,9 @@ export function CGFGroups() {
                 <Button variant="ghost" size="sm" onClick={() => handleEditGroupFromList(group)}>
                   <Pencil className="h-4 w-4" /> Edit
                 </Button>
+                <Button variant="ghost" size="sm" className="text-destructive" onClick={() => setDeleteTarget(group)}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               </CardFooter>
             </Card>
           ))}
@@ -168,68 +257,69 @@ export function CGFGroups() {
           onClose={() => { setShowGroupDialog(false); setEditingGroup(null); }}
         />
       )}
+
+      <AlertDialog open={!!deleteTarget} onOpenChange={(v) => !v && setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Group</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete <strong>{deleteTarget?.nama_cgf}</strong>? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteGroup} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
 
-function GroupDetailView({ group, onBack, onGroupUpdated }) {
+function GroupDetailView({ group, onBack, onGroupUpdated, onDelete }) {
   const [detail, setDetail] = useState(null);
   const [members, setMembers] = useState([]);
   const [attendanceHistory, setAttendanceHistory] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showAddMemberDialog, setShowAddMemberDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
+    let cancelled = false;
     const cgId = String(group.cg_id);
     Promise.all([
       getAttendanceCGFById(cgId),
       fetch(`${API_BASE}/groups/${cgId}/members`).then(r => r.json()),
       getAttendanceHistory({ cg_id: cgId, limit: 20 }),
     ]).then(([detailData, membersRes, historyRes]) => {
+      if (cancelled) return;
       setDetail(detailData);
       setMembers(membersRes.data || []);
       setAttendanceHistory(historyRes.data || []);
       setLoading(false);
     });
+    return () => { cancelled = true; };
   }, [group.cg_id]);
-  console.log(members);
-
-  const handleRemoveMember = useCallback(async (no_jemaat) => {
-    const cgId = String(group.cg_id);
-    try {
-      await fetch(`${API_BASE}/groups/${cgId}/members/${no_jemaat}`, { method: 'DELETE' });
-      setMembers(prev => prev.filter(m => m.no_jemaat !== no_jemaat));
-    } catch (err) {
-      console.error('Failed to remove member:', err);
-    }
-  }, [group.cg_id]);
-
-  const handleAddMember = useCallback(async (no_jemaat) => {
-    const cgId = String(group.cg_id);
-    try {
-      const res = await fetch(`${API_BASE}/groups/${cgId}/members`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ no_jemaat, nama_cgf: group.nama_cgf, is_leader: false }),
-      });
-      const json = await res.json();
-      if (json.success) {
-        const membersRes = await fetch(`${API_BASE}/groups/${cgId}/members`).then(r => r.json());
-        setMembers(membersRes.data || []);
-      }
-    } catch (err) {
-      console.error('Failed to add member:', err);
-    }
-    setShowAddMemberDialog(false);
-  }, [group.cg_id, group.nama_cgf]);
 
   const statusBadgeVariant = (status) => {
     if (status === "hadir") return "success";
     if (status === "izin") return "warning";
     if (status === "tamu") return "secondary";
     return "destructive";
+  };
+
+  const handleDelete = async () => {
+    try {
+      await apiRequest(`/groups/${group.cg_id}`, { method: "DELETE" });
+      toast.success("Group deleted successfully");
+      onDelete?.();
+    } catch (err) {
+      console.error("Failed to delete group:", err);
+      toast.error("Failed to delete group");
+    }
+    setShowDeleteConfirm(false);
   };
 
   if (loading) {
@@ -262,6 +352,9 @@ function GroupDetailView({ group, onBack, onGroupUpdated }) {
         </div>
         <Button variant="outline" size="sm" onClick={() => setShowEditDialog(true)}>
           <Pencil className="h-4 w-4 mr-1" /> Edit
+        </Button>
+        <Button variant="outline" size="sm" className="text-destructive" onClick={() => setShowDeleteConfirm(true)}>
+          <Trash2 className="h-4 w-4 mr-1" /> Delete
         </Button>
       </div>
 
@@ -299,14 +392,11 @@ function GroupDetailView({ group, onBack, onGroupUpdated }) {
       </div>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader>
           <div>
             <CardTitle>Anggota CGF</CardTitle>
             <CardDescription>Daftar anggota {detail?.nama_cgf || group.nama_cgf}</CardDescription>
           </div>
-          <Button size="sm" onClick={() => setShowAddMemberDialog(true)}>
-            <UserPlus className="h-4 w-4 mr-1" /> Tambah Anggota
-          </Button>
         </CardHeader>
         <CardContent>
           {members.length === 0 ? (
@@ -319,7 +409,6 @@ function GroupDetailView({ group, onBack, onGroupUpdated }) {
                   <TableHead>Nama</TableHead>
                   <TableHead>Gender</TableHead>
                   <TableHead>Role</TableHead>
-                  <TableHead className="text-right">Aksi</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -345,15 +434,6 @@ function GroupDetailView({ group, onBack, onGroupUpdated }) {
                       ) : (
                         <Badge variant="secondary">Member</Badge>
                       )}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleRemoveMember(member.no_jemaat)}
-                      >
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -398,14 +478,6 @@ function GroupDetailView({ group, onBack, onGroupUpdated }) {
         </CardContent>
       </Card>
 
-      {showAddMemberDialog && (
-        <AddMemberDialog
-          cgId={group.cg_id}
-          onAdd={handleAddMember}
-          onClose={() => setShowAddMemberDialog(false)}
-        />
-      )}
-
       {showEditDialog && (
         <GroupFormDialog
           group={detail || group}
@@ -416,75 +488,23 @@ function GroupDetailView({ group, onBack, onGroupUpdated }) {
           onClose={() => setShowEditDialog(false)}
         />
       )}
-    </div>
-  );
-}
 
-function AddMemberDialog({ cgId, onAdd, onClose }) {
-  const [unassigned, setUnassigned] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    Promise.all([
-      fetch(`${API_BASE}/members?limit=1000`).then(r => r.json()),
-      fetch(`${API_BASE}/groups/${cgId}/members`).then(r => r.json()),
-    ]).then(([membersRes, groupMembersRes]) => {
-      const allMembers = membersRes.data || [];
-      const groupMemberIds = new Set((groupMembersRes.data || []).map(m => m.no_jemaat));
-      setUnassigned(allMembers.filter(m => !groupMemberIds.has(m.no_jemaat)));
-      setLoading(false);
-    });
-  }, [cgId]);
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <Card className="w-full max-w-md mx-4">
-        <CardHeader>
-          <CardTitle>Tambah Anggota</CardTitle>
-          <CardDescription>Pilih jemaat untuk ditambahkan</CardDescription>
-        </CardHeader>
-        <CardContent className="max-h-80 overflow-y-auto">
-          {loading ? (
-            <div className="space-y-2">
-              {[1, 2, 3].map(i => <Skeleton key={i} className="h-12 w-full" />)}
-            </div>
-          ) : unassigned.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-4">
-              Tidak ada jemaat yang belum terdaftar.
-            </p>
-          ) : (
-            <div className="flex flex-col gap-2">
-              {unassigned.map((member) => (
-                <div
-                  key={member.no_jemaat}
-                  className="flex items-center justify-between p-2 rounded-md hover:bg-muted cursor-pointer"
-                  onClick={() => onAdd(member.no_jemaat)}
-                >
-                  <div className="flex items-center gap-2">
-                    <MemberAvatar
-                      name={member.nama_jemaat}
-                      gender={member.jenis_kelamin}
-                      size="sm"
-                    />
-                    <div>
-                      <p className="text-sm font-medium">{member.nama_jemaat}</p>
-                      <p className="text-xs text-muted-foreground">#{member.no_jemaat}</p>
-                    </div>
-                  </div>
-                  <Button size="sm" variant="outline">
-                    <UserPlus className="h-3 w-3 mr-1" /> Tambah
-                  </Button>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-        <CardFooter>
-          <Button variant="outline" className="w-full" onClick={onClose}>
-            Tutup
-          </Button>
-        </CardFooter>
-      </Card>
+      <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Group</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete <strong>{detail?.nama_cgf || group.nama_cgf}</strong>? This will also remove all members from this group.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
@@ -492,14 +512,20 @@ function AddMemberDialog({ cgId, onAdd, onClose }) {
 function GroupFormDialog({ group, onSave, onClose }) {
   const [formData, setFormData] = useState({
     nama_cgf: group?.nama_cgf || "",
-    leader_name: group?.leader_name || "",
+    lokasi_1: group?.lokasi || group?.lokasi_1 || "",
+    lokasi_2: group?.lokasi_2 || "",
     hari: group?.hari || "",
-    lokasi: group?.lokasi || "",
   });
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSave(formData);
+    setSubmitting(true);
+    try {
+      await onSave(formData);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -509,15 +535,14 @@ function GroupFormDialog({ group, onSave, onClose }) {
           <CardHeader>
             <CardTitle>{group ? "Edit CGF Group" : "Create CGF Group"}</CardTitle>
             <CardDescription>
-              {group ? "Perbarui informasi group" : "Buat group CGF baru"}
+              {group ? "Edit/Update CGF Group Information" : "Create New CGF Group"}
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium">Nama CGF</label>
-              <input
-                type="text"
-                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              <Label htmlFor="nama_cgf">Nama CGF</Label>
+              <Input
+                id="nama_cgf"
                 placeholder="CGF Kasih"
                 value={formData.nama_cgf}
                 onChange={(e) => setFormData(prev => ({ ...prev, nama_cgf: e.target.value }))}
@@ -525,45 +550,47 @@ function GroupFormDialog({ group, onSave, onClose }) {
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium">Nama Leader</label>
-              <input
-                type="text"
-                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                placeholder="Andreas Wijaya"
-                value={formData.leader_name}
-                onChange={(e) => setFormData(prev => ({ ...prev, leader_name: e.target.value }))}
+              <Label htmlFor="lokasi_1">Lokasi</Label>
+              <Input
+                id="lokasi_1"
+                placeholder="BSD"
+                value={formData.lokasi_1}
+                onChange={(e) => setFormData(prev => ({ ...prev, lokasi_1: e.target.value }))}
                 required
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium">Hari</label>
-              <input
-                type="text"
-                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                placeholder="Sabtu"
+              <Label htmlFor="lokasi_2">Lokasi 2 (opsional)</Label>
+              <Input
+                id="lokasi_2"
+                placeholder="Gading Serpong"
+                value={formData.lokasi_2}
+                onChange={(e) => setFormData(prev => ({ ...prev, lokasi_2: e.target.value }))}
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label>Hari</Label>
+              <Select
                 value={formData.hari}
-                onChange={(e) => setFormData(prev => ({ ...prev, hari: e.target.value }))}
-                required
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium">Lokasi</label>
-              <input
-                type="text"
-                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                placeholder="Rumah Andreas - Kemang"
-                value={formData.lokasi}
-                onChange={(e) => setFormData(prev => ({ ...prev, lokasi: e.target.value }))}
-                required
-              />
+                onValueChange={(value) => setFormData(prev => ({ ...prev, hari: value }))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Pilih hari" />
+                </SelectTrigger>
+                <SelectContent>
+                  {HARI_OPTIONS.map((hari) => (
+                    <SelectItem key={hari} value={hari}>{hari}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </CardContent>
           <CardFooter className="gap-2">
-            <Button type="button" variant="outline" className="flex-1" onClick={onClose}>
+            <Button type="button" variant="outline" className="flex-1" onClick={onClose} disabled={submitting}>
               Batal
             </Button>
-            <Button type="submit" className="flex-1">
-              {group ? "Simpan" : "Buat Group"}
+            <Button type="submit" className="flex-1" disabled={submitting || !formData.nama_cgf || !formData.lokasi_1 || !formData.hari}>
+              {submitting ? "Menyimpan..." : group ? "Simpan" : "Buat Group"}
             </Button>
           </CardFooter>
         </form>
