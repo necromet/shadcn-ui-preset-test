@@ -67,7 +67,7 @@ const kpiConfig = [
   },
   {
     title: "New Members This Week",
-    key: "total_cgf_groups",
+    key: "new_members_this_week",
     icon: UserCheck,
     trend: "up",
     change: "+2",

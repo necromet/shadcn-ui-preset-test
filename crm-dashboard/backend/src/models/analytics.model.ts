@@ -5,10 +5,13 @@ export interface DashboardKPIs {
   active_members: number;
   inactive_members: number;
   new_members_this_month: number;
+  new_members_this_week: number;
   total_cgf_groups: number;
   total_ministry_members: number;
   upcoming_events: number;
   attendance_rate_this_month: number;
+  avg_cgf_size: number;
+  members_without_cgf: number;
 }
 
 export interface DistributionItem {
@@ -78,7 +81,12 @@ export const AnalyticsModel = {
         (SELECT COUNT(*) FROM cnx_jemaat_clean) as total_members,
         (SELECT COUNT(*) FROM cgf_info) as total_cgf_groups,
         (SELECT COUNT(DISTINCT no_jemaat) FROM pelayan_pelayanan WHERE is_active = TRUE) as total_ministry_members,
-        (SELECT COUNT(nama_cgf) from cnx_jemaat_clean where nama_cgf = 'Belum CGF') as members_without_cgf
+        (SELECT COUNT(*) FROM cnx_jemaat_clean WHERE nama_cgf IS NULL OR nama_cgf = 'Belum CGF') as members_without_cgf,
+        (SELECT COUNT(*) FROM cnx_jemaat_clean WHERE created_date >= DATE_TRUNC('week', CURRENT_DATE)) as new_members_this_week,
+        (SELECT ROUND(
+          (SELECT COUNT(*)::numeric FROM cgf_members) /
+          NULLIF((SELECT COUNT(*) FROM cgf_info), 0)
+        , 1)) as avg_cgf_size
     `);
     return result.rows[0];
   },
