@@ -210,7 +210,7 @@ export function EventDetailModal({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-[700px] max-h-[85vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-[700px] max-h-[85vh] overflow-y-auto max-sm:inset-0 max-sm:translate-x-0 max-sm:translate-y-0 max-sm:max-w-none max-sm:rounded-none max-sm:h-full max-sm:max-h-none">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Calendar className="size-5" />
@@ -239,7 +239,7 @@ export function EventDetailModal({
               </Badge>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 text-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Calendar className="size-4" />
                 <span>{formatDate(event.event_date)}</span>
@@ -272,7 +272,7 @@ export function EventDetailModal({
           <Separator />
 
           {/* Participant Summary */}
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="text-center rounded-lg border p-3">
               <p className="text-2xl font-bold">{participants.length}</p>
               <p className="text-xs text-muted-foreground">Total</p>

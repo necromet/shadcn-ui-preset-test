@@ -53,8 +53,8 @@ export function Attendance() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h2 className="text-2xl font-semibold">Absensi CGF</h2>
-        <p className="text-sm text-muted-foreground">Kelola kehadiran Cell Group Fellowship</p>
+        <h2 className="text-xl md:text-2xl font-semibold">Absensi CGF</h2>
+        <p className="text-xs md:text-sm text-muted-foreground">Kelola kehadiran Cell Group Fellowship</p>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -367,13 +367,13 @@ function MarkAttendanceView({ cgId, date, onDateChange, onBack, onSubmitted }) {
   return (
     <div className="flex flex-col gap-6 mt-4">
       {/* ── Header ──────────────────────────────────────── */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex items-center gap-3">
           <Button variant="outline" size="icon" onClick={onBack} className="shrink-0">
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h3 className="text-xl font-bold tracking-tight">{cgfDetail?.nama_cgf} </h3>
+            <h3 className="text-lg sm:text-xl font-bold tracking-tight">{cgfDetail?.nama_cgf} </h3>
             <p className="text-xs text-muted-foreground">
               {cgfDetail?.leader_name} &middot; {cgfDetail?.jadwal}
             </p>
@@ -591,7 +591,7 @@ function MarkAttendanceView({ cgId, date, onDateChange, onBack, onSubmitted }) {
       )}
 
       {/* ── Submit Footer ───────────────────────────────── */}
-      <div className="sticky bottom-0 -mx-6 -mb-6 px-6 py-4 bg-background/80 backdrop-blur-sm border-t border-border flex items-center gap-3">
+      <div className="sticky bottom-0 -mx-4 md:-mx-6 -mb-4 md:-mb-6 px-4 md:px-6 py-4 bg-background/80 backdrop-blur-sm border-t border-border flex flex-col sm:flex-row items-start sm:items-center gap-3">
         <span className="font-mono-ledger text-xs text-muted-foreground flex-1">
           {progressPercent}% tercatat &middot; Tap = siklus &middot; Klik kanan = atur langsung
         </span>

@@ -44,10 +44,10 @@ paths:
       summary: Get all members
       description: Retrieve a paginated list of church members with optional filtering
       parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/Limit'
-        - $ref: '#/components/parameters/SortBy'
-        - $ref: '#/components/parameters/SortOrder'
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/SortBy"
+        - $ref: "#/components/parameters/SortOrder"
         - name: search
           in: query
           description: Search by member name
@@ -67,12 +67,12 @@ paths:
             type: string
             example: "Jakarta"
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MemberListResponse'
+                $ref: "#/components/schemas/MemberListResponse"
               example:
                 success: true
                 data:
@@ -93,10 +93,10 @@ paths:
                   limit: 10
                   total: 100
                   totalPages: 10
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
 
     post:
       tags: [Members]
@@ -107,7 +107,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MemberCreate'
+              $ref: "#/components/schemas/MemberCreate"
             example:
               nama_jemaat: "Jane Smith"
               jenis_kelamin: "Perempuan"
@@ -121,37 +121,37 @@ paths:
               kategori_domisili: "Bandung"
               alamat_domisili: "Jl. Asia Afrika No. 45"
       responses:
-        '201':
+        "201":
           description: Member created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MemberResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
+                $ref: "#/components/schemas/MemberResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
 
   /members/{no_jemaat}:
     parameters:
-      - $ref: '#/components/parameters/MemberId'
+      - $ref: "#/components/parameters/MemberId"
     get:
       tags: [Members]
       summary: Get member by ID
       description: Retrieve a single member by their member number
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MemberResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+                $ref: "#/components/schemas/MemberResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
 
     put:
       tags: [Members]
@@ -162,18 +162,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MemberUpdate'
+              $ref: "#/components/schemas/MemberUpdate"
       responses:
-        '200':
+        "200":
           description: Member updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MemberResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/MemberResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
     patch:
       tags: [Members]
@@ -184,30 +184,30 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MemberPartialUpdate'
+              $ref: "#/components/schemas/MemberPartialUpdate"
       responses:
-        '200':
+        "200":
           description: Member updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MemberResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/MemberResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
     delete:
       tags: [Members]
       summary: Delete member
       description: Remove a member from the system
       responses:
-        '200':
+        "200":
           description: Member deleted successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessMessage'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/SuccessMessage"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
   # ==================== CGF ENDPOINTS ====================
   /cgf:
@@ -216,8 +216,8 @@ paths:
       summary: Get all CGF groups
       description: Retrieve all Cell Group Fellowship groups with optional filtering
       parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/Limit'
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Limit"
         - name: hari
           in: query
           description: Filter by meeting day
@@ -230,12 +230,12 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CGFListResponse'
+                $ref: "#/components/schemas/CGFListResponse"
               example:
                 success: true
                 data:
@@ -258,16 +258,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CGFCreate'
+              $ref: "#/components/schemas/CGFCreate"
       responses:
-        '201':
+        "201":
           description: CGF created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CGFResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
+                $ref: "#/components/schemas/CGFResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
 
   /cgf/{id}:
     parameters:
@@ -285,14 +285,14 @@ paths:
       tags: [CGF]
       summary: Get CGF by ID
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CGFResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/CGFResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
     put:
       tags: [CGF]
@@ -302,29 +302,29 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CGFUpdate'
+              $ref: "#/components/schemas/CGFUpdate"
       responses:
-        '200':
+        "200":
           description: CGF updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CGFResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/CGFResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
     delete:
       tags: [CGF]
       summary: Delete CGF group
       responses:
-        '200':
+        "200":
           description: CGF deleted successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessMessage'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/SuccessMessage"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
   # ==================== CGF MEMBERS ENDPOINTS ====================
   /cgf/members:
@@ -333,8 +333,8 @@ paths:
       summary: Get all CGF member assignments
       description: Retrieve all member assignments to CGF groups
       parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/Limit'
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Limit"
         - name: nama_cgf
           in: query
           description: Filter by CGF name
@@ -346,12 +346,12 @@ paths:
           schema:
             type: boolean
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CGFMemberListResponse'
+                $ref: "#/components/schemas/CGFMemberListResponse"
 
     post:
       tags: [CGF]
@@ -361,33 +361,33 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CGFMemberCreate'
+              $ref: "#/components/schemas/CGFMemberCreate"
       responses:
-        '201':
+        "201":
           description: Member assigned to CGF successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CGFMemberResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
+                $ref: "#/components/schemas/CGFMemberResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
 
   /cgf/members/{no_jemaat}:
     parameters:
-      - $ref: '#/components/parameters/MemberId'
+      - $ref: "#/components/parameters/MemberId"
 
     get:
       tags: [CGF]
       summary: Get CGF assignment by member ID
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CGFMemberResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/CGFMemberResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
     put:
       tags: [CGF]
@@ -397,29 +397,29 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CGFMemberUpdate'
+              $ref: "#/components/schemas/CGFMemberUpdate"
       responses:
-        '200':
+        "200":
           description: Assignment updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CGFMemberResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/CGFMemberResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
     delete:
       tags: [CGF]
       summary: Remove member from CGF
       responses:
-        '200':
+        "200":
           description: Member removed from CGF successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessMessage'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/SuccessMessage"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
   # ==================== ATTENDANCE ENDPOINTS ====================
   /attendance:
@@ -428,8 +428,8 @@ paths:
       summary: Get all attendance records
       description: Retrieve attendance records with filtering options
       parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/Limit'
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Limit"
         - name: no_jemaat
           in: query
           description: Filter by member ID
@@ -465,12 +465,12 @@ paths:
             type: string
             format: date
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttendanceListResponse'
+                $ref: "#/components/schemas/AttendanceListResponse"
               example:
                 success: true
                 data:
@@ -495,16 +495,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AttendanceCreate'
+              $ref: "#/components/schemas/AttendanceCreate"
       responses:
-        '201':
+        "201":
           description: Attendance recorded successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttendanceResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
+                $ref: "#/components/schemas/AttendanceResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
 
   /attendance/bulk:
     post:
@@ -529,14 +529,14 @@ paths:
                 records:
                   type: array
                   items:
-                    $ref: '#/components/schemas/AttendanceRecord'
+                    $ref: "#/components/schemas/AttendanceRecord"
                   example:
                     - no_jemaat: 1
                       keterangan: "hadir"
                     - no_jemaat: 2
                       keterangan: "izin"
       responses:
-        '201':
+        "201":
           description: Bulk attendance recorded successfully
           content:
             application/json:
@@ -549,7 +549,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Attendance'
+                      $ref: "#/components/schemas/Attendance"
                   message:
                     type: string
                     example: "Attendance records created successfully"
@@ -567,14 +567,14 @@ paths:
       tags: [Attendance]
       summary: Get attendance record by ID
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttendanceResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/AttendanceResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
     put:
       tags: [Attendance]
@@ -584,29 +584,29 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AttendanceUpdate'
+              $ref: "#/components/schemas/AttendanceUpdate"
       responses:
-        '200':
+        "200":
           description: Attendance updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttendanceResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/AttendanceResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
     delete:
       tags: [Attendance]
       summary: Delete attendance record
       responses:
-        '200':
+        "200":
           description: Attendance deleted successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessMessage'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/SuccessMessage"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
   # ==================== MINISTRY INFO ENDPOINTS ====================
   /ministry/types:
@@ -614,20 +614,20 @@ paths:
       tags: [Ministry]
       summary: Get all ministry types
       parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/Limit'
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Limit"
         - name: search
           in: query
           description: Search by ministry name
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MinistryListResponse'
+                $ref: "#/components/schemas/MinistryListResponse"
               example:
                 success: true
                 data:
@@ -649,16 +649,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MinistryCreate'
+              $ref: "#/components/schemas/MinistryCreate"
       responses:
-        '201':
+        "201":
           description: Ministry created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MinistryResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
+                $ref: "#/components/schemas/MinistryResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
 
   /ministry/types/{pelayanan_id}:
     parameters:
@@ -675,14 +675,14 @@ paths:
       tags: [Ministry]
       summary: Get ministry by ID
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MinistryResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/MinistryResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
     put:
       tags: [Ministry]
@@ -692,29 +692,29 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MinistryUpdate'
+              $ref: "#/components/schemas/MinistryUpdate"
       responses:
-        '200':
+        "200":
           description: Ministry updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MinistryResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/MinistryResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
     delete:
       tags: [Ministry]
       summary: Delete ministry
       responses:
-        '200':
+        "200":
           description: Ministry deleted successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessMessage'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/SuccessMessage"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
   # ==================== PELAYAN (MINISTRY MEMBERS) ENDPOINTS ====================
   /ministry/pelayan:
@@ -722,8 +722,8 @@ paths:
       tags: [Ministry]
       summary: Get all ministry members
       parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/Limit'
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Limit"
         - name: search
           in: query
           description: Search by member name
@@ -734,14 +734,31 @@ paths:
           description: Filter by specific ministry role
           schema:
             type: string
-            enum: [is_worship_leader, is_singer, is_pianist, is_saxophone, is_filler, is_bass_guitarist, is_drummer, is_multimedia, is_sound, is_caringteam, is_connexion_crew, is_supporting_crew, is_cforce, is_cg_leader, is_community_pic]
+            enum:
+              [
+                is_worship_leader,
+                is_singer,
+                is_pianist,
+                is_saxophone,
+                is_filler,
+                is_bass_guitarist,
+                is_drummer,
+                is_multimedia,
+                is_sound,
+                is_caringteam,
+                is_connexion_crew,
+                is_supporting_crew,
+                is_cforce,
+                is_cg_leader,
+                is_community_pic,
+              ]
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PelayanListResponse'
+                $ref: "#/components/schemas/PelayanListResponse"
               example:
                 success: true
                 data:
@@ -778,33 +795,33 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PelayanCreate'
+              $ref: "#/components/schemas/PelayanCreate"
       responses:
-        '201':
+        "201":
           description: Ministry member added successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PelayanResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
+                $ref: "#/components/schemas/PelayanResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
 
   /ministry/pelayan/{no_jemaat}:
     parameters:
-      - $ref: '#/components/parameters/MemberId'
+      - $ref: "#/components/parameters/MemberId"
 
     get:
       tags: [Ministry]
       summary: Get ministry member by ID
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PelayanResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/PelayanResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
     put:
       tags: [Ministry]
@@ -814,16 +831,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PelayanUpdate'
+              $ref: "#/components/schemas/PelayanUpdate"
       responses:
-        '200':
+        "200":
           description: Ministry member updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PelayanResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/PelayanResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
     patch:
       tags: [Ministry]
@@ -833,29 +850,29 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PelayanPartialUpdate'
+              $ref: "#/components/schemas/PelayanPartialUpdate"
       responses:
-        '200':
+        "200":
           description: Ministry member updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PelayanResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/PelayanResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
     delete:
       tags: [Ministry]
       summary: Remove ministry member
       responses:
-        '200':
+        "200":
           description: Ministry member removed successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessMessage'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/SuccessMessage"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
   # ==================== STATUS HISTORY ENDPOINTS ====================
   /status/status-history:
@@ -863,8 +880,8 @@ paths:
       tags: [Status]
       summary: Get all status history
       parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/Limit'
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Limit"
         - name: no_jemaat
           in: query
           description: Filter by member ID
@@ -889,12 +906,12 @@ paths:
             type: string
             format: date
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StatusHistoryListResponse'
+                $ref: "#/components/schemas/StatusHistoryListResponse"
 
     post:
       tags: [Status]
@@ -904,16 +921,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/StatusHistoryCreate'
+              $ref: "#/components/schemas/StatusHistoryCreate"
       responses:
-        '201':
+        "201":
           description: Status history created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StatusHistoryResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
+                $ref: "#/components/schemas/StatusHistoryResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
 
   /status/status-history/{id}:
     parameters:
@@ -927,14 +944,14 @@ paths:
       tags: [Status]
       summary: Get status history by ID
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StatusHistoryResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/StatusHistoryResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
     put:
       tags: [Status]
@@ -944,43 +961,43 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/StatusHistoryUpdate'
+              $ref: "#/components/schemas/StatusHistoryUpdate"
       responses:
-        '200':
+        "200":
           description: Status history updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StatusHistoryResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/StatusHistoryResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
     delete:
       tags: [Status]
       summary: Delete status history
       responses:
-        '200':
+        "200":
           description: Status history deleted successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessMessage'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/SuccessMessage"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
   /status/members/{no_jemaat}/status-history:
     parameters:
-      - $ref: '#/components/parameters/MemberId'
+      - $ref: "#/components/parameters/MemberId"
     get:
       tags: [Status, Members]
       summary: Get status history for a member
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StatusHistoryListResponse'
+                $ref: "#/components/schemas/StatusHistoryListResponse"
 
   # ==================== EVENTS ENDPOINTS ====================
   /events:
@@ -988,8 +1005,8 @@ paths:
       tags: [Events]
       summary: Get all events
       parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/Limit'
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Limit"
         - name: search
           in: query
           description: Search by event name
@@ -1014,12 +1031,12 @@ paths:
             type: string
             format: date
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EventListResponse'
+                $ref: "#/components/schemas/EventListResponse"
               example:
                 success: true
                 data:
@@ -1043,16 +1060,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EventCreate'
+              $ref: "#/components/schemas/EventCreate"
       responses:
-        '201':
+        "201":
           description: Event created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EventResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
+                $ref: "#/components/schemas/EventResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
 
   /events/{event_id}:
     parameters:
@@ -1066,14 +1083,14 @@ paths:
       tags: [Events]
       summary: Get event by ID
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EventResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/EventResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
     put:
       tags: [Events]
@@ -1083,29 +1100,29 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EventUpdate'
+              $ref: "#/components/schemas/EventUpdate"
       responses:
-        '200':
+        "200":
           description: Event updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EventResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/EventResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
     delete:
       tags: [Events]
       summary: Delete event
       responses:
-        '200':
+        "200":
           description: Event deleted successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessMessage'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/SuccessMessage"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
   # ==================== EVENT PARTICIPATION ENDPOINTS ====================
   /events/{event_id}/participants:
@@ -1119,8 +1136,8 @@ paths:
       tags: [Events]
       summary: Get event participants
       parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/Limit'
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Limit"
         - name: role
           in: query
           description: Filter by role
@@ -1128,12 +1145,12 @@ paths:
             type: string
             enum: [Peserta, Panitia, Volunteer]
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EventParticipationListResponse'
+                $ref: "#/components/schemas/EventParticipationListResponse"
 
     post:
       tags: [Events]
@@ -1143,16 +1160,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EventParticipationCreate'
+              $ref: "#/components/schemas/EventParticipationCreate"
       responses:
-        '201':
+        "201":
           description: Participant registered successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EventParticipationResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
+                $ref: "#/components/schemas/EventParticipationResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
 
   /events/participation/{id}:
     parameters:
@@ -1166,14 +1183,14 @@ paths:
       tags: [Events]
       summary: Get participation record by ID
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EventParticipationResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/EventParticipationResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
     put:
       tags: [Events]
@@ -1183,43 +1200,43 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EventParticipationUpdate'
+              $ref: "#/components/schemas/EventParticipationUpdate"
       responses:
-        '200':
+        "200":
           description: Participation updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EventParticipationResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/EventParticipationResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
     delete:
       tags: [Events]
       summary: Remove participation record
       responses:
-        '200':
+        "200":
           description: Participation removed successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessMessage'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/SuccessMessage"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
   /members/{no_jemaat}/events:
     parameters:
-      - $ref: '#/components/parameters/MemberId'
+      - $ref: "#/components/parameters/MemberId"
     get:
       tags: [Events, Members]
       summary: Get events for a member
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EventParticipationListResponse'
+                $ref: "#/components/schemas/EventParticipationListResponse"
 
   # ==================== ANALYTICS ENDPOINTS ====================
   /analytics/dashboard:
@@ -1228,7 +1245,7 @@ paths:
       summary: Get dashboard KPIs
       description: Retrieve key performance indicators for the dashboard
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -1297,7 +1314,7 @@ paths:
             type: string
             enum: [gender, domicile, age_group, status]
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -1351,7 +1368,7 @@ paths:
             type: integer
             default: 12
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -1413,7 +1430,7 @@ paths:
             type: string
             format: date
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -1472,7 +1489,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -1506,7 +1523,7 @@ paths:
       summary: Get CGF summary
       description: Get CGF group statistics
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -1559,7 +1576,7 @@ paths:
       summary: Get ministry summary
       description: Get ministry participation statistics
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -1603,7 +1620,7 @@ paths:
             type: integer
             example: 2024
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -1650,7 +1667,7 @@ paths:
             type: integer
             default: 30
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -1739,7 +1756,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
           example:
             success: false
             error:
@@ -1754,7 +1771,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
           example:
             success: false
             error:
@@ -1766,7 +1783,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
           example:
             success: false
             error:
@@ -1778,7 +1795,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
           example:
             success: false
             error:
@@ -2006,7 +2023,7 @@ components:
           type: boolean
           example: true
         data:
-          $ref: '#/components/schemas/Member'
+          $ref: "#/components/schemas/Member"
 
     MemberListResponse:
       type: object
@@ -2017,9 +2034,9 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/Member'
+            $ref: "#/components/schemas/Member"
         pagination:
-          $ref: '#/components/schemas/Pagination'
+          $ref: "#/components/schemas/Pagination"
 
     # CGF Schemas
     CGF:
@@ -2083,7 +2100,7 @@ components:
           type: boolean
           example: true
         data:
-          $ref: '#/components/schemas/CGF'
+          $ref: "#/components/schemas/CGF"
 
     CGFListResponse:
       type: object
@@ -2094,9 +2111,9 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/CGF'
+            $ref: "#/components/schemas/CGF"
         pagination:
-          $ref: '#/components/schemas/Pagination'
+          $ref: "#/components/schemas/Pagination"
 
     # CGF Member Schemas
     CGFMember:
@@ -2112,7 +2129,7 @@ components:
           type: boolean
           example: false
         member:
-          $ref: '#/components/schemas/Member'
+          $ref: "#/components/schemas/Member"
 
     CGFMemberCreate:
       type: object
@@ -2141,7 +2158,7 @@ components:
           type: boolean
           example: true
         data:
-          $ref: '#/components/schemas/CGFMember'
+          $ref: "#/components/schemas/CGFMember"
 
     CGFMemberListResponse:
       type: object
@@ -2152,9 +2169,9 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/CGFMember'
+            $ref: "#/components/schemas/CGFMember"
         pagination:
-          $ref: '#/components/schemas/Pagination'
+          $ref: "#/components/schemas/Pagination"
 
     # Attendance Schemas
     Attendance:
@@ -2179,7 +2196,7 @@ components:
           enum: [hadir, izin, tidak_hadir, tamu]
           example: "hadir"
         member:
-          $ref: '#/components/schemas/Member'
+          $ref: "#/components/schemas/Member"
 
     AttendanceCreate:
       type: object
@@ -2224,7 +2241,7 @@ components:
           type: boolean
           example: true
         data:
-          $ref: '#/components/schemas/Attendance'
+          $ref: "#/components/schemas/Attendance"
 
     AttendanceListResponse:
       type: object
@@ -2235,9 +2252,9 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/Attendance'
+            $ref: "#/components/schemas/Attendance"
         pagination:
-          $ref: '#/components/schemas/Pagination'
+          $ref: "#/components/schemas/Pagination"
 
     # Ministry Schemas
     Ministry:
@@ -2277,7 +2294,7 @@ components:
           type: boolean
           example: true
         data:
-          $ref: '#/components/schemas/Ministry'
+          $ref: "#/components/schemas/Ministry"
 
     MinistryListResponse:
       type: object
@@ -2288,9 +2305,9 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/Ministry'
+            $ref: "#/components/schemas/Ministry"
         pagination:
-          $ref: '#/components/schemas/Pagination'
+          $ref: "#/components/schemas/Pagination"
 
     # Pelayan (Ministry Member) Schemas
     Pelayan:
@@ -2493,7 +2510,7 @@ components:
           type: boolean
           example: true
         data:
-          $ref: '#/components/schemas/Pelayan'
+          $ref: "#/components/schemas/Pelayan"
 
     PelayanListResponse:
       type: object
@@ -2504,9 +2521,9 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/Pelayan'
+            $ref: "#/components/schemas/Pelayan"
         pagination:
-          $ref: '#/components/schemas/Pagination'
+          $ref: "#/components/schemas/Pagination"
 
     # Status History Schemas
     StatusHistory:
@@ -2518,10 +2535,15 @@ components:
         no_jemaat:
           type: integer
           example: 1
-        status:
+        status_after:
           type: string
-          enum: [Active, Inactive, Sabbatical, Moved]
+          enum: [Active, Inactive, Sabbatical, Moved, No Information]
           example: "Active"
+        status_before:
+          type: string
+          nullable: true
+          enum: [Active, Inactive, Sabbatical, Moved, No Information]
+          example: null
         changed_at:
           type: string
           format: date-time
@@ -2530,26 +2552,34 @@ components:
           type: string
           example: "Initial registration"
         member:
-          $ref: '#/components/schemas/Member'
+          $ref: "#/components/schemas/Member"
 
     StatusHistoryCreate:
       type: object
-      required: [no_jemaat, status]
+      required: [no_jemaat, status_after]
       properties:
         no_jemaat:
           type: integer
-        status:
+        status_after:
           type: string
-          enum: [Active, Inactive, Sabbatical, Moved]
+          enum: [Active, Inactive, Sabbatical, Moved, No Information]
+        status_before:
+          type: string
+          nullable: true
+          enum: [Active, Inactive, Sabbatical, Moved, No Information]
         reason:
           type: string
 
     StatusHistoryUpdate:
       type: object
       properties:
-        status:
+        status_after:
           type: string
-          enum: [Active, Inactive, Sabbatical, Moved]
+          enum: [Active, Inactive, Sabbatical, Moved, No Information]
+        status_before:
+          type: string
+          nullable: true
+          enum: [Active, Inactive, Sabbatical, Moved, No Information]
         reason:
           type: string
 
@@ -2560,7 +2590,7 @@ components:
           type: boolean
           example: true
         data:
-          $ref: '#/components/schemas/StatusHistory'
+          $ref: "#/components/schemas/StatusHistory"
 
     StatusHistoryListResponse:
       type: object
@@ -2571,9 +2601,9 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/StatusHistory'
+            $ref: "#/components/schemas/StatusHistory"
         pagination:
-          $ref: '#/components/schemas/Pagination'
+          $ref: "#/components/schemas/Pagination"
 
     # Event Schemas
     Event:
@@ -2641,7 +2671,7 @@ components:
           type: boolean
           example: true
         data:
-          $ref: '#/components/schemas/Event'
+          $ref: "#/components/schemas/Event"
 
     EventListResponse:
       type: object
@@ -2652,9 +2682,9 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/Event'
+            $ref: "#/components/schemas/Event"
         pagination:
-          $ref: '#/components/schemas/Pagination'
+          $ref: "#/components/schemas/Pagination"
 
     # Event Participation Schemas
     EventParticipation:
@@ -2678,9 +2708,9 @@ components:
           format: date-time
           example: "2024-01-20T09:00:00Z"
         event:
-          $ref: '#/components/schemas/Event'
+          $ref: "#/components/schemas/Event"
         member:
-          $ref: '#/components/schemas/Member'
+          $ref: "#/components/schemas/Member"
 
     EventParticipationCreate:
       type: object
@@ -2708,7 +2738,7 @@ components:
           type: boolean
           example: true
         data:
-          $ref: '#/components/schemas/EventParticipation'
+          $ref: "#/components/schemas/EventParticipation"
 
     EventParticipationListResponse:
       type: object
@@ -2719,6 +2749,6 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/EventParticipation'
+            $ref: "#/components/schemas/EventParticipation"
         pagination:
-          $ref: '#/components/schemas/Pagination'
+          $ref: "#/components/schemas/Pagination"

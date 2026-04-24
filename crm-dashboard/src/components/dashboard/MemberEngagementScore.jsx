@@ -91,7 +91,7 @@ export function MemberEngagementScore() {
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
+      <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
           <Gauge className="size-4 text-muted-foreground" />
           <CardTitle className="text-base">Member Engagement</CardTitle>

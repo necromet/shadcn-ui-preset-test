@@ -355,7 +355,7 @@ export function Members() {
     
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-        <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl bg-card p-6 shadow-lg">
+        <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl bg-card p-4 md:p-6 shadow-lg">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">{title}</h2>
             <Button
@@ -370,7 +370,7 @@ export function Members() {
             </Button>
           </div>
           <form onSubmit={onSubmit} className="flex flex-col gap-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium">No. Jemaat</label>
                 {isEditMode ? (
@@ -400,7 +400,7 @@ export function Members() {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium">Gender</label>
                 <SelectPopover
@@ -421,7 +421,7 @@ export function Members() {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium">Kuliah / Kerja</label>
                 <SelectPopover
@@ -445,7 +445,7 @@ export function Members() {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium">CGF Status</label>
                 <SelectPopover
@@ -491,7 +491,7 @@ export function Members() {
                 className="h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium">Status Aktif</label>
                 <SelectPopover
@@ -547,20 +547,20 @@ export function Members() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
+    <div className="flex flex-col gap-4 md:gap-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Members</h1>
-          <p className="text-sm text-muted-foreground">Manage church members and CGF memberships</p>
+          <h1 className="text-xl md:text-2xl font-semibold">Members</h1>
+          <p className="text-xs md:text-sm text-muted-foreground">Manage church members and CGF memberships</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={exportToCSV} disabled={filteredMembers.length === 0}>
+          <Button variant="outline" size="sm" onClick={exportToCSV} disabled={filteredMembers.length === 0}>
             <Download className="h-4 w-4" />
-            Export CSV
+            <span className="hidden sm:inline">Export CSV</span>
           </Button>
-          <Button onClick={openAddDialog}>
+          <Button size="sm" onClick={openAddDialog}>
             <Plus className="h-4 w-4" />
-            Add Member
+            <span className="hidden sm:inline">Add Member</span>
           </Button>
         </div>
       </div>
@@ -631,16 +631,16 @@ export function Members() {
             </div>
           </div>
 
-          <div className="mt-4">
-            <Table>
+          <div className="mt-4 overflow-x-auto -mx-2 px-2">
+            <Table className="min-w-[700px]">
               <TableHeader>
                 <TableRow>
                   <TableHead>Nama</TableHead>
-                  <TableHead>Gender</TableHead>
+                  <TableHead className="hidden sm:table-cell">Gender</TableHead>
                   <TableHead>Phone</TableHead>
                   <TableHead>CGF Status</TableHead>
-                  <TableHead>Domisili</TableHead>
-                  <TableHead>Alamat Domisili</TableHead>
+                  <TableHead className="hidden md:table-cell">Domisili</TableHead>
+                  <TableHead className="hidden lg:table-cell">Alamat Domisili</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -680,9 +680,9 @@ export function Members() {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell>{member.jenis_kelamin}</TableCell>
+                      <TableCell className="hidden sm:table-cell">{member.jenis_kelamin}</TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-2 ">
+                        <div className="flex items-center gap-2">
                           <span>{member.no_handphone}</span>
                           {member.no_handphone && (
                             <a
@@ -697,8 +697,8 @@ export function Members() {
                         </div>
                       </TableCell>
                       <TableCell>{getCgfStatusBadge(member.ketertarikan_cgf)}</TableCell>
-                      <TableCell>{member.kategori_domisili}</TableCell>
-                      <TableCell className="max-w-[100px] truncate">{member.alamat_domisili}</TableCell>
+                      <TableCell className="hidden md:table-cell">{member.kategori_domisili}</TableCell>
+                      <TableCell className="hidden lg:table-cell max-w-[100px] truncate">{member.alamat_domisili}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
                           <Button
@@ -759,7 +759,7 @@ export function Members() {
       {showEditDialog && renderMemberForm(handleEditMember, "Edit Member")}
 
       {showDeleteDialog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="w-full max-w-sm rounded-xl bg-card p-6 shadow-lg">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold">Delete Member</h2>

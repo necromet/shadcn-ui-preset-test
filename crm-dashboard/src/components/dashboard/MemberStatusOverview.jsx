@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react"
-import { Users, UserCheck, UserX, UserMinus, MapPin, TrendingUp } from "lucide-react"
+import { Users, UserCheck, UserX, UserMinus, MapPin, TrendingUp, ArrowRight } from "lucide-react"
 import {
   PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Legend,
 } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card.jsx"
 import { Badge } from "../ui/badge.jsx"
+import { Avatar, AvatarFallback } from "../ui/avatar.jsx"
 import { cn } from "../../lib/utils.js"
-import { getStatusDistribution, getStatusTrend, getTotalServingMembers, getServingPercentage } from "../../data/mock.js"
+import { getStatusDistribution, getStatusTrend, getTotalServingMembers, getServingPercentage, getRecentStatusChanges } from "../../data/mock.js"
 
 const STATUS_CONFIG = {
   Active: { icon: UserCheck, color: "var(--chart-1)", badgeVariant: "success" },
@@ -16,12 +17,13 @@ const STATUS_CONFIG = {
   Moved: { icon: MapPin, color: "var(--chart-4)", badgeVariant: "warning" },
 }
 
-const DATE_RANGES = [
-  { label: "30 Days", value: "30d" },
-  { label: "90 Days", value: "90d" },
-  { label: "6 Months", value: "6m" },
-  { label: "1 Year", value: "1y" },
-]
+const STATUS_STYLES = {
+  Active: { className: "bg-emerald-500/15 text-emerald-700 dark:bg-emerald-500/25 dark:text-emerald-400" },
+  Inactive: { className: "bg-rose-500/15 text-rose-700 dark:bg-rose-500/25 dark:text-rose-400" },
+  'No Information': { className: "bg-amber-500/15 text-amber-700 dark:bg-amber-500/25 dark:text-amber-400" },
+  Moved: { className: "bg-sky-500/15 text-sky-700 dark:bg-sky-500/25 dark:text-sky-400" },
+  Sabbatical: { className: "bg-violet-500/15 text-violet-700 dark:bg-violet-500/25 dark:text-violet-400" },
+}
 
 function CustomTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null
@@ -71,6 +73,7 @@ export function MemberStatusOverview() {
   const [trend, setTrend] = useState([])
   const [totalServing, setTotalServing] = useState(0)
   const [servingPercentage, setServingPercentage] = useState(0)
+  const [recentChanges, setRecentChanges] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -78,16 +81,18 @@ export function MemberStatusOverview() {
     async function loadData() {
       try {
         setLoading(true)
-        const [distData, trendData, servingCount, servingPct] = await Promise.all([
+        const [distData, trendData, servingCount, servingPct, recentData] = await Promise.all([
           getStatusDistribution(),
           getStatusTrend(),
           getTotalServingMembers(),
           getServingPercentage(),
+          getRecentStatusChanges(3),
         ])
         setDistribution(distData)
         setTrend(trendData)
         setTotalServing(servingCount)
         setServingPercentage(servingPct)
+        setRecentChanges(recentData)
       } catch (err) {
         setError(err)
         console.error("Failed to load status overview data:", err)
@@ -109,28 +114,33 @@ export function MemberStatusOverview() {
     fill: STATUS_CONFIG[name]?.color || "var(--muted)",
   }))
 
+  function getStatusBadgeClass(status) {
+    return STATUS_STYLES[status]?.className || "bg-gray-500/15 text-gray-700"
+  }
+
+  function formatDate(dateStr) {
+    const date = new Date(dateStr)
+    return date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+    })
+  }
+
+  function getInitials(name) {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2)
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Users className="size-5" style={{ color: "var(--foreground)" }} />
           <h2 className="text-lg font-semibold">Member Status Overview</h2>
-        </div>
-        <div className="flex items-center gap-1 rounded-lg border p-1" style={{ borderColor: "var(--border)" }}>
-          {DATE_RANGES.map((range) => (
-            <button
-              key={range.value}
-              onClick={() => setDateRange(range.value)}
-              className={cn(
-                "rounded-md px-3 py-1 text-xs font-medium transition-colors",
-                dateRange === range.value
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {range.label}
-            </button>
-          ))}
         </div>
       </div>
 
@@ -188,7 +198,7 @@ export function MemberStatusOverview() {
         </Card>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-3">
         <Card>
           <CardHeader>
             <CardTitle className="text-base">Status Distribution</CardTitle>
@@ -284,6 +294,47 @@ export function MemberStatusOverview() {
                 </LineChart>
               </ResponsiveContainer>
             </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Recent Status Changes</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {recentChanges.length === 0 ? (
+              <div className="text-center text-muted-foreground py-4">No recent changes</div>
+            ) : (
+              <div className="space-y-4">
+                {recentChanges.map((change) => (
+                  <div key={change.id} className="flex items-start gap-3">
+                    <Avatar className="size-8 mt-0.5">
+                      <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
+                        {getInitials(change.nama_jemaat)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-sm truncate">{change.nama_jemaat}</span>
+                        <span className="text-xs text-muted-foreground">{formatDate(change.changed_at)}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        {change.status_before ? (
+                          <>
+                            <span className={`inline-flex items-center rounded px-1.5 py-0.5 text-xs ${getStatusBadgeClass(change.status_before)}`}>
+                              {change.status_before}
+                            </span>
+                            <ArrowRight className="size-3 text-muted-foreground" />
+                          </>
+                        ) : null}
+                        <span className={`inline-flex items-center rounded px-1.5 py-0.5 text-xs ${getStatusBadgeClass(change.status_after)}`}>
+                          {change.status_after}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

@@ -240,9 +240,9 @@ export const MembersModel = {
         const nextId = (maxIdResult.rows[0]?.max_id ?? 90000) + 1;
 
         await txQuery(
-          `INSERT INTO cnx_jemaat_status_history (id, no_jemaat, status, reason)
-           VALUES ($1, $2, $3, $4)`,
-          [nextId, no_jemaat, data.status_aktif, data.status_keterangan || null],
+          `INSERT INTO cnx_jemaat_status_history (id, no_jemaat, status_after, status_before, reason)
+           VALUES ($1, $2, $3, $4, $5)`,
+          [nextId, no_jemaat, data.status_aktif, previousStatusAktif, data.status_keterangan || null],
         );
       } else if (data.status_keterangan !== undefined) {
         // status_keterangan changed without status_aktif change — update latest history record's reason

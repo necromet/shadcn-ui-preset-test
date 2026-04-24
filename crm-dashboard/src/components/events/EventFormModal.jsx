@@ -99,7 +99,7 @@ export function EventFormModal({ open, onOpenChange, event, onSubmit }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[540px] p-0 gap-0 overflow-hidden">
+      <DialogContent className="sm:max-w-[540px] p-0 gap-0 overflow-hidden max-sm:inset-0 max-sm:translate-x-0 max-sm:translate-y-0 max-sm:max-w-none max-sm:rounded-none max-sm:h-full max-sm:max-h-none">
         {/* Header Banner */}
         <div className="relative px-6 pt-6 pb-5 bg-gradient-to-br from-primary/8 via-primary/5 to-transparent border-b">
           <div className="flex items-start gap-3">
@@ -183,7 +183,7 @@ export function EventFormModal({ open, onOpenChange, event, onSubmit }) {
               <Label className="text-sm font-medium">
                 Category <span className="text-destructive">*</span>
               </Label>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {CATEGORIES.map((cat) => {
                   const isActive = form.category === cat.value
                   return (

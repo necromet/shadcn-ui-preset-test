@@ -82,15 +82,15 @@ export function MinistryParticipation() {
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
             <BarChart3 className="size-5" style={{ color: "var(--foreground)" }} />
             <CardTitle className="text-base">Ministry Participation</CardTitle>
             <Badge variant="outline" className="ml-2">
-              {totalServing} serving members
+              {totalServing} serving
             </Badge>
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 overflow-x-auto">
             <ArrowUpDown className="size-3 mr-1" style={{ color: "var(--muted-foreground)" }} />
             {SORT_OPTIONS.map((option) => (
               <Button
@@ -107,7 +107,7 @@ export function MinistryParticipation() {
         </div>
       </CardHeader>
       <CardContent>
-        <div style={{ height: 500 }}>
+        <div style={{ height: "clamp(300px, 50vw, 500px)" }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={sortedData}

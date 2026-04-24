@@ -360,7 +360,8 @@ export type PelayanListResponse = z.infer<typeof PelayanListResponseSchema>;
 export const StatusHistorySchema = z.object({
   id: z.number().int().optional(),
   no_jemaat: z.number().int().optional(),
-  status: z.enum(['Active', 'Inactive', 'Sabbatical', 'Moved', 'No Information']).optional(),
+  status_after: z.enum(['Active', 'Inactive', 'Sabbatical', 'Moved', 'No Information']).optional(),
+  status_before: z.enum(['Active', 'Inactive', 'Sabbatical', 'Moved', 'No Information']).nullable().optional(),
   changed_at: z.string().optional(),
   reason: z.string().optional(),
   member: MemberSchema.optional(),
@@ -369,13 +370,15 @@ export type StatusHistory = z.infer<typeof StatusHistorySchema>;
 
 export const StatusHistoryCreateSchema = z.object({
   no_jemaat: z.number().int(),
-  status: z.enum(['Active', 'Inactive', 'Sabbatical', 'Moved', 'No Information']),
+  status_after: z.enum(['Active', 'Inactive', 'Sabbatical', 'Moved', 'No Information']),
+  status_before: z.enum(['Active', 'Inactive', 'Sabbatical', 'Moved', 'No Information']).nullable().optional(),
   reason: z.string().optional(),
 });
 export type StatusHistoryCreate = z.infer<typeof StatusHistoryCreateSchema>;
 
 export const StatusHistoryUpdateSchema = z.object({
-  status: z.enum(['Active', 'Inactive', 'Sabbatical', 'Moved', 'No Information']).optional(),
+  status_after: z.enum(['Active', 'Inactive', 'Sabbatical', 'Moved', 'No Information']).optional(),
+  status_before: z.enum(['Active', 'Inactive', 'Sabbatical', 'Moved', 'No Information']).nullable().optional(),
   reason: z.string().optional(),
 });
 export type StatusHistoryUpdate = z.infer<typeof StatusHistoryUpdateSchema>;

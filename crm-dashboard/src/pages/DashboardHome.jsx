@@ -290,8 +290,8 @@ export function DashboardHome() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Church Dashboard</h1>
-        <p className="text-muted-foreground">Pelayanan & Event Analytics</p>
+        <h1 className="text-xl md:text-2xl lg:text-3xl font-bold tracking-tight">Church Dashboard</h1>
+        <p className="text-xs md:text-sm text-muted-foreground">Pelayanan & Event Analytics</p>
       </div>
       <Tabs defaultValue="overview">
         <TabsList className="flex flex-wrap h-auto gap-1">

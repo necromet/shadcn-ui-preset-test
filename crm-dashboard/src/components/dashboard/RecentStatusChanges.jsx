@@ -5,7 +5,7 @@ import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from ".
 import { Badge } from "../ui/badge.jsx"
 import { Avatar, AvatarFallback } from "../ui/avatar.jsx"
 import { cn } from "../../lib/utils.js"
-import { getRecentStatusChanges, getStatusHistoryForMember } from "../../data/mock.js"
+import { getRecentStatusChanges } from "../../data/mock.js"
 
 const STATUS_STYLES = {
   Active: { className: "bg-chart-1/20 text-chart-1" },
@@ -32,13 +32,7 @@ function formatDate(dateStr) {
   })
 }
 
-async function getPreviousStatus(no_jemaat, currentChangedAt) {
-  const memberHistory = await getStatusHistoryForMember(no_jemaat);
-  const filtered = memberHistory
-    .filter((r) => new Date(r.changed_at) < new Date(currentChangedAt))
-    .sort((a, b) => new Date(b.changed_at) - new Date(a.changed_at))
-  return filtered.length > 0 ? filtered[0].status : null
-}
+
 
 function StatusBadge({ status }) {
   const style = STATUS_STYLES[status] || {}
@@ -73,24 +67,7 @@ export function RecentStatusChanges() {
     loadData()
   }, [])
 
-  const [enrichedChanges, setEnrichedChanges] = useState([])
 
-  useEffect(() => {
-    async function enrichChanges() {
-      const enriched = await Promise.all(
-        changes.map(async (change) => ({
-          ...change,
-          previousStatus: await getPreviousStatus(change.no_jemaat, change.changed_at),
-        }))
-      )
-      setEnrichedChanges(enriched)
-    }
-    if (changes.length > 0) {
-      enrichChanges()
-    } else {
-      setEnrichedChanges([])
-    }
-  }, [changes])
 
   return (
     <Card>
@@ -111,7 +88,7 @@ export function RecentStatusChanges() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {enrichedChanges.map((change) => (
+            {changes.map((change) => (
               <TableRow key={change.id}>
                 <TableCell>
                   <div className="flex items-center gap-3">
@@ -125,14 +102,14 @@ export function RecentStatusChanges() {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    {change.previousStatus ? (
+                    {change.status_before ? (
                       <>
-                        <StatusBadge status={change.previousStatus} />
+                        <StatusBadge status={change.status_before} />
                         <ArrowRight className="size-3" style={{ color: "var(--muted-foreground)" }} />
-                        <StatusBadge status={change.status} />
+                        <StatusBadge status={change.status_after} />
                       </>
                     ) : (
-                      <StatusBadge status={change.status} />
+                      <StatusBadge status={change.status_after} />
                     )}
                   </div>
                 </TableCell>

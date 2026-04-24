@@ -331,7 +331,7 @@ ORDER BY MIN(EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)));
         MAX(a.tanggal)::text as last_attendance,
         COALESCE(EXTRACT(DAY FROM CURRENT_DATE - MAX(a.tanggal::date)), 9999) as days_since_attendance,
         COALESCE(
-          (SELECT status FROM cnx_jemaat_status_history
+          (SELECT status_after FROM cnx_jemaat_status_history
            WHERE no_jemaat = m.no_jemaat
            ORDER BY changed_at DESC LIMIT 1),
           'Unknown'

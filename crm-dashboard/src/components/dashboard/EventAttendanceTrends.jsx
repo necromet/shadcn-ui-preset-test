@@ -490,12 +490,12 @@ export function EventAttendanceTrends() {
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
+      <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
           <Calendar className="size-4 text-muted-foreground" />
           <CardTitle className="text-base">Events</CardTitle>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Badge variant="outline" className="gap-1">
             <Calendar className="size-3" />
             {totalEvents} events

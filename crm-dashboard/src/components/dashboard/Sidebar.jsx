@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom"
-import { LayoutDashboard, Users, UserCheck, CalendarCheck, Settings, BookOpen, UserCog, Calendar } from "lucide-react"
+import { LayoutDashboard, Users, UserCheck, CalendarCheck, Settings, BookOpen, UserCog, Calendar, Clock, X } from "lucide-react"
 import { cn } from "../../lib/utils.js"
 import { Button } from "../ui/button.jsx"
 
@@ -18,6 +18,7 @@ const navSections = [
       { icon: Calendar, label: "Events", path: "/events" },
       { icon: BookOpen, label: "Pelayanan", path: "/pelayanan" },
       { icon: UserCog, label: "Pelayan", path: "/pelayan" },
+      { icon: Clock, label: "Status Log", path: "/status-log" },
     ],
   },
   {
@@ -32,14 +33,9 @@ const bottomNavItems = [
   { icon: Settings, label: "Settings", path: "/settings" },
 ]
 
-export function Sidebar({ isOpen = true }) {
+function SidebarContent({ isOpen, onNavClick }) {
   return (
-    <aside
-      className={cn(
-        "hidden lg:flex flex-col border-r border-sidebar-border bg-sidebar h-screen sticky top-0 overflow-hidden transition-[width] duration-300 ease-in-out",
-        isOpen ? "w-64" : "w-26"
-      )}
-    >
+    <>
       <div className="flex items-center px-4 py-5 border-b border-sidebar-border shrink-0">
         <img
           src="/images/logos/Connexion Logogram Black.png"
@@ -73,6 +69,7 @@ export function Sidebar({ isOpen = true }) {
                 key={item.path}
                 to={item.path}
                 end={item.path === "/"}
+                onClick={onNavClick}
                 className={cn(
                   "transition-all duration-200",
                   isOpen ? "w-full" : "w-9 mx-auto"
@@ -117,6 +114,7 @@ export function Sidebar({ isOpen = true }) {
           <NavLink
             key={item.path}
             to={item.path}
+            onClick={onNavClick}
             className={cn(
               "transition-all duration-200",
               isOpen ? "w-full" : "w-9 mx-auto"
@@ -156,6 +154,45 @@ export function Sidebar({ isOpen = true }) {
           v1.0.0
         </span>
       </div>
-    </aside>
+    </>
+  )
+}
+
+export function Sidebar({ isOpen = true, mobileOpen = false, onMobileClose }) {
+  return (
+    <>
+      {/* Mobile overlay backdrop */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden animate-in fade-in-0 duration-200"
+          onClick={onMobileClose}
+        />
+      )}
+
+      {/* Mobile drawer */}
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 flex flex-col border-r border-sidebar-border bg-sidebar w-64 transition-transform duration-300 ease-in-out lg:hidden",
+          mobileOpen ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
+        <div className="flex items-center justify-end px-2 pt-2 lg:hidden">
+          <Button variant="ghost" size="icon" onClick={onMobileClose}>
+            <X className="size-5" />
+          </Button>
+        </div>
+        <SidebarContent isOpen={true} onNavClick={onMobileClose} />
+      </aside>
+
+      {/* Desktop sidebar */}
+      <aside
+        className={cn(
+          "hidden lg:flex flex-col border-r border-sidebar-border bg-sidebar h-screen sticky top-0 overflow-hidden transition-[width] duration-300 ease-in-out",
+          isOpen ? "w-64" : "w-26"
+        )}
+      >
+        <SidebarContent isOpen={isOpen} />
+      </aside>
+    </>
   )
 }

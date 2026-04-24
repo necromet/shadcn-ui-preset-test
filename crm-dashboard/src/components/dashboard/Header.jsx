@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useUser, useClerk } from "@clerk/clerk-react"
-import { Bell, PanelLeftOpen, PanelLeftClose, Search, Settings, LogOut, User } from "lucide-react"
+import { Bell, PanelLeftOpen, PanelLeftClose, Search, Settings, LogOut, User, Menu } from "lucide-react"
 import { Button } from "../ui/button.jsx"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar.jsx"
 import {
@@ -35,7 +35,7 @@ const pageTitles = {
   "/pelayan": "Pelayan"
 }
 
-export function Header({ onToggleSidebar, sidebarOpen }) {
+export function Header({ onToggleSidebar, sidebarOpen, onMobileMenuToggle }) {
   const location = useLocation()
   const navigate = useNavigate()
   const { user } = useUser()
@@ -61,9 +61,14 @@ export function Header({ onToggleSidebar, sidebarOpen }) {
 
   return (
     <>
-      <header className="flex items-center justify-between px-6 py-4 border-b bg-card">
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={onToggleSidebar}>
+      <header className="flex items-center justify-between px-4 py-3 md:px-6 md:py-4 border-b bg-card">
+        <div className="flex items-center gap-2 md:gap-3">
+          {/* Mobile hamburger */}
+          <Button variant="ghost" size="icon" onClick={onMobileMenuToggle} className="lg:hidden">
+            <Menu className="size-5" />
+          </Button>
+          {/* Desktop sidebar toggle */}
+          <Button variant="ghost" size="icon" onClick={onToggleSidebar} className="hidden lg:flex">
             {sidebarOpen ? (
               <PanelLeftClose className="size-4" />
             ) : (
@@ -71,14 +76,14 @@ export function Header({ onToggleSidebar, sidebarOpen }) {
             )}
           </Button>
           <div>
-            <h1 className="text-xl font-semibold">{title}</h1>
+            <h1 className="text-lg md:text-xl font-semibold">{title}</h1>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 md:gap-3">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative size-8 rounded-full">
-                <Avatar className="size-8">
+              <Button variant="ghost" className="relative size-9 md:size-8 rounded-full">
+                <Avatar className="size-9 md:size-8">
                   {user?.imageUrl ? (
                     <AvatarImage src={user.imageUrl} alt={displayName} />
                   ) : null}

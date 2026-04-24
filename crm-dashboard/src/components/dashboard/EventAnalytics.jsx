@@ -39,7 +39,18 @@ function formatDate(dateStr) {
   return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" })
 }
 
-function CustomTooltip({ active, payload, label }) {
+function BarLabel({ viewBox, value, total }) {
+  if (!viewBox || !total) return null
+  const { x, y, width } = viewBox
+  const pct = total > 0 ? ((value / total) * 100).toFixed(0) : 0
+  return (
+    <text x={x + width / 2} y={y - 8} fill="var(--muted-foreground)" textAnchor="middle" fontSize={11} fontWeight={500}>
+      {pct}%
+    </text>
+  )
+}
+
+function CustomTooltip({ active, payload, label, total }) {
   if (!active || !payload || !payload.length) return null
   return (
     <div className="rounded-lg border bg-background px-3 py-2 shadow-md">
@@ -47,6 +58,7 @@ function CustomTooltip({ active, payload, label }) {
       {payload.map((entry, i) => (
         <p key={i} className="text-sm text-muted-foreground">
           {entry.name}: {entry.value}
+          {total > 0 && ` (${((entry.value / total) * 100).toFixed(1)}%)`}
         </p>
       ))}
     </div>
@@ -61,14 +73,15 @@ function ChartEmpty() {
   )
 }
 
-function CustomPieTooltip({ active, payload }) {
+function CustomPieTooltip({ active, payload, total }) {
   if (!active || !payload || !payload.length) return null
   const d = payload[0]
+  const pct = total > 0 ? ((d.value / total) * 100).toFixed(1) : "0.0"
   return (
     <div className="rounded-lg border bg-background px-3 py-2 shadow-md">
       <p className="text-sm font-medium">{d.name}</p>
       <p className="text-sm text-muted-foreground">
-        {d.value} ({(d.percent * 100).toFixed(1)}%)
+        {d.value} ({pct}%)
       </p>
     </div>
   )
@@ -79,6 +92,7 @@ function RoleChart({ roles }) {
     name: r.role,
     value: r.count,
   }))
+  const total = data.reduce((sum, d) => sum + d.value, 0)
 
   return (
     <ResponsiveContainer width="100%" height={250}>
@@ -86,8 +100,8 @@ function RoleChart({ roles }) {
         <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
         <XAxis dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} />
         <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} allowDecimals={false} />
-        <Tooltip content={<CustomTooltip />} />
-        <Bar dataKey="value" radius={[6, 6, 0, 0]} name="Participants">
+        <Tooltip content={<CustomTooltip total={total} />} />
+        <Bar dataKey="value" radius={[6, 6, 0, 0]} name="Participants" label={<BarLabel total={total} />}>
           {data.map((entry) => (
             <Cell key={entry.name} fill={ROLE_COLORS[entry.name]?.chart || "var(--chart-1)"} />
           ))}
@@ -98,20 +112,22 @@ function RoleChart({ roles }) {
 }
 
 function AgeChart({ data }) {
+  const total = data.reduce((sum, d) => sum + d.value, 0)
   return (
     <ResponsiveContainer width="100%" height={250}>
       <BarChart data={data}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
         <XAxis dataKey="label" tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} />
         <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} />
-        <Tooltip content={<CustomTooltip />} />
-        <Bar dataKey="value" fill="var(--chart-1)" radius={[6, 6, 0, 0]} name="Participants" />
+        <Tooltip content={<CustomTooltip total={total} />} />
+        <Bar dataKey="value" fill="var(--chart-1)" radius={[6, 6, 0, 0]} name="Participants" label={<BarLabel total={total} />} />
       </BarChart>
     </ResponsiveContainer>
   )
 }
 
 function SimplePieChart({ data }) {
+  const total = data.reduce((sum, d) => sum + (d.value || 0), 0)
   return (
     <ResponsiveContainer width="100%" height={250}>
       <RechartsPieChart>
@@ -130,13 +146,14 @@ function SimplePieChart({ data }) {
             <Cell key={i} fill={getChartColors()[i % getChartColors().length]} />
           ))}
         </Pie>
-        <Tooltip content={<CustomPieTooltip />} />
+        <Tooltip content={<CustomPieTooltip total={total} />} />
       </RechartsPieChart>
     </ResponsiveContainer>
   )
 }
 
 function CGFPieChart({ data }) {
+  const total = data.reduce((sum, d) => sum + (d.value || 0), 0)
   return (
     <ResponsiveContainer width="100%" height={250}>
       <RechartsPieChart>
@@ -155,7 +172,7 @@ function CGFPieChart({ data }) {
             <Cell key={i} fill={getChartColors()[i % getChartColors().length]} />
           ))}
         </Pie>
-        <Tooltip content={<CustomPieTooltip />} />
+        <Tooltip content={<CustomPieTooltip total={total} />} />
         <Legend
           verticalAlign="bottom"
           height={36}
@@ -167,6 +184,7 @@ function CGFPieChart({ data }) {
 }
 
 function DomisiliChart({ data }) {
+  const total = data.reduce((sum, count) => sum + count.value, 0)
   return (
     <ResponsiveContainer width="100%" height={280}>
       <BarChart data={data}>
@@ -180,8 +198,8 @@ function DomisiliChart({ data }) {
           height={50}
         />
         <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} />
-        <Tooltip content={<CustomTooltip />} />
-        <Bar dataKey="value" fill="var(--chart-4)" radius={[6, 6, 0, 0]} name="Participants" />
+        <Tooltip content={<CustomTooltip total={total} />} />
+        <Bar dataKey="value" fill="var(--chart-4)" radius={[6, 6, 0, 0]} name="Participants" label={<BarLabel total={total} />} />
       </BarChart>
     </ResponsiveContainer>
   )
@@ -233,23 +251,23 @@ export function EventAnalytics() {
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
+      <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
           <BarChart3 className="size-4 text-muted-foreground" />
           <CardTitle className="text-base">Event Analytics</CardTitle>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {selectedEvent && (
-            <Badge variant="outline" className="gap-1">
-              <CheckCircle2 className="size-3" />
-              {selectedEvent.event_name}
+            <Badge variant="outline" className="gap-1 max-w-[180px] sm:max-w-none">
+              <CheckCircle2 className="size-3 shrink-0" />
+              <span className="truncate">{selectedEvent.event_name}</span>
             </Badge>
           )}
           {analytics && (
             <>
               <Badge variant="outline" className="gap-1">
-                <Users className="size-3" />
-                {totalParticipants} participants
+                <Users className="size-3 shrink-0" />
+                {totalParticipants} pts
               </Badge>
               {Object.entries(roleCounts).map(([role, count]) => (
                 <Badge key={role} variant="outline" className="gap-1 text-[10px]">
@@ -337,7 +355,9 @@ export function EventAnalytics() {
                   <p className="text-3xl font-bold" style={{ color: ROLE_COLORS[role]?.chart }}>
                     {count}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">{role}</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {role} · {totalParticipants > 0 ? ((count / totalParticipants) * 100).toFixed(0) : 0}%
+                  </p>
                 </div>
               ))}
             </div>

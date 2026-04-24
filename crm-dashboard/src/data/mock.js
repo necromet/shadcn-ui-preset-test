@@ -131,86 +131,86 @@ const pelayan = [
 
 const cnx_jemaat_status_history = [
   // Andreas Wijaya - Active throughout
-  { id: 1, no_jemaat: 1001, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 1, no_jemaat: 1001, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Maria Sari - Active throughout
-  { id: 2, no_jemaat: 1002, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 2, no_jemaat: 1002, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Daniel Setiawan - Active throughout
-  { id: 3, no_jemaat: 1003, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 3, no_jemaat: 1003, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Sarah Hartono - Active, went Inactive briefly, back to Active
-  { id: 4, no_jemaat: 1004, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
-  { id: 5, no_jemaat: 1004, status: 'Inactive', changed_at: '2025-06-15T10:00:00Z', reason: 'Pindah kota sementara untuk tugas kantor' },
-  { id: 6, no_jemaat: 1004, status: 'Active', changed_at: '2025-11-01T08:00:00Z', reason: 'Kembali dari penugasan luar kota' },
+  { id: 4, no_jemaat: 1004, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 5, no_jemaat: 1004, status_after: 'Inactive', status_before: null, changed_at: '2025-06-15T10:00:00Z', reason: 'Pindah kota sementara untuk tugas kantor' },
+  { id: 6, no_jemaat: 1004, status_after: 'Active', status_before: null, changed_at: '2025-11-01T08:00:00Z', reason: 'Kembali dari penugasan luar kota' },
   // Yohanes Pratama - Active throughout
-  { id: 7, no_jemaat: 1005, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 7, no_jemaat: 1005, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Esther Lim - No Information
-  { id: 8, no_jemaat: 1006, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
-  { id: 9, no_jemaat: 1006, status: 'No Information', changed_at: '2025-12-01T08:00:00Z', reason: 'Istirahat untuk pemulihan kesehatan' },
+  { id: 8, no_jemaat: 1006, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 9, no_jemaat: 1006, status_after: 'No Information', status_before: null, changed_at: '2025-12-01T08:00:00Z', reason: 'Istirahat untuk pemulihan kesehatan' },
   // Yakobus Santoso - Active throughout
-  { id: 10, no_jemaat: 1007, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 10, no_jemaat: 1007, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Ruth Natalia - Active throughout
-  { id: 11, no_jemaat: 1008, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 11, no_jemaat: 1008, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Daud Kurniawan - Active throughout
-  { id: 12, no_jemaat: 1009, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 12, no_jemaat: 1009, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Deborah Susanti - Active throughout
-  { id: 13, no_jemaat: 1010, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 13, no_jemaat: 1010, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Paulus Gunawan - Active throughout
-  { id: 14, no_jemaat: 1011, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 14, no_jemaat: 1011, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Hana Wijayanti - Active throughout
-  { id: 15, no_jemaat: 1012, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 15, no_jemaat: 1012, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Samuel Tan - Active throughout
-  { id: 16, no_jemaat: 1013, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 16, no_jemaat: 1013, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Grace Oktavia - Active throughout
-  { id: 17, no_jemaat: 1014, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 17, no_jemaat: 1014, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Timothy Halim - Active throughout
-  { id: 18, no_jemaat: 1015, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 18, no_jemaat: 1015, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Mikhaela Tampubolon - Active, then Moved
-  { id: 19, no_jemaat: 1016, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
-  { id: 20, no_jemaat: 1016, status: 'Moved', changed_at: '2025-09-01T08:00:00Z', reason: 'Pindah domisili ke Surabaya untuk pekerjaan' },
+  { id: 19, no_jemaat: 1016, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 20, no_jemaat: 1016, status_after: 'Moved', status_before: null, changed_at: '2025-09-01T08:00:00Z', reason: 'Pindah domisili ke Surabaya untuk pekerjaan' },
   // Gabriel Saputra - Active throughout
-  { id: 21, no_jemaat: 1017, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 21, no_jemaat: 1017, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Brenda Anggraini - Active, Inactive briefly, Active again
-  { id: 22, no_jemaat: 1018, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
-  { id: 23, no_jemaat: 1018, status: 'Inactive', changed_at: '2025-07-10T10:00:00Z', reason: 'Fokus skripsi semester akhir' },
-  { id: 24, no_jemaat: 1018, status: 'Active', changed_at: '2025-12-20T08:00:00Z', reason: 'Lulus dan kembali aktif' },
+  { id: 22, no_jemaat: 1018, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 23, no_jemaat: 1018, status_after: 'Inactive', status_before: null, changed_at: '2025-07-10T10:00:00Z', reason: 'Fokus skripsi semester akhir' },
+  { id: 24, no_jemaat: 1018, status_after: 'Active', status_before: null, changed_at: '2025-12-20T08:00:00Z', reason: 'Lulus dan kembali aktif' },
   // Michael Putra - Inactive recently
-  { id: 25, no_jemaat: 1019, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
-  { id: 26, no_jemaat: 1019, status: 'Inactive', changed_at: '2026-03-15T10:00:00Z', reason: 'Kesibukan pekerjaan yang sangat padat' },
+  { id: 25, no_jemaat: 1019, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 26, no_jemaat: 1019, status_after: 'Inactive', status_before: null, changed_at: '2026-03-15T10:00:00Z', reason: 'Kesibukan pekerjaan yang sangat padat' },
   // Catherine Widodo - Active throughout
-  { id: 27, no_jemaat: 1020, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 27, no_jemaat: 1020, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Ezra Nugroho - Active, then Moved
-  { id: 28, no_jemaat: 1021, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
-  { id: 29, no_jemaat: 1021, status: 'Moved', changed_at: '2025-08-15T08:00:00Z', reason: 'Melanjutkan studi di Bandung' },
+  { id: 28, no_jemaat: 1021, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 29, no_jemaat: 1021, status_after: 'Moved', status_before: null, changed_at: '2025-08-15T08:00:00Z', reason: 'Melanjutkan studi di Bandung' },
   // Abigail Larasati - Active throughout
-  { id: 30, no_jemaat: 1022, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 30, no_jemaat: 1022, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Natan Ridwan - Active throughout
-  { id: 31, no_jemaat: 1023, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 31, no_jemaat: 1023, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Lidia Purnamasari - Active, then No Information
-  { id: 32, no_jemaat: 1024, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
-  { id: 33, no_jemaat: 1024, status: 'No Information', changed_at: '2025-11-15T08:00:00Z', reason: 'Istirahat karena kondisi kesehatan' },
+  { id: 32, no_jemaat: 1024, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 33, no_jemaat: 1024, status_after: 'No Information', status_before: null, changed_at: '2025-11-15T08:00:00Z', reason: 'Istirahat karena kondisi kesehatan' },
   // Imanuel Sihombing - Active throughout
-  { id: 34, no_jemaat: 1025, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 34, no_jemaat: 1025, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Kirenius Sagala - Active throughout
-  { id: 35, no_jemaat: 1026, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 35, no_jemaat: 1026, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Naomi Simanjuntak - Active throughout
-  { id: 36, no_jemaat: 1027, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 36, no_jemaat: 1027, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Obed Manurung - Active, Inactive recently
-  { id: 37, no_jemaat: 1028, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
-  { id: 38, no_jemaat: 1028, status: 'Inactive', changed_at: '2026-03-20T10:00:00Z', reason: 'Konflik jadwal dengan komitmen keluarga' },
+  { id: 37, no_jemaat: 1028, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 38, no_jemaat: 1028, status_after: 'Inactive', status_before: null, changed_at: '2026-03-20T10:00:00Z', reason: 'Konflik jadwal dengan komitmen keluarga' },
   // Priscilla Anggraeni - Active throughout
-  { id: 39, no_jemaat: 1029, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 39, no_jemaat: 1029, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Rafael Hutapea - Active throughout
-  { id: 40, no_jemaat: 1030, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 40, no_jemaat: 1030, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Sela Marpaung - Active throughout
-  { id: 41, no_jemaat: 1031, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 41, no_jemaat: 1031, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Titus Sibarani - Active throughout
-  { id: 42, no_jemaat: 1032, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 42, no_jemaat: 1032, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Ulfa Ramadhani - Active throughout
-  { id: 43, no_jemaat: 1033, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 43, no_jemaat: 1033, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Viktor Nainggolan - Active throughout
-  { id: 44, no_jemaat: 1034, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 44, no_jemaat: 1034, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
   // Wisye Pakpahan - Active, Inactive recently
-  { id: 45, no_jemaat: 1035, status: 'Active', changed_at: '2024-10-01T08:00:00Z', reason: null },
-  { id: 46, no_jemaat: 1035, status: 'Inactive', changed_at: '2026-03-25T10:00:00Z', reason: 'Pindah rumah dan belum menemukan CGF baru' },
+  { id: 45, no_jemaat: 1035, status_after: 'Active', status_before: null, changed_at: '2024-10-01T08:00:00Z', reason: null },
+  { id: 46, no_jemaat: 1035, status_after: 'Inactive', status_before: null, changed_at: '2026-03-25T10:00:00Z', reason: 'Pindah rumah dan belum menemukan CGF baru' },
 ];
 
 // ============================================================
@@ -946,8 +946,8 @@ export async function getStatusTrend() {
 
     const counts = { Active: 0, Inactive: 0, 'No Information': 0, Moved: 0 };
     Object.values(latestStatuses).forEach(record => {
-      if (counts[record.status] !== undefined) {
-        counts[record.status]++;
+      if (counts[record.status_after] !== undefined) {
+        counts[record.status_after]++;
       }
     });
 

@@ -137,6 +137,24 @@
 }
 
 /* ============================================================
+   MOBILE RESPONSIVE UTILITIES
+   ============================================================ */
+
+@media (max-width: 768px) {
+  button:not([data-state]),
+  a[role="button"],
+  [role="button"]:not(button) {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 640px) {
+  .recharts-wrapper {
+    font-size: 11px;
+  }
+}
+
+/* ============================================================
    ATTENDANCE UI - "Warm Ledger" Aesthetic
    ============================================================ */
 

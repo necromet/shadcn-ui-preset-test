@@ -282,12 +282,12 @@ export function Events() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Events</h1>
-          <p className="text-muted-foreground">Manage church events and activities</p>
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold tracking-tight">Events</h1>
+          <p className="text-xs md:text-sm text-muted-foreground">Manage church events and activities</p>
         </div>
-        <Button onClick={handleAddClick}>
+        <Button onClick={handleAddClick} size="sm">
           <Plus className="size-4 mr-2" />
           Add Event
         </Button>
@@ -346,14 +346,15 @@ export function Events() {
             />
           ) : (
             <>
-              <Table>
+              <div className="overflow-x-auto -mx-2 px-2">
+                <Table className="min-w-[650px]">
                 <TableHeader>
                   <TableRow>
                     <TableHead>Event</TableHead>
                     <TableHead>Date</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead>Location</TableHead>
-                    <TableHead>Sync</TableHead>
+                    <TableHead className="hidden sm:table-cell">Category</TableHead>
+                    <TableHead className="hidden md:table-cell">Location</TableHead>
+                    <TableHead className="hidden lg:table-cell">Sync</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -380,12 +381,12 @@ export function Events() {
                           <p className="text-xs text-muted-foreground">{formatRelativeDate(event.event_date)}</p>
                         </div>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="hidden sm:table-cell">
                         <Badge variant="secondary" className={CATEGORY_COLORS[event.category] || ""}>
                           {event.category}
                         </Badge>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="hidden md:table-cell">
                         {event.location ? (
                           <div className="flex items-center gap-1 text-sm">
                             <MapPin className="size-3 text-muted-foreground" />
@@ -395,7 +396,7 @@ export function Events() {
                           <span className="text-muted-foreground">-</span>
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="hidden lg:table-cell">
                         {event.gcal_event_id ? (
                           <a
                             href={event.gcal_link}
@@ -446,6 +447,7 @@ export function Events() {
                   ))}
                 </TableBody>
               </Table>
+              </div>
 
               {totalPages > 1 && (
                 <div className="flex items-center justify-between mt-4 pt-4 border-t">

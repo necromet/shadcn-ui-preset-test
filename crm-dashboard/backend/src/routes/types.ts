@@ -324,7 +324,8 @@ export interface PelayanListResponse {
 export interface StatusHistory {
   id?: number;
   no_jemaat?: number;
-  status?: 'Active' | 'Inactive' | 'Sabbatical' | 'Moved' | 'No Information';
+  status_after?: 'Active' | 'Inactive' | 'Sabbatical' | 'Moved' | 'No Information';
+  status_before?: 'Active' | 'Inactive' | 'Sabbatical' | 'Moved' | 'No Information' | null;
   changed_at?: string;
   reason?: string;
   member?: Member;
@@ -332,12 +333,14 @@ export interface StatusHistory {
 
 export interface StatusHistoryCreate {
   no_jemaat: number;
-  status: 'Active' | 'Inactive' | 'Sabbatical' | 'Moved' | 'No Information';
+  status_after: 'Active' | 'Inactive' | 'Sabbatical' | 'Moved' | 'No Information';
+  status_before?: 'Active' | 'Inactive' | 'Sabbatical' | 'Moved' | 'No Information' | null;
   reason?: string;
 }
 
 export interface StatusHistoryUpdate {
-  status?: 'Active' | 'Inactive' | 'Sabbatical' | 'Moved' | 'No Information';
+  status_after?: 'Active' | 'Inactive' | 'Sabbatical' | 'Moved' | 'No Information';
+  status_before?: 'Active' | 'Inactive' | 'Sabbatical' | 'Moved' | 'No Information' | null;
   reason?: string;
 }
 

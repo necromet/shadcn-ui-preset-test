@@ -3,19 +3,22 @@ import { query } from '../config/database';
 export interface StatusHistory {
   id: number;
   no_jemaat: number;
-  status: 'Active' | 'Inactive' | 'Sabbatical' | 'Moved' | 'No Information';
+  status_after: 'Active' | 'Inactive' | 'Sabbatical' | 'Moved' | 'No Information';
+  status_before: 'Active' | 'Inactive' | 'Sabbatical' | 'Moved' | 'No Information' | null;
   changed_at: string;
   reason: string | null;
 }
 
 export interface StatusHistoryCreateData {
   no_jemaat: number;
-  status: 'Active' | 'Inactive' | 'Sabbatical' | 'Moved' | 'No Information';
+  status_after: 'Active' | 'Inactive' | 'Sabbatical' | 'Moved' | 'No Information';
+  status_before?: 'Active' | 'Inactive' | 'Sabbatical' | 'Moved' | 'No Information' | null;
   reason?: string;
 }
 
 export interface StatusHistoryUpdateData {
-  status?: 'Active' | 'Inactive' | 'Sabbatical' | 'Moved' | 'No Information';
+  status_after?: 'Active' | 'Inactive' | 'Sabbatical' | 'Moved' | 'No Information';
+  status_before?: 'Active' | 'Inactive' | 'Sabbatical' | 'Moved' | 'No Information' | null;
   reason?: string;
 }
 
@@ -62,10 +65,10 @@ export const StatusModel = {
 
   async create(data: StatusHistoryCreateData): Promise<StatusHistory> {
     const result = await query<StatusHistory>(
-      `INSERT INTO cnx_jemaat_status_history (no_jemaat, status, reason)
-       VALUES ($1, $2, $3)
+      `INSERT INTO cnx_jemaat_status_history (no_jemaat, status_after, status_before, reason)
+       VALUES ($1, $2, $3, $4)
        RETURNING *`,
-      [data.no_jemaat, data.status, data.reason || null],
+      [data.no_jemaat, data.status_after, data.status_before || null, data.reason || null],
     );
     return result.rows[0];
   },
