@@ -67,6 +67,14 @@ export interface PaginatedResult<T> {
 }
 
 export const EventsModel = {
+  normalizeEventDate<T extends { event_date: string | Date }>(row: T): T & { event_date: string } {
+    const d = new Date(row.event_date);
+    const year = d.getUTCFullYear();
+    const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(d.getUTCDate() + 1).padStart(2, '0');
+    return { ...row, event_date: `${year}-${month}-${day}` };
+  },
+
   async getAll(page: number = 1, limit: number = 20, filters: EventFilters = {}): Promise<PaginatedResult<Event>> {
     const conditions: string[] = [];
     const params: unknown[] = [];
@@ -100,7 +108,7 @@ export const EventsModel = {
     );
 
     return {
-      data: dataResult.rows,
+      data: dataResult.rows.map(r => this.normalizeEventDate(r)),
       total,
       page,
       limit,
@@ -113,7 +121,8 @@ export const EventsModel = {
       'SELECT * FROM event_history WHERE event_id = $1',
       [eventId],
     );
-    return result.rows[0] || null;
+    const row = result.rows[0];
+    return row ? this.normalizeEventDate(row) : null;
   },
 
   async create(data: EventCreateData): Promise<Event> {
@@ -132,7 +141,7 @@ export const EventsModel = {
         data.last_synced_at || null,
       ],
     );
-    return result.rows[0];
+    return this.normalizeEventDate(result.rows[0]);
   },
 
   async update(eventId: number, data: EventUpdateData): Promise<Event | null> {
@@ -148,7 +157,8 @@ export const EventsModel = {
       `UPDATE event_history SET ${setClauses.join(', ')} WHERE event_id = $${columns.length + 1} RETURNING *`,
       [...values, eventId],
     );
-    return result.rows[0] || null;
+    const row = result.rows[0];
+    return row ? this.normalizeEventDate(row) : null;
   },
 
   async delete(eventId: number): Promise<boolean> {
@@ -215,6 +225,6 @@ export const EventsModel = {
        ORDER BY eh.event_date DESC`,
       [noJemaat],
     );
-    return result.rows;
+    return result.rows.map(r => this.normalizeEventDate(r));
   },
 };

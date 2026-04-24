@@ -354,7 +354,13 @@ ORDER BY MIN(EXTRACT(YEAR FROM AGE(CURRENT_DATE, tanggal_lahir::date)));
       LIMIT $1
     `, [limit]);
 
-    return result.rows;
+    return result.rows.map(r => {
+      const d = new Date(r.event_date);
+      const year = d.getUTCFullYear();
+      const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+      const day = String(d.getUTCDate()).padStart(2, '0');
+      return { ...r, event_date: `${year}-${month}-${day}` };
+    });
   },
 
   async getEventAttendanceTrends(): Promise<Record<string, unknown>[]> {
