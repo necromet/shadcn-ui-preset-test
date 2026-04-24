@@ -156,3 +156,11 @@ export async function fetchMemberEvents(no_jemaat) {
   const response = await apiRequest(`/members/${no_jemaat}/events`);
   return response?.data ?? [];
 }
+
+/**
+ * GET /events/:eventId/participants/analytics - Fetch participant analytics for an event
+ */
+export async function fetchEventParticipantAnalytics(eventId) {
+  const response = await apiRequest(`/events/${eventId}/participants/analytics`);
+  return response?.data ?? null;
+}

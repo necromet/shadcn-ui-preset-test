@@ -38,6 +38,7 @@ import { ServiceFrequency } from "../components/dashboard/ServiceFrequency.jsx"
 import { WorshipTeamComposition } from "../components/dashboard/WorshipTeamComposition.jsx"
 import { CGHealthDashboard } from "../components/dashboard/CGHealthDashboard.jsx"
 import { EventAttendanceTrends } from "../components/dashboard/EventAttendanceTrends.jsx"
+import { EventAnalytics } from "../components/dashboard/EventAnalytics.jsx"
 import { MultiSkillAnalysis } from "../components/dashboard/MultiSkillAnalysis.jsx"
 import { CareVisitTracker } from "../components/dashboard/CareVisitTracker.jsx"
 import {
@@ -72,12 +73,11 @@ const kpiConfig = [
     change: "+2",
   },
   {
-    title: "Attendance Rate",
-    key: "attendanceRateCurrentMonth",
-    icon: TrendingUp,
+    title: "Avg CGF Size",
+    key: "avg_cgf_size",
+    icon: BarChart3,
     trend: "up",
-    change: "+4.1%",
-    suffix: "%",
+    change: "+1.2",
   },
 ]
 
@@ -330,6 +330,7 @@ export function DashboardHome() {
         </TabsContent>
         <TabsContent value="events" className="flex flex-col gap-6">
           <EventAttendanceTrends />
+          <EventAnalytics />
         </TabsContent>
         <TabsContent value="engagement" className="flex flex-col gap-6">
           <div className="grid gap-6 grid-cols-1 xl:grid-cols-2">

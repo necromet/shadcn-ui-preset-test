@@ -46,12 +46,15 @@ export interface EventParticipation {
   no_jemaat: number;
   role: 'Peserta' | 'Panitia' | 'Volunteer';
   registered_at: string;
+  nama_jemaat: string | null;
+  nama_cgf: string | null;
 }
 
 export interface EventParticipationCreateData {
   event_id: number;
   no_jemaat: number;
   role: 'Peserta' | 'Panitia' | 'Volunteer';
+  registered_at?: string;
 }
 
 export interface EventParticipationUpdateData {
@@ -171,29 +174,87 @@ export const EventsModel = {
 
   async getParticipants(eventId: number): Promise<EventParticipation[]> {
     const result = await query<EventParticipation>(
-      `SELECT * FROM event_participation
-       WHERE event_id = $1
-       ORDER BY role ASC, no_jemaat ASC`,
+      `SELECT ep.id, ep.event_id, ep.no_jemaat, ep.role,
+              to_char(ep.registered_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Jakarta', 'YYYY-MM-DD HH24:MI:SS') AS registered_at,
+              j.nama_jemaat, j.nama_cgf
+       FROM event_participation ep
+       LEFT JOIN cnx_jemaat_clean j ON ep.no_jemaat = j.no_jemaat
+       WHERE ep.event_id = $1
+       ORDER BY ep.role ASC, ep.no_jemaat ASC`,
       [eventId],
     );
     return result.rows;
   },
 
   async addParticipant(data: EventParticipationCreateData): Promise<EventParticipation> {
+    const registeredAt = data.registered_at || null;
     const result = await query<EventParticipation>(
-      `INSERT INTO event_participation (event_id, no_jemaat, role)
-       VALUES ($1, $2, $3)
-       RETURNING *`,
-      [data.event_id, data.no_jemaat, data.role],
+      registeredAt
+        ? `INSERT INTO event_participation (event_id, no_jemaat, role, registered_at)
+           VALUES ($1, $2, $3, $4)
+           RETURNING *`
+        : `INSERT INTO event_participation (event_id, no_jemaat, role)
+           VALUES ($1, $2, $3)
+           RETURNING *`,
+      registeredAt
+        ? [data.event_id, data.no_jemaat, data.role, registeredAt]
+        : [data.event_id, data.no_jemaat, data.role],
     );
-    return result.rows[0];
+    const inserted = result.rows[0];
+    const enriched = await query<EventParticipation>(
+      `SELECT ep.id, ep.event_id, ep.no_jemaat, ep.role,
+              to_char(ep.registered_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Jakarta', 'YYYY-MM-DD HH24:MI:SS') AS registered_at,
+              j.nama_jemaat, j.nama_cgf
+       FROM event_participation ep
+       LEFT JOIN cnx_jemaat_clean j ON ep.no_jemaat = j.no_jemaat
+       WHERE ep.id = $1`,
+      [inserted.id],
+    );
+    return enriched.rows[0];
+  },
+
+  async addParticipantsBulk(eventId: number, participants: { no_jemaat: number; role: string; registered_at?: string }[]): Promise<EventParticipation[]> {
+    if (participants.length === 0) return [];
+
+    const values: (string | number)[] = [];
+    const placeholders: string[] = [];
+
+    participants.forEach((p, i) => {
+      const offset = i * 4;
+      placeholders.push(`($${offset + 1}, $${offset + 2}, $${offset + 3}, $${offset + 4})`);
+      values.push(eventId, p.no_jemaat, p.role, p.registered_at || new Date().toISOString().replace('T', ' ').slice(0, 19));
+    });
+
+    await query(
+      `INSERT INTO event_participation (event_id, no_jemaat, role, registered_at)
+       VALUES ${placeholders.join(', ')}`,
+      values,
+    );
+
+    const result = await query<EventParticipation>(
+      `SELECT ep.id, ep.event_id, ep.no_jemaat, ep.role,
+              to_char(ep.registered_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Jakarta', 'YYYY-MM-DD HH24:MI:SS') AS registered_at,
+              j.nama_jemaat, j.nama_cgf
+       FROM event_participation ep
+       LEFT JOIN cnx_jemaat_clean j ON ep.no_jemaat = j.no_jemaat
+       WHERE ep.event_id = $1
+       ORDER BY ep.role ASC, ep.no_jemaat ASC`,
+      [eventId],
+    );
+
+    return result.rows;
   },
 
   async updateParticipant(id: number, data: EventParticipationUpdateData): Promise<EventParticipation | null> {
     const columns = Object.keys(data);
     if (columns.length === 0) {
       const result = await query<EventParticipation>(
-        'SELECT * FROM event_participation WHERE id = $1',
+        `SELECT ep.id, ep.event_id, ep.no_jemaat, ep.role,
+                to_char(ep.registered_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Jakarta', 'YYYY-MM-DD HH24:MI:SS') AS registered_at,
+                j.nama_jemaat, j.nama_cgf
+         FROM event_participation ep
+         LEFT JOIN cnx_jemaat_clean j ON ep.no_jemaat = j.no_jemaat
+         WHERE ep.id = $1`,
         [id],
       );
       return result.rows[0] || null;
@@ -202,9 +263,19 @@ export const EventsModel = {
     const values = Object.values(data);
     const setClauses = columns.map((col, i) => `${col} = $${i + 1}`);
 
-    const result = await query<EventParticipation>(
-      `UPDATE event_participation SET ${setClauses.join(', ')} WHERE id = $${columns.length + 1} RETURNING *`,
+    await query(
+      `UPDATE event_participation SET ${setClauses.join(', ')} WHERE id = $${columns.length + 1}`,
       [...values, id],
+    );
+
+    const result = await query<EventParticipation>(
+      `SELECT ep.id, ep.event_id, ep.no_jemaat, ep.role,
+              to_char(ep.registered_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Jakarta', 'YYYY-MM-DD HH24:MI:SS') AS registered_at,
+              j.nama_jemaat, j.nama_cgf
+       FROM event_participation ep
+       LEFT JOIN cnx_jemaat_clean j ON ep.no_jemaat = j.no_jemaat
+       WHERE ep.id = $1`,
+      [id],
     );
     return result.rows[0] || null;
   },
@@ -226,5 +297,92 @@ export const EventsModel = {
       [noJemaat],
     );
     return result.rows.map(r => this.normalizeEventDate(r));
+  },
+
+  async getParticipantAnalytics(eventId: number): Promise<{
+    roles: { role: string; count: number }[];
+    age: { label: string; value: number; percentage: number }[];
+    gender: { label: string; value: number; percentage: number }[];
+    kuliah_kerja: { label: string; value: number; percentage: number }[];
+    ketertarikan_cgf: { label: string; value: number; percentage: number }[];
+    kategori_domisili: { label: string; value: number; percentage: number }[];
+  }> {
+    const participants = await query<{
+      role: string;
+      jenis_kelamin: string | null;
+      tanggal_lahir: string | null;
+      kuliah_kerja: string | null;
+      ketertarikan_cgf: string | null;
+      kategori_domisili: string | null;
+    }>(
+      `SELECT ep.role,
+              j.jenis_kelamin,
+              j.tanggal_lahir,
+              j.kuliah_kerja,
+              j.ketertarikan_cgf,
+              j.kategori_domisili
+       FROM event_participation ep
+       LEFT JOIN cnx_jemaat_clean j ON ep.no_jemaat = j.no_jemaat
+       WHERE ep.event_id = $1`,
+      [eventId],
+    );
+
+    const rows = participants.rows;
+    const total = rows.length;
+
+    function countBy<T extends string | null>(items: T[], fallback = 'Unknown'): { label: string; value: number; percentage: number }[] {
+      const map = new Map<string, number>();
+      items.forEach(v => {
+        const key = v || fallback;
+        map.set(key, (map.get(key) || 0) + 1);
+      });
+      return Array.from(map.entries())
+        .map(([label, value]) => ({
+          label,
+          value,
+          percentage: total > 0 ? Math.round((value / total) * 100 * 10) / 10 : 0,
+        }))
+        .sort((a, b) => b.value - a.value);
+    }
+
+    const roleMap = new Map<string, number>();
+    rows.forEach(r => {
+      roleMap.set(r.role, (roleMap.get(r.role) || 0) + 1);
+    });
+    const roles = Array.from(roleMap.entries())
+      .map(([role, count]) => ({ role, count }))
+      .sort((a, b) => b.count - a.count);
+
+    const ageMap = new Map<string, number>();
+    rows.forEach(r => {
+      if (!r.tanggal_lahir) {
+        ageMap.set('Unknown', (ageMap.get('Unknown') || 0) + 1);
+        return;
+      }
+      const birth = new Date(r.tanggal_lahir);
+      const age = new Date().getFullYear() - birth.getFullYear();
+      const label = age > 30 ? '30+' : String(age);
+      ageMap.set(label, (ageMap.get(label) || 0) + 1);
+    });
+    const age = Array.from(ageMap.entries())
+      .map(([label, value]) => ({
+        label,
+        value,
+        percentage: total > 0 ? Math.round((value / total) * 100 * 10) / 10 : 0,
+      }))
+      .sort((a, b) => {
+        if (a.label === 'Unknown') return 1;
+        if (b.label === 'Unknown') return -1;
+        return parseInt(a.label) - parseInt(b.label);
+      });
+
+    return {
+      roles,
+      age,
+      gender: countBy(rows.map(r => r.jenis_kelamin)),
+      kuliah_kerja: countBy(rows.map(r => r.kuliah_kerja)),
+      ketertarikan_cgf: countBy(rows.map(r => r.ketertarikan_cgf)),
+      kategori_domisili: countBy(rows.map(r => r.kategori_domisili)),
+    };
   },
 };

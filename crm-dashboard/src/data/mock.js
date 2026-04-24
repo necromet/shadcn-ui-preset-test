@@ -469,13 +469,27 @@ async function addEventParticipant(data) {
   const res = await fetch(`${API_BASE}/events/${data.event_id}/participants`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ no_jemaat: data.no_jemaat, role: data.role }),
+    body: JSON.stringify({ no_jemaat: data.no_jemaat, role: data.role, registered_at: data.registered_at }),
   });
   const json = await res.json();
   if (!res.ok || !json.success) {
     throw new Error(json.error?.message || 'Failed to add participant');
   }
   invalidateCache(`${API_BASE}/events/${data.event_id}/participants`);
+  return json;
+}
+
+async function addEventParticipants(eventId, participants) {
+  const res = await fetch(`${API_BASE}/events/${eventId}/participants/bulk`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ participants }),
+  });
+  const json = await res.json();
+  if (!res.ok || !json.success) {
+    throw new Error(json.error?.message || 'Failed to add participants');
+  }
+  invalidateCache(`${API_BASE}/events/${eventId}/participants`);
   return json;
 }
 
@@ -997,22 +1011,13 @@ export async function getTotalServingMembers() {
 }
 
 export async function getServingPercentage() {
-  const [pelayanData, statusHistory, dist] = await Promise.all([
+  const [pelayanData, dist] = await Promise.all([
     getPelayan(),
-    getStatusHistory(),
     getStatusDistribution()
   ]);
-  if (!Array.isArray(pelayanData) || !Array.isArray(statusHistory)) {
-    return 0;
-  }
   const activeMembers = dist.Active || 0;
-  const serving = pelayanData.filter(p => {
-    const memberStatus = statusHistory
-      .filter(r => r.no_jemaat === p.no_jemaat)
-      .sort((a, b) => new Date(b.changed_at) - new Date(a.changed_at))[0];
-    return memberStatus && memberStatus.status === 'Active';
-  }).length;
-  return activeMembers > 0 ? Math.round((serving / activeMembers) * 100) : 0;
+  const pelayanCount = Array.isArray(pelayanData) ? pelayanData.length : 0;
+  return activeMembers > 0 ? Math.round((pelayanCount / activeMembers) * 100) : 0;
 }
 
 export async function getRecentStatusChanges(limit = 10) {
@@ -1456,6 +1461,7 @@ export {
   deleteEvent,
   getEventParticipants,
   addEventParticipant,
+  addEventParticipants,
   updateEventParticipant,
   removeEventParticipant,
   getMostPopularEventTypes,

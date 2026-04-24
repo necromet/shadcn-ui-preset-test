@@ -4,9 +4,9 @@
 
 This document outlines the functional and non-functional requirements for the Authentication and User Management features: **Login Page**, **Logout Page**, **Settings Page**, and **Session Management**.
 
-**Tech Stack:** React + Vite, Clerk (authentication provider), Supabase (PostgreSQL + access control), shadcn/ui, Tailwind CSS.
+**Tech Stack:** React + Vite, Clerk (authentication provider), shadcn/ui, Tailwind CSS.
 
-**Auth Architecture:** Clerk handles authentication (sign-in/sign-out, session tokens). Supabase PostgreSQL hosts an `allowed_users` table that acts as an access control list — only users present in this table can access the application after Clerk authentication.
+**Auth Architecture:** Clerk handles authentication (sign-in/sign-out, session tokens, and access control via allowed email domains).
 
 ---
 
@@ -48,59 +48,26 @@ This document outlines the functional and non-functional requirements for the Au
 
 ---
 
-## 2. Access Control (Supabase Allowed Users)
+## 2. Access Control (Clerk Allowed Email Domains)
 
 ### 2.1 Overview
 
-After Clerk authenticates a user, the system checks the Supabase `allowed_users` table to determine if that user is permitted to access the application. This provides a simple, admin-controlled allowlist without requiring Supabase Auth.
+Access control is handled entirely by Clerk's built-in **Allowed Email Domains** feature. In the Clerk Dashboard → Users → Restrictions, admins configure which email domains are permitted (e.g., `@yourcompany.com`). This requires no custom code, no Supabase table, and adds zero latency.
 
-### 2.2 Database Schema
-
-```sql
-CREATE TABLE IF NOT EXISTS allowed_users (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  clerk_user_id TEXT UNIQUE NOT NULL,
-  email TEXT UNIQUE NOT NULL,
-  display_name TEXT,
-  role TEXT DEFAULT 'user' CHECK (role IN ('admin', 'user', 'viewer')),
-  is_active BOOLEAN DEFAULT true,
-  created_at TIMESTAMPTZ DEFAULT now(),
-  updated_at TIMESTAMPTZ DEFAULT now()
-);
-
-CREATE INDEX idx_allowed_users_clerk_id ON allowed_users(clerk_user_id);
-CREATE INDEX idx_allowed_users_email ON allowed_users(email);
-```
-
-### 2.3 Functional Requirements
+### 2.2 Functional Requirements
 
 | ID | Requirement | Priority |
 |----|-------------|----------|
-| AC-01 | The system shall maintain an `allowed_users` table in Supabase PostgreSQL. | High |
-| AC-02 | The system shall check the `allowed_users` table after Clerk authentication succeeds. | High |
-| AC-03 | The system shall deny access and redirect to `/login` if the authenticated Clerk user is not in `allowed_users` or `is_active = false`. | High |
-| AC-04 | The system shall display an "Access Denied" message when a valid Clerk user is not in the allowlist. | High |
-| AC-05 | The system shall provide a backend API endpoint `GET /api/v1/auth/check-access` that verifies a Clerk user ID against `allowed_users`. | High |
-| AC-06 | The system shall store the Clerk user ID (`clerk_user_id`) and email in `allowed_users` upon admin approval. | High |
-| AC-07 | The system shall allow admins to add/remove users from the allowlist via direct database access or an admin API. | Medium |
-| AC-08 | The system shall cache the access check result client-side for the duration of the session to avoid repeated API calls. | Medium |
+| AC-01 | The system shall configure allowed email domains in Clerk Dashboard. | High |
+| AC-02 | The system shall deny access at Clerk's authentication layer if the user's email domain is not in the allowlist. | High |
+| AC-03 | The system shall display a "Sign up not permitted" message when a user's email domain is blocked. | High |
 
-### 2.4 Non-Functional Requirements
-
-| ID | Requirement |
-|----|-------------|
-| AC-NF-01 | Access check shall add no more than 100ms latency to the initial page load. |
-| AC-NF-02 | The `allowed_users` table shall be indexed on `clerk_user_id` and `email` for fast lookups. |
-| AC-NF-03 | Access check API shall be rate-limited to prevent abuse. |
-
-### 2.5 Integration Flow
+### 2.3 Integration Flow
 
 ```
-User → Clerk <SignIn /> → Clerk authenticates → JWT/session created
-  → ProtectedRoute calls GET /api/v1/auth/check-access with clerk_user_id
-  → Backend queries allowed_users table
-  → If found & is_active: grant access → dashboard
-  → If not found or inactive: deny access → show "Access Denied" → sign out
+User → Clerk <SignIn /> → Clerk checks email domain against allowed list
+  → If domain allowed: authentication proceeds → dashboard
+  → If domain blocked: Clerk shows "Sign up not permitted" error
 ```
 
 ---
@@ -253,8 +220,7 @@ User → Clerk <SignIn /> → Clerk authenticates → JWT/session created
 - The project uses **React + Vite** as the frontend framework.
 - UI components are built with **shadcn/ui** and styled with **Tailwind CSS**.
 - Authentication is provided by **Clerk** (hosted auth service).
-- **Supabase PostgreSQL** hosts the `allowed_users` table for access control.
-- The backend uses **Express + pg** to query Supabase PostgreSQL directly.
+- Access control is handled by **Clerk's Allowed Email Domains** feature.
 - Google OAuth is configured as a social connection in the Clerk dashboard.
 - Session timeout is set to **15 minutes** for active sessions.
 - HTTPS is enforced in production environments.
@@ -270,4 +236,4 @@ User → Clerk <SignIn /> → Clerk authenticates → JWT/session created
 | 3 | Is 2FA required? | **No, not yet** — will be added in a future phase |
 | 4 | Specific compliance requirements? | **No** beyond standard best practices |
 | 5 | OAuth providers for SSO? | **Google Login** only |
-| 6 | How to control which users can log in? | **Supabase `allowed_users` table** — Clerk authenticates, then Supabase allowlist gates access |
+| 6 | How to control which users can log in? | **Clerk's Allowed Email Domains** — configured in Clerk Dashboard, no custom code required |
